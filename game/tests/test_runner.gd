@@ -37,6 +37,7 @@ func _init() -> void:
 		
 		total_passed += int(test_obj.passed_count)
 		total_failed += int(test_obj.failed_count)
+		test_obj.cleanup()
 	
 	print("\n==================================================")
 	print("Test Results: %d Passed, %d Failed" % [total_passed, total_failed])
