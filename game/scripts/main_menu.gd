@@ -73,9 +73,17 @@ func _on_continuous_button_pressed() -> void:
 	
 	get_tree().change_scene_to_file("res://scenes/main_game.tscn")
 
+func _get_stats_screen() -> Control:
+	if has_node("StatsScreen"):
+		return $StatsScreen as Control
+	return null
+
 func _on_stats_button_pressed() -> void:
-	# Stats screen integration will open stats modal or screen in Issue 9
-	pass
+	var stats_scr: Control = _get_stats_screen()
+	if stats_scr != null:
+		if stats_scr.has_method("refresh_display"):
+			stats_scr.refresh_display()
+		stats_scr.visible = true
 
 func _get_how_to_play_modal() -> Control:
 	if how_to_play_modal != null:

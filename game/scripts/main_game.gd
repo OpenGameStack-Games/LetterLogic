@@ -99,3 +99,14 @@ func _on_next_word_pressed() -> void:
 func _on_share_pressed() -> void:
 	# Share intent handler will be connected via ShareManager in Issue 10
 	show_toast("Results copied to clipboard!")
+
+func _on_stats_pressed() -> void:
+	if has_node("StatsScreen"):
+		var stats_scr: Control = $StatsScreen as Control
+		if stats_scr != null:
+			var gm: Node = get_node_or_null("/root/GameManager")
+			if gm != null and stats_scr.has_method("set_mode"):
+				stats_scr.set_mode(gm.current_mode)
+			elif stats_scr.has_method("refresh_display"):
+				stats_scr.refresh_display()
+			stats_scr.visible = true

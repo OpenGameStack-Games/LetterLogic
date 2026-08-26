@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://cstats001letterlogic"]
+
+[ext_resource type="Script" path="res://scripts/stats_screen.gd" id="1_stats_script"]
+
+[node name="StatsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_stats_script")
+
+[node name="BackgroundDim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="Panel" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(480, 560)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -280.0
+offset_right = 240.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 26
+text = "STATISTICS"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Panel/VBox/Header"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "✕"
+
+[node name="ModeTabs" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DailyTabButton" type="Button" parent="Panel/VBox/ModeTabs"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Daily Challenge"
+
+[node name="ContinuousTabButton" type="Button" parent="Panel/VBox/ModeTabs"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Continuous Play"
+
+[node name="SummaryCards" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayedCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/PlayedCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/PlayedCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Played"
+horizontal_alignment = 1
+
+[node name="WinPctCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/WinPctCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0%"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/WinPctCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Win %"
+horizontal_alignment = 1
+
+[node name="StreakCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/StreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/StreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Current"
+horizontal_alignment = 1
+
+[node name="MaxStreakCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/MaxStreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/MaxStreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Max Streak"
+horizontal_alignment = 1
+
+[node name="DistHeading" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "GUESS DISTRIBUTION"
+horizontal_alignment = 1
+
+[node name="DistributionContainer" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[connection signal="pressed" from="Panel/VBox/Header/CloseButton" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Panel/VBox/ModeTabs/DailyTabButton" to="." method="_on_daily_tab_pressed"]
+[connection signal="pressed" from="Panel/VBox/ModeTabs/ContinuousTabButton" to="." method="_on_continuous_tab_pressed"]
