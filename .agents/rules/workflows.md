@@ -15,7 +15,7 @@ This document defines the rules of engagement, Git workflows, and coding standar
   - The PR body must include a summary of changes, test verification results, and link the issue using closing keywords (e.g., `Resolves #<number>` or `Closes #<number>`).
 - **PR Review & Merge:**
   - Verify PR checks/diffs.
-  - Merge the PR cleanly via `gh pr merge --squash --delete-branch` (or standard merge) once verified.
+  - Merge the PR cleanly via standard merge commit: `gh pr merge <pr_number> --merge --delete-branch` (DO NOT squash, to preserve full Git history in Git graph).
   - Pull latest `main` back into the main repository and clean up any worktrees (`git worktree remove ...`).
 
 ## 2. Issue Processing Workflow
