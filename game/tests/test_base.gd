@@ -8,6 +8,9 @@ var failed_count: int = 0
 var passed_count: int = 0
 var current_test_name: String = ""
 
+func cleanup() -> void:
+	pass
+
 func assert_true(condition: bool, message: String = "") -> void:
 	if condition:
 		passed_count += 1

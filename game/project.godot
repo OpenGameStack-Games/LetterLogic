@@ -15,6 +15,10 @@ config/description="A clean, strategic 5-letter isogram word puzzle game."
 config/version="1.0.0"
 config/features=PackedStringArray("4.7")
 
+[autoload]
+
+WordBank="*res://autoloads/word_bank.gd"
+
 [display]
 
 window/size/viewport_width=720
