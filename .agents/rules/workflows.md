@@ -4,9 +4,9 @@ This document defines the rules of engagement, Git workflows, and coding standar
 
 ## 1. Git & Worktree Workflow
 - **Branching Strategy:** Agents must never push or commit directly to the `main` branch.
-- **Git Worktrees:** Agents should create and use isolated Git worktrees (or dedicated feature branches) when working on issues:
+- **Git Worktrees:** Agents should create and use isolated Git worktrees inside the repository's `.worktrees/` directory when working on issues:
   ```bash
-  git worktree add ../LetterLogic-issue-<number> -b feature/issue-<number>-<short-description>
+  git worktree add .worktrees/issue-<number> -b feature/issue-<number>-<short-description>
   ```
 - **Feature Branches:** All feature branches must be named `feature/issue-<number>-<short-description>`.
 - **Commits:** Use Conventional Commits formatting (e.g., `feat: implement dynamic keyboard`, `fix: correct UTC date calculation`, `docs: update readme`). Keep commits atomic and informative.
