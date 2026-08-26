@@ -19,6 +19,7 @@ config/features=PackedStringArray("4.7")
 
 WordBank="*res://autoloads/word_bank.gd"
 GameManager="*res://autoloads/game_manager.gd"
+SaveManager="*res://autoloads/save_manager.gd"
 
 [display]
 
