@@ -23,6 +23,7 @@ GameManager="*res://autoloads/game_manager.gd"
 SaveManager="*res://autoloads/save_manager.gd"
 DailyManager="*res://autoloads/daily_manager.gd"
 StatsManager="*res://autoloads/stats_manager.gd"
+ShareManager="*res://autoloads/share_manager.gd"
 
 [display]
 

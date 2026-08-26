@@ -97,7 +97,16 @@ func _on_next_word_pressed() -> void:
 		gm.start_game(GameManagerScript.GameMode.CONTINUOUS)
 
 func _on_share_pressed() -> void:
-	# Share intent handler will be connected via ShareManager in Issue 10
+	var gm: Node = get_node_or_null("/root/GameManager")
+	var dm: Node = get_node_or_null("/root/DailyManager")
+	var sm: Node = get_node_or_null("/root/ShareManager")
+	
+	if gm != null and dm != null and sm != null:
+		var date_str: String = dm.get_current_utc_date_string()
+		var won: bool = gm.game_status == GameManagerScript.GameStatus.WON
+		var attempts: int = gm.current_row
+		sm.share_daily_results(date_str, gm.guess_results, won, attempts)
+	
 	show_toast("Results copied to clipboard!")
 
 func _on_stats_pressed() -> void:
