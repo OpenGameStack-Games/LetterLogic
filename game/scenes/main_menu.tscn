@@ -1,0 +1,149 @@
+[gd_scene format=3 uid="uid://cmainmenu001letterlogic"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu_script"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "LETTERLOGIC"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+text = "The 5-Letter Isogram Word Game"
+horizontal_alignment = 1
+
+[node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="DailyButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Daily Challenge
+[Play Today's Word]"
+
+[node name="ContinuousButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Continuous Play
+[Unlimited Practice]"
+
+[node name="StatsButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Statistics"
+
+[node name="HowToPlayButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "How to Play"
+
+[node name="CountdownTimer" type="Timer" parent="."]
+
+[node name="HowToPlayModal" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="Panel" type="PanelContainer" parent="HowToPlayModal"]
+custom_minimum_size = Vector2(460, 480)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -240.0
+offset_right = 230.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="HowToPlayModal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ModalTitle" type="Label" parent="HowToPlayModal/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "[b]Guess the secret word in 6 attempts.[/b]
+
+• Each guess must be a valid 5-letter word.
+• [color=#ffcc00][b]Special Rule:[/b][/color] Words [b]NEVER contain duplicate letters[/b]! Keys you've already typed in the current row will be temporarily disabled.
+
+[b]Tile Colors:[/b]
+[color=#538d4e]🟩 GREEN[/color] - Letter is in the word and in the correct spot.
+[color=#b59f3b]🟨 YELLOW[/color] - Letter is in the word but wrong spot.
+[color=#808080]⬛ GRAY[/color] - Letter is not in the word.
+
+[b]Modes:[/b]
+• [b]Daily Challenge:[/b] One synchronized word per day (resets at midnight UTC).
+• [b]Continuous Play:[/b] Play as many words as you like!"
+
+[node name="CloseButton" type="Button" parent="HowToPlayModal/Panel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Got It!"
+
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/DailyButton" to="." method="_on_daily_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/ContinuousButton" to="." method="_on_continuous_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/StatsButton" to="." method="_on_stats_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/HowToPlayButton" to="." method="_on_how_to_play_button_pressed"]
+[connection signal="pressed" from="HowToPlayModal/Panel/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]
