@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ctile001letterlogic"]
+
+[ext_resource type="Script" path="res://scripts/tile.gd" id="1_tile_script"]
+
+[node name="Tile" type="PanelContainer"]
+custom_minimum_size = Vector2(62, 62)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_tile_script")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
