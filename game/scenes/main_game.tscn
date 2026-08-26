@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/main_game.gd" id="1_main_game_script"]
 [ext_resource type="PackedScene" path="res://scenes/game_board.tscn" id="2_game_board"]
 [ext_resource type="PackedScene" path="res://scenes/keyboard.tscn" id="3_keyboard"]
+[ext_resource type="PackedScene" path="res://scenes/stats_screen.tscn" id="4_stats_screen"]
 
 [node name="MainGame" type="Control"]
 layout_mode = 3
@@ -54,9 +55,11 @@ theme_override_font_sizes/font_size = 14
 text = "CONTINUOUS PLAY"
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="VBoxContainer/Header"]
+[node name="StatsButton" type="Button" parent="VBoxContainer/Header"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "📊"
 
 [node name="BoardArea" type="Control" parent="VBoxContainer"]
 layout_mode = 2
@@ -161,7 +164,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Main Menu"
 
+[node name="StatsScreen" parent="." instance=ExtResource("4_stats_screen")]
+visible = false
+layout_mode = 1
+
 [connection signal="pressed" from="VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
 [connection signal="timeout" from="ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
 [connection signal="pressed" from="GameOverModal/Panel/VBox/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
 [connection signal="pressed" from="GameOverModal/Panel/VBox/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
