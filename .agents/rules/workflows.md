@@ -25,9 +25,10 @@ When an agent is assigned an issue, it must follow this sequence:
 3. **Workspace Setup:** Create a new feature branch and worktree from latest `main`.
 4. **Implementation:** Write clean, modular, and typed GDScript code satisfying all acceptance criteria.
 5. **Testing & Verification:** Run automated tests (or write them if they don't exist). Ensure the game/code runs without errors or warnings.
-6. **Commit & Push:** Commit using conventional commits and push the feature branch to origin.
-7. **Create PR:** Open a Pull Request with complete details linking the issue (`Resolves #<number>`).
-8. **Merge PR:** Review diff, merge the PR into `main`, and clean up the worktree.
+6. **Documentation Coordination:** Ensure that `documents/requirements.md`, `documents/manual_testing.md`, and `README.md` are updated to reflect any changes made to the game's code, keeping all project documentation coordinated with the latest implementation.
+7. **Commit & Push:** Commit using conventional commits and push the feature branch to origin.
+8. **Create PR:** Open a Pull Request with complete details linking the issue (`Resolves #<number>`).
+9. **Merge PR:** Review diff, merge the PR into `main`, and clean up the worktree.
 
 ## 3. Coding Standards & Documentation
 - **Godot GDScript Guidelines:** 
