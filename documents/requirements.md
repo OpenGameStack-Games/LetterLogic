@@ -1,0 +1,34 @@
+# LetterLogic Requirements
+
+## 1. Overview
+LetterLogic is a word-guessing game inspired by Wordle, built using the Godot Engine. The unique twist in LetterLogic is that all valid words and secret target words are **5-letter isograms** (words containing no repeating letters).
+
+## 2. Core Gameplay
+- **REQ-2.1 - Grid Size:** The game board consists of a 6-row by 5-column grid. Players have a maximum of 6 attempts to guess the 5-letter secret word.
+- **REQ-2.2 - Tile Evaluation:** After a valid guess is submitted, each letter tile is evaluated and colored based on its presence in the secret word:
+  - **Correct (Green / 🟩):** The letter is in the secret word and in the correct position.
+  - **Present (Yellow / 🟨):** The letter is in the secret word but in the wrong position.
+  - **Absent (Dark Gray / ⬛):** The letter is not in the secret word.
+- **REQ-2.3 - Win/Loss Condition:** The game is won if the player guesses the secret word exactly within 6 attempts. The game is lost if the 6th attempt is incorrect.
+- **REQ-2.4 - Keyboard State Update:** The on-screen virtual keyboard must update its keys to reflect the best-known state of each letter (Correct > Present > Absent) based on all submitted guesses.
+
+## 3. Input & Validation
+- **REQ-3.1 - Isogram Typing Constraint:** While typing a guess, the game must prevent the user from inputting a letter that already exists in the current active row.
+- **REQ-3.2 - Dictionary Validation:** The game must reject guesses that are not present in the internal dictionary of 5-letter isograms. A rejected guess does not consume an attempt.
+- **REQ-3.3 - Length Validation:** The game must reject guesses that are shorter than 5 letters.
+
+## 4. Game Modes
+- **REQ-4.1 - Continuous Play:** A sandbox mode where players can play unlimited consecutive games. Secret words are selected randomly from the word bank.
+- **REQ-4.2 - Daily Challenge:** A synchronized daily mode where all players attempt to guess the same deterministic secret word, based on the current UTC date.
+- **REQ-4.3 - Daily Lockout:** A player can only complete the Daily Challenge once per UTC day. A countdown timer should indicate when the next challenge unlocks.
+
+## 5. Statistics Tracking
+- **REQ-5.1 - Segregated Stats:** The game must track statistics separately for "Continuous Play" and "Daily Challenge" modes.
+- **REQ-5.2 - Tracked Metrics:** The game must record total games played, total games won, current win streak, maximum win streak, and a distribution of guess attempts (1 through 6, and losses).
+
+## 6. Sharing
+- **REQ-6.1 - Result Generation:** Upon completing a Daily Challenge, the game must generate a shareable text block containing the date, score, an emoji grid representing the game board, and a link to the game on the Google Play Store.
+- **REQ-6.2 - Clipboard/Native Share:** The generated text must be copied to the system clipboard and, on Android, trigger the native share intent.
+
+## 7. Saving and Data Persistence
+- **REQ-7.1 - Persistence:** The game must save player statistics and daily challenge records locally to the device so they persist between sessions.

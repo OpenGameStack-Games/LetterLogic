@@ -1,0 +1,33 @@
+# LetterLogic
+
+LetterLogic is a Wordle-inspired word-guessing game built with the [Godot Engine](https://godotengine.org/) (4.x). 
+
+What sets LetterLogic apart is its unique constraint: **all valid guesses and secret words must be 5-letter isograms** (words containing no duplicate letters). This introduces a new layer of deduction and strategy to the familiar core gameplay loop.
+
+## Features
+- **Isogram Ruleset:** Every valid 5-letter word in the game's dictionary is an isogram. The on-screen keyboard actively prevents you from typing a letter you've already used in your current guess.
+- **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
+- **Daily Challenge:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date.
+- **Comprehensive Statistics:** Track your progress separately across Daily and Continuous modes. Monitor your total wins, current streak, max streak, and guess distributions.
+- **Social Sharing:** Easily share your Daily Challenge results with friends using a generated emoji grid (🟩🟨⬛) via the native Android share intent or clipboard.
+
+## Project Structure
+- `/game` - The root directory for the Godot project containing all scenes, scripts, autoloads, and assets.
+  - `/autoloads` - Core singletons handling game logic, stats, daily dates, and the word dictionary.
+  - `/scripts` & `/scenes` - UI components (game board, keyboard, main menu).
+  - `/tests` - Automated tests verifying the core logic.
+- `/documents` - Project documentation, including requirements and manual testing guides.
+- `/assets` - Contains the word lists and media assets.
+
+## Getting Started
+1. Clone the repository.
+2. Open the Godot Editor (version 4.x recommended based on `stack.json`).
+3. Import the `game/project.godot` file.
+4. Press `F5` to run the project.
+
+## Development & Testing
+- Automated tests are located in the `game/tests` folder and can be run from the editor using your preferred Godot testing framework.
+- For manual testing guidelines and core requirement mapping, please refer to the documentation in the `/documents` folder.
+
+## License
+This project is open-source and available under the [MIT License](LICENSE).
