@@ -34,7 +34,6 @@ window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
-
 window/touchscreen/emulate_touch_from_mouse=true
 
 [rendering]
