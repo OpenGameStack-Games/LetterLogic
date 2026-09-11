@@ -106,3 +106,26 @@ func test_loss_condition() -> void:
 	
 	assert_eq(game_mgr.current_row, 6, "All 6 rows should be exhausted")
 	assert_eq(game_mgr.game_status, GameManagerScript.GameStatus.LOST, "Game status should be LOST after 6 failed guesses")
+
+func test_timer_tracking() -> void:
+	game_mgr.start_game(GameManagerScript.GameMode.CONTINUOUS, "LOGIC")
+	assert_eq(game_mgr.get_active_time(), 0.0, "Timer should start at 0")
+	
+	game_mgr._process(1.5)
+	assert_eq(game_mgr.get_active_time(), 1.5, "Timer should increment by delta")
+	
+	game_mgr.pause_timer()
+	game_mgr._process(1.0)
+	assert_eq(game_mgr.get_active_time(), 1.5, "Timer should not increment when paused")
+	
+	game_mgr.resume_timer()
+	game_mgr._process(0.5)
+	assert_eq(game_mgr.get_active_time(), 2.0, "Timer should increment after resume")
+	
+	for char in "LOGIC":
+		game_mgr.add_letter(char)
+	game_mgr.submit_guess()
+	
+	game_mgr._process(1.0)
+	assert_eq(game_mgr.get_active_time(), 2.0, "Timer should stop after game won")
+

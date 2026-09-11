@@ -55,6 +55,13 @@ theme_override_font_sizes/font_size = 14
 text = "CONTINUOUS PLAY"
 horizontal_alignment = 1
 
+[node name="TimerLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 16
+text = "00:00"
+horizontal_alignment = 1
+
 [node name="StatsButton" type="Button" parent="VBoxContainer/Header"]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2

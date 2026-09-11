@@ -29,9 +29,10 @@ func test_generate_share_text_win() -> void:
 		[GameManagerScript.TileState.CORRECT, GameManagerScript.TileState.CORRECT, GameManagerScript.TileState.CORRECT, GameManagerScript.TileState.CORRECT, GameManagerScript.TileState.CORRECT]
 	]
 	
-	var text: String = share_mgr.generate_share_text(date_str, dummy_results, true, 3)
+	var text: String = share_mgr.generate_share_text(date_str, dummy_results, true, 3, 105.0)
 	
 	assert_true(text.begins_with("LetterLogic 2026-08-26 3/6"), "Header should format correctly with 3/6")
+	assert_true(text.contains("⏱️ 01:45"), "Should contain time emoji and formatted time")
 	assert_true(text.contains("🟥🟥🟨🟥🟩"), "Row 1 emojis should match")
 	assert_true(text.contains("🟥🟩🟥🟥🟩"), "Row 2 emojis should match")
 	assert_true(text.contains("🟩🟩🟩🟩🟩"), "Row 3 emojis should match")

@@ -14,6 +14,8 @@ const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
 @onready var win_pct_val: Label = $Panel/VBox/SummaryCards/WinPctCard/Value
 @onready var streak_val: Label = $Panel/VBox/SummaryCards/StreakCard/Value
 @onready var max_streak_val: Label = $Panel/VBox/SummaryCards/MaxStreakCard/Value
+@onready var best_time_val: Label = $Panel/VBox/SummaryCards/BestTimeCard/Value
+@onready var avg_time_val: Label = $Panel/VBox/SummaryCards/AvgTimeCard/Value
 
 @onready var dist_container: VBoxContainer = $Panel/VBox/DistributionContainer
 
@@ -33,6 +35,10 @@ func _ensure_nodes() -> void:
 		streak_val = $Panel/VBox/SummaryCards/StreakCard/Value as Label
 	if max_streak_val == null and has_node("Panel/VBox/SummaryCards/MaxStreakCard/Value"):
 		max_streak_val = $Panel/VBox/SummaryCards/MaxStreakCard/Value as Label
+	if best_time_val == null and has_node("Panel/VBox/SummaryCards/BestTimeCard/Value"):
+		best_time_val = $Panel/VBox/SummaryCards/BestTimeCard/Value as Label
+	if avg_time_val == null and has_node("Panel/VBox/SummaryCards/AvgTimeCard/Value"):
+		avg_time_val = $Panel/VBox/SummaryCards/AvgTimeCard/Value as Label
 	if dist_container == null and has_node("Panel/VBox/DistributionContainer"):
 		dist_container = $Panel/VBox/DistributionContainer as VBoxContainer
 	if daily_tab_btn == null and has_node("Panel/VBox/ModeTabs/DailyTabButton"):
@@ -59,10 +65,14 @@ func refresh_display() -> void:
 	var sm: Node = get_stats_manager()
 	var stats: Dictionary = {}
 	var win_pct: int = 0
+	var best_time: float = 0.0
+	var avg_time: float = 0.0
 	
 	if sm != null:
 		stats = sm.get_stats_for_mode(active_mode)
 		win_pct = sm.get_win_percentage(active_mode)
+		best_time = sm.get_best_time(active_mode)
+		avg_time = sm.get_average_time(active_mode)
 	else:
 		stats = {
 			"played": 0, "won": 0, "current_streak": 0, "max_streak": 0,
@@ -77,6 +87,10 @@ func refresh_display() -> void:
 		streak_val.text = str(stats.get("current_streak", 0))
 	if max_streak_val != null:
 		max_streak_val.text = str(stats.get("max_streak", 0))
+	if best_time_val != null:
+		best_time_val.text = GameManagerScript.format_time(best_time) if best_time > 0 else "--:--"
+	if avg_time_val != null:
+		avg_time_val.text = GameManagerScript.format_time(avg_time) if avg_time > 0 else "--:--"
 	
 	_update_tab_buttons()
 	_update_distribution(stats.get("distribution", {}))

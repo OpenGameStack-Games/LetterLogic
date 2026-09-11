@@ -15,6 +15,8 @@ var _stats_data: Dictionary = {
 		"won": 0,
 		"current_streak": 0,
 		"max_streak": 0,
+		"best_time": 0.0,
+		"total_won_time": 0.0,
 		"distribution": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "loss": 0 }
 	},
 	"continuous": {
@@ -22,6 +24,8 @@ var _stats_data: Dictionary = {
 		"won": 0,
 		"current_streak": 0,
 		"max_streak": 0,
+		"best_time": 0.0,
+		"total_won_time": 0.0,
 		"distribution": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "loss": 0 }
 	}
 }
@@ -43,12 +47,14 @@ func _connect_game_manager() -> void:
 func _on_game_won(attempts: int, _secret: String) -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")
 	var mode: int = gm.current_mode if gm != null else GameManagerScript.GameMode.CONTINUOUS
-	record_game(mode, true, attempts)
+	var time: float = gm.get_active_time() if gm != null and gm.has_method("get_active_time") else 0.0
+	record_game(mode, true, attempts, time)
 
 func _on_game_lost(_secret: String) -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")
 	var mode: int = gm.current_mode if gm != null else GameManagerScript.GameMode.CONTINUOUS
-	record_game(mode, false, 0)
+	var time: float = gm.get_active_time() if gm != null and gm.has_method("get_active_time") else 0.0
+	record_game(mode, false, 0, time)
 
 func _get_mode_key(mode: int) -> String:
 	if mode == GameManagerScript.GameMode.DAILY:
@@ -56,7 +62,7 @@ func _get_mode_key(mode: int) -> String:
 	return "continuous"
 
 ## Records the outcome of a game session.
-func record_game(mode: int, won: bool, attempts: int, custom_path: String = "") -> void:
+func record_game(mode: int, won: bool, attempts: int, active_time: float = 0.0, custom_path: String = "") -> void:
 	var key: String = _get_mode_key(mode)
 	var mode_stats: Dictionary = _stats_data[key]
 	
@@ -70,6 +76,12 @@ func record_game(mode: int, won: bool, attempts: int, custom_path: String = "") 
 		mode_stats["current_streak"] = new_streak
 		if new_streak > int(mode_stats.get("max_streak", 0)):
 			mode_stats["max_streak"] = new_streak
+			
+		var current_best: float = float(mode_stats.get("best_time", 0.0))
+		if current_best == 0.0 or active_time < current_best:
+			if active_time > 0.0:
+				mode_stats["best_time"] = active_time
+		mode_stats["total_won_time"] = float(mode_stats.get("total_won_time", 0.0)) + active_time
 		
 		var att_key: String = str(clampi(attempts, 1, 6))
 		dist[att_key] = int(dist.get(att_key, 0)) + 1
@@ -94,6 +106,20 @@ func get_win_percentage(mode: int) -> int:
 	if played <= 0:
 		return 0
 	return int(round((float(won) / float(played)) * 100.0))
+
+## Calculates and returns average solve time in seconds. Excludes losses.
+func get_average_time(mode: int) -> float:
+	var stats: Dictionary = get_stats_for_mode(mode)
+	var won: int = int(stats.get("won", 0))
+	if won <= 0:
+		return 0.0
+	var total_time: float = float(stats.get("total_won_time", 0.0))
+	return total_time / float(won)
+
+## Returns the best solve time in seconds.
+func get_best_time(mode: int) -> float:
+	var stats: Dictionary = get_stats_for_mode(mode)
+	return float(stats.get("best_time", 0.0))
 
 ## Saves stats to disk as JSON.
 func save_stats(custom_path: String = "") -> bool:
@@ -130,10 +156,12 @@ func reset_all_stats(custom_path: String = "") -> void:
 	_stats_data = {
 		"daily": {
 			"played": 0, "won": 0, "current_streak": 0, "max_streak": 0,
+			"best_time": 0.0, "total_won_time": 0.0,
 			"distribution": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "loss": 0 }
 		},
 		"continuous": {
 			"played": 0, "won": 0, "current_streak": 0, "max_streak": 0,
+			"best_time": 0.0, "total_won_time": 0.0,
 			"distribution": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "loss": 0 }
 		}
 	}

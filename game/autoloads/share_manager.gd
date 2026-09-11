@@ -26,9 +26,11 @@ func tile_state_to_emoji(state: int) -> String:
 			return EMOJI_ABSENT
 
 ## Formats the complete shareable text block for a Daily Challenge result.
-func generate_share_text(date_str: String, guess_results: Array, won: bool, attempts: int) -> String:
+func generate_share_text(date_str: String, guess_results: Array, won: bool, attempts: int, active_time: float = 0.0) -> String:
 	var score_str: String = "%d/6" % attempts if won else "X/6"
 	var header: String = "LetterLogic %s %s" % [date_str, score_str]
+	
+	var time_str: String = "⏱️ " + GameManagerScript.new().format_time(active_time)
 	
 	var grid_lines: Array[String] = []
 	for row_results in guess_results:
@@ -40,11 +42,11 @@ func generate_share_text(date_str: String, guess_results: Array, won: bool, atte
 	var body_grid: String = "\n".join(grid_lines)
 	var footer: String = "Play now: %s" % PLAY_STORE_URL
 	
-	return "%s\n\n%s\n\n%s" % [header, body_grid, footer]
+	return "%s\n%s\n\n%s\n\n%s" % [header, time_str, body_grid, footer]
 
 ## Shares the daily challenge outcome via native Android intent or clipboard.
-func share_daily_results(date_str: String, guess_results: Array, won: bool, attempts: int) -> String:
-	var share_text: String = generate_share_text(date_str, guess_results, won, attempts)
+func share_daily_results(date_str: String, guess_results: Array, won: bool, attempts: int, active_time: float = 0.0) -> String:
+	var share_text: String = generate_share_text(date_str, guess_results, won, attempts, active_time)
 	
 	# Set clipboard when supported
 	if DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD):

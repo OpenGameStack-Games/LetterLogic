@@ -80,7 +80,7 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="Panel/VBox/SummaryCards/PlayedCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
@@ -96,7 +96,7 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="Panel/VBox/SummaryCards/WinPctCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 text = "0%"
 horizontal_alignment = 1
 
@@ -112,7 +112,7 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="Panel/VBox/SummaryCards/StreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
@@ -128,7 +128,7 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="Panel/VBox/SummaryCards/MaxStreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
@@ -136,6 +136,38 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Max Streak"
+horizontal_alignment = 1
+
+[node name="BestTimeCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/BestTimeCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "--:--"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/BestTimeCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Best Time"
+horizontal_alignment = 1
+
+[node name="AvgTimeCard" type="VBoxContainer" parent="Panel/VBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="Panel/VBox/SummaryCards/AvgTimeCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "--:--"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="Panel/VBox/SummaryCards/AvgTimeCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Avg Time"
 horizontal_alignment = 1
 
 [node name="DistHeading" type="Label" parent="Panel/VBox"]
