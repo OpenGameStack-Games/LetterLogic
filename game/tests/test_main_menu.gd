@@ -45,6 +45,32 @@ func test_how_to_play_modal() -> void:
 	
 	menu.free()
 
+func test_how_to_play_modal_dimensions_and_rules() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	
+	var modal: Control = menu.find_child("HowToPlayModal", true, false) as Control
+	assert_true(modal != null, "HowToPlayModal should exist")
+	
+	var panel: PanelContainer = modal.get_node_or_null("Panel") as PanelContainer
+	assert_true(panel != null, "HowToPlayModal/Panel should exist")
+	if panel != null:
+		assert_true(panel.custom_minimum_size.y >= 600.0, "HowToPlayModal/Panel height must be at least 600px")
+		assert_eq(panel.offset_top, -300.0, "HowToPlayModal/Panel offset_top should be -300.0 for vertical centering")
+		assert_eq(panel.offset_bottom, 300.0, "HowToPlayModal/Panel offset_bottom should be 300.0 for vertical centering")
+	
+	var rules_label: RichTextLabel = modal.find_child("RulesText", true, false) as RichTextLabel
+	assert_true(rules_label != null, "RulesText RichTextLabel should exist")
+	if rules_label != null:
+		var content: String = rules_label.text
+		assert_true(content.contains("#b53b3b"), "RulesText must contain red color code #b53b3b")
+		assert_true(content.contains("🟥 RED"), "RulesText must contain 🟥 RED indicator")
+		assert_false(content.contains("⬛"), "RulesText must not contain black/gray square emoji ⬛")
+		assert_false(content.contains("GRAY"), "RulesText must not contain GRAY")
+		assert_true(rules_label.scroll_active, "RulesText scroll_active must remain true for fallback scrolling")
+	
+	menu.free()
+
 func test_main_game_scene_loads() -> void:
 	var game_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	assert_true(game_scn != null, "main_game.tscn must be loadable")
