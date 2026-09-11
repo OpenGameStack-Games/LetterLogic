@@ -22,22 +22,58 @@ The **PR Reviewer & Documentation Agent** acts as the quality gatekeeper and doc
 
 Before approving or merging any Pull Request, verify the following:
 
-### 1. Code Quality & Standards
+### 1. Pre-Review & Dependency Check
+* [ ] **Dependencies Resolved:** If the linked issue or PR mentions `Depends on #<number>`, confirm that all dependency issues are `CLOSED` and their PRs are already merged into `main`.
+* [ ] **Reviewer Handoff Notes:** Check the PR description's **"Handoff for PR Reviewer & Documentation Agent"** section for specific documentation and testing notes provided by the resolver.
+
+### 2. Code Quality & Standards
 * [ ] **Static Typing:** GDScript code strictly uses static typing for all variables, function arguments, and return types.
 * [ ] **Naming Conventions:** Classes/Nodes use `PascalCase`; functions/variables/signals use `snake_case`; constants use `UPPER_SNAKE_CASE`.
 * [ ] **Logging:** No raw `print()` statements. Uses `print_debug()`, `push_warning()`, or `push_error()`.
 * [ ] **Comments:** Explains the *why*, not the obvious *what*.
 
-### 2. Testing Verification
-* [ ] **Automated Tests:** PR body includes evidence that all automated tests pass (`Test Results: X Passed, 0 Failed`).
+### 3. Testing Verification
+* [ ] **Automated Test Report:** PR body includes evidence that all automated tests pass (`Test Results: X Passed, 0 Failed`).
+* [ ] **Independent Test Execution:** Reviewer independently runs the test suite on the checked-out branch and confirms zero failures.
 * [ ] **New Tests Added:** If core logic, autoloads, or calculations were altered, corresponding unit tests are present in `game/tests/`.
 
-### 3. Reviewer Handoff Notes
-* [ ] Check the PR description's **"Handoff for PR Reviewer & Documentation Agent"** section for specific documentation and testing notes provided by the resolver.
 
 ---
 
-## 3. Documentation Coordination (Mandatory Prior to Merge)
+## 3. PR Inspection & Local Testing Protocol
+
+All review operations—inspecting code, running automated tests, and committing documentation updates—should take place within an isolated Git worktree under `.worktrees/`. This ensures the main workspace remains pristine, prevents Git checkout conflicts (`already checked out at...`), and allows multiple agents or developers to work concurrently on the same machine.
+
+### 1. View PR Overview & Diff
+Inspect the PR description and diff via the GitHub CLI:
+```powershell
+gh pr view <pr_number>
+gh pr diff <pr_number>
+```
+
+### 2. Access or Create the Review Worktree
+Determine whether a local worktree for this feature branch already exists:
+
+* **If the worktree already exists locally** (e.g., created during issue resolution at `.worktrees/issue-<number>`):
+  Perform review, testing, and documentation commits directly inside that worktree directory.
+* **If the worktree does not exist locally** (e.g., opened by an external contributor or another machine):
+  Fetch the branch and create a dedicated review worktree:
+  ```powershell
+  git fetch origin
+  git worktree add .worktrees/review-pr-<pr_number> feature/issue-<number>-<short-description>
+  ```
+
+### 3. Run Automated Tests Locally
+Inside the feature worktree, run the headless Godot test suite to independently verify zero regressions:
+```powershell
+godot --headless --path game -s res://tests/test_runner.gd
+```
+*(Note: Replace `godot` with the local Godot 4.x console binary on your system, or run the default test task in your IDE).*
+
+
+---
+
+## 4. Documentation Coordination (Mandatory Prior to Merge)
 
 The reviewing agent is directly responsible for synchronizing project documentation with code changes.
 
@@ -52,38 +88,52 @@ The reviewing agent is directly responsible for synchronizing project documentat
 * Update if user-facing behavior, controls, rules, or visuals (e.g., color indicators or emoji representations) are changed.
 
 ### Committing Documentation Updates
-Documentation updates should be committed either directly to the feature branch before merging:
+Always commit documentation updates directly to the feature branch **prior to merging**:
 ```powershell
 git commit -m "docs: update requirements and manual testing for issue #<number>"
 git push origin feature/issue-<number>-<short-description>
 ```
-Or immediately after merging directly to `main` if preferred by the workflow.
+This ensures that the complete issue resolution (implementation, tests, and documentation) is bundled together into the final merge commit.
 
 ---
 
-## 4. Merging Protocol
+## 5. Review Decisions & Protocol
 
-### 1. Merge the Pull Request
-Merge the PR using the GitHub CLI with a **standard merge commit** (preserving the complete Git graph and atomic commits):
+### Scenario A: Changes Required (Failing Checks or Missing Criteria)
+If the PR violates static typing, includes raw `print()` statements, lacks necessary test cases, fails the test suite, or does not meet the linked issue's acceptance criteria, **do not merge**. Submit a review requesting changes:
+```powershell
+gh pr review <pr_number> --request-changes --body "<Detailed description of what needs to be fixed>"
+```
+
+### Scenario B: Approved & Ready to Merge
+Once all acceptance criteria are met, automated tests pass, and documentation is updated and pushed to the feature branch, proceed to merge.
+
+#### 1. Merge the Pull Request
+Merge using the GitHub CLI with a **standard merge commit** (preserving the complete Git graph and atomic commits):
 ```powershell
 gh pr merge <pr_number> --merge --delete-branch
 ```
 > [!IMPORTANT]
 > **DO NOT squash** (`--squash`) or rebase (`--rebase`). Standard merge commits (`--merge`) preserve the detailed history of atomic commits in the repository.
 
-### 2. Verify Issue Closure
-Confirm that the linked issue (`Resolves #<number>`) has transitioned to `CLOSED`.
+#### 2. Verify Issue Closure
+Confirm that the linked issue (`Resolves #<number>`) has transitioned to `CLOSED`. If GitHub did not automatically close the issue:
+```powershell
+gh issue close <issue_number> --comment "Resolved via PR #<pr_number>."
+```
 
-### 3. Local Repository Synchronization & Worktree Cleanup
+#### 3. Local Repository Synchronization & Cleanup
 From the main project directory:
 ```powershell
-# Switch to main and pull latest merge commit
+# Remove the review worktree and prune metadata
+git worktree remove .worktrees/<worktree-name>
+git worktree prune
+
+# Ensure main is up to date with the newly merged PR
 git checkout main
 git pull origin main
 
-# Remove the feature worktree
-git worktree remove .worktrees/issue-<number>
-
-# Prune worktree metadata
-git worktree prune
+# Delete the local feature branch (if it was checked out locally)
+git branch -d feature/issue-<number>-<short-description>
 ```
+
