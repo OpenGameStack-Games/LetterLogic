@@ -10,7 +10,7 @@ const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 
 @onready var game_board: Control = $VBoxContainer/BoardArea/GameBoard
 @onready var game_keyboard: Control = $VBoxContainer/KeyboardArea/Keyboard
-@onready var mode_label: Label = $VBoxContainer/Header/ModeLabel
+@onready var mode_label: Label = $VBoxContainer/Header/TitleBox/ModeLabel
 @onready var toast_label: Label = $ToastOverlay/ToastPanel/ToastLabel
 @onready var toast_overlay: Control = $ToastOverlay
 @onready var game_over_modal: Control = $GameOverModal
@@ -38,11 +38,13 @@ func _connect_signals() -> void:
 		if not gm.game_lost.is_connected(_on_game_lost):
 			gm.game_lost.connect(_on_game_lost)
 
-func _update_header() -> void:
-	var gm: Node = get_node_or_null("/root/GameManager")
+func _update_header(gm_override: Node = null, dm_override: Node = null) -> void:
+	if mode_label == null:
+		mode_label = get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	var gm: Node = gm_override if gm_override != null else get_node_or_null("/root/GameManager")
 	if gm != null and mode_label != null:
 		if gm.current_mode == GameManagerScript.GameMode.DAILY:
-			var dm: Node = get_node_or_null("/root/DailyManager")
+			var dm: Node = dm_override if dm_override != null else get_node_or_null("/root/DailyManager")
 			var date_str: String = dm.get_current_utc_date_string() if dm != null else "DAILY"
 			mode_label.text = "DAILY CHALLENGE • %s" % date_str
 		else:
