@@ -124,10 +124,11 @@ Every feature or bug fix touching game logic or autoloads must be backed by auto
 * Assertions use `assert_true()`, `assert_false()`, `assert_eq()`, and `assert_ne()`.
 
 ### Running Automated Tests
-Run the headless Godot test suite via PowerShell:
+Run the headless Godot test suite:
 ```powershell
-& "C:\Users\kevin\AppData\Local\OGS\Library\godot\4.7.2\Godot_v4.7.2-stable_win64_console.exe" --headless --path game -s res://tests/test_runner.gd
+godot --headless --path game -s res://tests/test_runner.gd
 ```
+*(Note: Replace `godot` with the path to your local Godot 4.x console binary if it is not in your system PATH).*
 
 ### Verification Gate
 * **Zero Failures:** All existing and newly created tests must pass (`Test Results: X Passed, 0 Failed`, exit code 0).
