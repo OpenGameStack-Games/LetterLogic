@@ -28,7 +28,7 @@ func test_record_win_and_loss() -> void:
 	assert_eq(int(stats_init.get("won", -1)), 0, "Initial won games should be 0")
 	
 	# Record Win in 3 attempts
-	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, true, 3, TEST_STATS_PATH)
+	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, true, 3, 0.0, TEST_STATS_PATH)
 	var stats_win: Dictionary = stats_mgr.get_stats_for_mode(GameManagerScript.GameMode.CONTINUOUS)
 	assert_eq(int(stats_win.get("played", 0)), 1, "Played games should be 1")
 	assert_eq(int(stats_win.get("won", 0)), 1, "Won games should be 1")
@@ -38,7 +38,7 @@ func test_record_win_and_loss() -> void:
 	assert_eq(stats_mgr.get_win_percentage(GameManagerScript.GameMode.CONTINUOUS), 100, "Win % should be 100")
 	
 	# Record Loss
-	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, false, 0, TEST_STATS_PATH)
+	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, false, 0, 0.0, TEST_STATS_PATH)
 	var stats_loss: Dictionary = stats_mgr.get_stats_for_mode(GameManagerScript.GameMode.CONTINUOUS)
 	assert_eq(int(stats_loss.get("played", 0)), 2, "Played games should be 2")
 	assert_eq(int(stats_loss.get("won", 0)), 1, "Won games should remain 1")
@@ -50,7 +50,7 @@ func test_record_win_and_loss() -> void:
 func test_mode_isolation() -> void:
 	stats_mgr.reset_all_stats(TEST_STATS_PATH)
 	# Record in Daily
-	stats_mgr.record_game(GameManagerScript.GameMode.DAILY, true, 4, TEST_STATS_PATH)
+	stats_mgr.record_game(GameManagerScript.GameMode.DAILY, true, 4, 0.0, TEST_STATS_PATH)
 	
 	var daily_stats: Dictionary = stats_mgr.get_stats_for_mode(GameManagerScript.GameMode.DAILY)
 	var cont_stats: Dictionary = stats_mgr.get_stats_for_mode(GameManagerScript.GameMode.CONTINUOUS)
@@ -71,3 +71,15 @@ func test_stats_screen_ui() -> void:
 	assert_eq(dist_box.get_child_count(), 7, "DistributionContainer should render 7 rows (1..6 + loss)")
 	
 	screen.free()
+
+func test_time_stats() -> void:
+	stats_mgr.reset_all_stats(TEST_STATS_PATH)
+	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, true, 3, 100.0, TEST_STATS_PATH)
+	assert_eq(stats_mgr.get_best_time(GameManagerScript.GameMode.CONTINUOUS), 100.0, "Best time should be 100")
+	assert_eq(stats_mgr.get_average_time(GameManagerScript.GameMode.CONTINUOUS), 100.0, "Avg time should be 100")
+	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, true, 4, 50.0, TEST_STATS_PATH)
+	assert_eq(stats_mgr.get_best_time(GameManagerScript.GameMode.CONTINUOUS), 50.0, "Best time should update to 50")
+	assert_eq(stats_mgr.get_average_time(GameManagerScript.GameMode.CONTINUOUS), 75.0, "Avg time should be 75")
+	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, false, 0, 300.0, TEST_STATS_PATH)
+	assert_eq(stats_mgr.get_best_time(GameManagerScript.GameMode.CONTINUOUS), 50.0, "Best time should remain 50")
+	assert_eq(stats_mgr.get_average_time(GameManagerScript.GameMode.CONTINUOUS), 75.0, "Avg time should remain 75")

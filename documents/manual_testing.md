@@ -44,6 +44,27 @@ This document outlines the manual test cases used to verify the requirements out
   3. Play another game and submit the exact secret word.
   4. Verify the win screen appears.
 
+### Test 1.5: Active Gameplay Timer & State Freezing
+- **Requirement(s):** REQ-2.5
+- **Steps:**
+  1. Start a game in either Continuous Play or Daily Challenge.
+  2. Verify the timer label appears in the header directly above the puzzle grid, starting at `00:00`.
+  3. Wait 5-10 seconds and observe that the timer increments accurately in seconds (`MM:SS`).
+  4. Solve or lose the puzzle.
+- **Expected Result:** The timer starts immediately at `00:00`, counts up in real time, and freezes instantaneously when the game ends in a win or loss.
+
+### Test 1.6: App-Switching & Modal Timer Pause / Resume
+- **Requirement(s):** REQ-2.6
+- **Steps:**
+  1. Start a game and allow the timer to reach ~`00:05`.
+  2. Tap the Statistics icon button in the header to open the Stats Screen overlay.
+  3. Wait 5 seconds.
+  4. Close the Stats Screen modal.
+  5. Check whether the timer elapsed during the modal.
+  6. Minimize the game window or switch to another app / browser window for 5 seconds.
+  7. Return focus to the game.
+- **Expected Result:** The timer stops advancing while the Stats modal is open and resumes when the modal is closed. Similarly, losing application focus or sending the app to the background pauses the timer, resuming only upon refocusing the active puzzle.
+
 ---
 
 ## 2. Game Modes
@@ -54,7 +75,7 @@ This document outlines the manual test cases used to verify the requirements out
   1. Start a Continuous Play game.
   2. Complete the game (win or lose).
   3. Select the option to play again.
-- **Expected Result:** The board resets immediately, and a new random word is chosen.
+- **Expected Result:** The board resets immediately, a new random word is chosen, and the timer resets to `00:00`.
 
 ### Test 2.2: Daily Challenge Synchronization & Lockout
 - **Requirement(s):** REQ-4.2, REQ-4.3
@@ -80,20 +101,23 @@ This document outlines the manual test cases used to verify the requirements out
 
 ## 3. Statistics and Persistence
 
-### Test 3.1: Stats Segregation and Tracking
-- **Requirement(s):** REQ-5.1, REQ-5.2
+### Test 3.1: Stats Segregation & Solve Time Tracking
+- **Requirement(s):** REQ-5.1, REQ-5.2, REQ-5.3
 - **Steps:**
-  1. Play and win a Continuous mode game. Check the stats screen; Continuous wins should increment by 1.
-  2. Play and lose a Daily mode game. Check the stats screen; Daily losses should increment by 1, while Continuous stats remain unchanged.
+  1. Open the Stats Screen on a fresh profile; confirm Best Time and Avg Time show `--:--`.
+  2. Win a Continuous Play game in 40 seconds. Open Stats; confirm Continuous Best Time and Avg Time both show `00:40`.
+  3. Win a second Continuous Play game in 20 seconds. Confirm Best Time updates to `00:20` and Avg Time updates to `00:30`.
+  4. Play a third Continuous Play game and deliberately lose after 1 minute. Confirm Best Time remains `00:20` and Avg Time remains `00:30` (losses must NOT affect average solve time).
+  5. Switch to the Daily Challenge tab in the Stats Screen; confirm Daily stats show `--:--` for Best Time and Avg Time, completely isolated from Continuous Play.
 
-### Test 3.2: Save State Persistence
+### Test 3.2: Save State & Time Stats Persistence
 - **Requirement(s):** REQ-7.1
 - **Steps:**
-  1. Complete a few games to generate stats.
+  1. Complete games to record valid Best Time and Avg Time statistics.
   2. Complete today's Daily Challenge.
   3. Close the application entirely.
   4. Reopen the application.
-- **Expected Result:** The stats screen retains the previous session's metrics. The Daily Challenge remains locked out with an accurate countdown timer.
+- **Expected Result:** All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distributions retain their exact values. The Daily Challenge remains locked out with an accurate countdown timer.
 
 ---
 
@@ -102,15 +126,22 @@ This document outlines the manual test cases used to verify the requirements out
 ### Test 4.1: Native Share intent (Android)
 - **Requirement(s):** REQ-6.1, REQ-6.2
 - **Steps (Android device required):**
-  1. Complete a Daily Challenge.
-  2. Tap the "Share" button on the results screen.
-- **Expected Result:** The Android native share sheet appears. Selecting a destination (e.g., Messages, Keep Notes) pastes a formatted string containing the date, score (e.g., 3/6), emoji grid (🟩🟨🟥), and the Google Play Store link.
+  1. Complete a Daily Challenge in win or loss state.
+  2. Tap the "Share" button on the game over screen.
+- **Expected Result:** The Android native share sheet appears. Pasting the shared text into any recipient app reveals the date and score, followed by the dedicated timer line `⏱️ MM:SS`, the guess emoji grid (🟩🟨🟥), and the Google Play Store link.
 
 ### Test 4.2: Clipboard Fallback (Godot PC)
-- **Requirement(s):** REQ-6.2
+- **Requirement(s):** REQ-6.1, REQ-6.2
 - **Steps:**
   1. Run the project in the Godot Editor on a PC.
   2. Complete a Daily Challenge and tap "Share".
   3. Open Notepad and press `Ctrl+V`.
-- **Expected Result:** The same formatted share string with the emoji grid (🟩🟨🟥) is pasted from the clipboard.
+- **Expected Result:** The clipboard contains the full share format including the timer line:
+  ```text
+  LetterLogic YYYY-MM-DD 3/6
+  ⏱️ 01:45
+
+  🟩🟨🟥...
+  Play now: https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic
+  ```
 

@@ -107,7 +107,8 @@ func _on_share_pressed() -> void:
 		var date_str: String = dm.get_current_utc_date_string()
 		var won: bool = gm.game_status == GameManagerScript.GameStatus.WON
 		var attempts: int = gm.current_row
-		sm.share_daily_results(date_str, gm.guess_results, won, attempts)
+		var active_time: float = gm.get_active_time() if gm.has_method("get_active_time") else 0.0
+		sm.share_daily_results(date_str, gm.guess_results, won, attempts, active_time)
 	
 	show_toast("Results copied to clipboard!")
 
@@ -116,8 +117,49 @@ func _on_stats_pressed() -> void:
 		var stats_scr: Control = $StatsScreen as Control
 		if stats_scr != null:
 			var gm: Node = get_node_or_null("/root/GameManager")
-			if gm != null and stats_scr.has_method("set_mode"):
-				stats_scr.set_mode(gm.current_mode)
-			elif stats_scr.has_method("refresh_display"):
-				stats_scr.refresh_display()
+			if gm != null:
+				if stats_scr.has_method("set_mode"):
+					stats_scr.set_mode(gm.current_mode)
+				elif stats_scr.has_method("refresh_display"):
+					stats_scr.refresh_display()
+				if gm.has_method("pause_timer"):
+					gm.pause_timer()
+				if not stats_scr.visibility_changed.is_connected(_on_stats_visibility_changed):
+					stats_scr.visibility_changed.connect(_on_stats_visibility_changed)
 			stats_scr.visible = true
+
+func _on_stats_visibility_changed() -> void:
+	var stats_scr: Control = get_node_or_null("StatsScreen") as Control
+	if stats_scr != null and not stats_scr.visible:
+		var gm: Node = get_node_or_null("/root/GameManager")
+		if gm != null and gm.has_method("resume_timer"):
+			if not _is_overlay_blocking():
+				gm.resume_timer()
+
+func _is_overlay_blocking() -> bool:
+	if game_over_modal != null and game_over_modal.visible:
+		return true
+	if has_node("StatsScreen"):
+		var stats_scr: Control = get_node("StatsScreen") as Control
+		if stats_scr != null and stats_scr.visible:
+			return true
+	return false
+
+func _process(_delta: float) -> void:
+	var gm: Node = get_node_or_null("/root/GameManager")
+	if gm != null:
+		var time_lbl: Label = get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel") as Label
+		if time_lbl != null:
+			time_lbl.text = gm.format_time(gm.get_active_time())
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+		var gm: Node = get_node_or_null("/root/GameManager")
+		if gm != null and gm.has_method("pause_timer"):
+			gm.pause_timer()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
+		var gm: Node = get_node_or_null("/root/GameManager")
+		if gm != null and gm.has_method("resume_timer"):
+			if not _is_overlay_blocking():
+				gm.resume_timer()
+

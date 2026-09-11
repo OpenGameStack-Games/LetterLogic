@@ -6,10 +6,11 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## Features
 - **Isogram Ruleset:** Every valid 5-letter word in the game's dictionary is an isogram. The on-screen keyboard actively prevents you from typing a letter you've already used in your current guess.
+- **Active Puzzle Timer:** Live running timer during gameplay with automatic app lifecycle pausing (backgrounding/minimizing) to encourage speed-solving and deduction efficiency.
 - **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
 - **Daily Challenge:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date.
-- **Comprehensive Statistics:** Track your progress separately across Daily and Continuous modes. Monitor your total wins, current streak, max streak, and guess distributions.
-- **Social Sharing:** Easily share your Daily Challenge results with friends using a generated emoji grid (🟩🟨🟥) via the native Android share intent or clipboard.
+- **Comprehensive Statistics:** Track your progress separately across Daily and Continuous modes. Monitor your total wins, win streak, personal Best Time, Average Solve Time, and guess distributions.
+- **Social Sharing:** Easily share your Daily Challenge results with friends—including your completion time (⏱️) and generated emoji grid (🟩🟨🟥)—via the native Android share intent or clipboard.
 
 ## Project Structure
 - `/game` - The root directory for the Godot project containing all scenes, scripts, autoloads, and assets.

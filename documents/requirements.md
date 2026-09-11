@@ -11,6 +11,8 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
   - **Absent (Flat Red / 🟥):** The letter is not in the secret word.
 - **REQ-2.3 - Win/Loss Condition:** The game is won if the player guesses the secret word exactly within 6 attempts. The game is lost if the 6th attempt is incorrect.
 - **REQ-2.4 - Keyboard State Update:** The on-screen virtual keyboard must update its keys to reflect the best-known state of each letter (Correct > Present > Absent) based on all submitted guesses. Absent keys display in flat red (`#b53b3b`) with white text (`#ffffff`).
+- **REQ-2.5 - Active Gameplay Timer:** An active running timer is displayed in the game header directly above the grid during gameplay. The timer starts at `00:00` upon puzzle start, increments dynamically while solving, and stops immediately upon game completion (win or loss). Time is formatted as `MM:SS` (or `HH:MM:SS` if the puzzle duration exceeds 1 hour).
+- **REQ-2.6 - App Lifecycle & Overlay Timer Pausing:** The active gameplay timer must automatically pause when the application loses focus, is minimized, or is sent to the background (`NOTIFICATION_APPLICATION_FOCUS_OUT`, `NOTIFICATION_APPLICATION_PAUSED`), and automatically resume when primary focus returns (`NOTIFICATION_APPLICATION_FOCUS_IN`, `NOTIFICATION_APPLICATION_RESUMED`). Furthermore, modal dialogs and full-screen overlays (such as the Statistics Screen or Game Over modal) must pause the timer while visible, resuming only once dismissed if the game remains in progress.
 
 ## 3. Input & Validation
 - **REQ-3.1 - Isogram Typing Constraint:** While typing a guess, the game must prevent the user from inputting a letter that already exists in the current active row. Keys currently typed in the active row are temporarily disabled and visually styled in dark gray (`#272729`), maintaining clear differentiation from absent letters (flat red / `#b53b3b`).
@@ -23,13 +25,13 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-4.2 - Daily Challenge:** A synchronized daily mode where all players attempt to guess the same deterministic secret word, based on the current UTC date. The game screen header displays `DAILY CHALLENGE • YYYY-MM-DD` reflecting the current UTC date.
 - **REQ-4.3 - Daily Lockout:** A player can only complete the Daily Challenge once per UTC day. A countdown timer should indicate when the next challenge unlocks.
 
-
 ## 5. Statistics Tracking
 - **REQ-5.1 - Segregated Stats:** The game must track statistics separately for "Continuous Play" and "Daily Challenge" modes.
-- **REQ-5.2 - Tracked Metrics:** The game must record total games played, total games won, current win streak, maximum win streak, and a distribution of guess attempts (1 through 6, and losses).
+- **REQ-5.2 - Tracked Metrics:** The game must record total games played, total games won, current win streak, maximum win streak, best solve time (fastest win), average solve time, and a distribution of guess attempts (1 through 6, and losses).
+- **REQ-5.3 - Average and Best Solve Time Rules:** Best and Average Solve Times must be tracked and displayed separately per mode on the statistics screen. Average solve time is strictly calculated across won games (losses are excluded from solve time calculations). If no games have been won in a mode, best and average times are displayed as `--:--`.
 
 ## 6. Sharing
-- **REQ-6.1 - Result Generation:** Upon completing a Daily Challenge, the game must generate a shareable text block containing the date, score, an emoji grid representing the game board, and a link to the game on the Google Play Store.
+- **REQ-6.1 - Result Generation:** Upon completing a Daily Challenge, the game must generate a shareable text block containing the header (game title, UTC date, score/attempts), a dedicated timer line with the stopwatch emoji (`⏱️ MM:SS` or `⏱️ HH:MM:SS`), an emoji grid representing the game board, and a link to the game on the Google Play Store.
 - **REQ-6.2 - Clipboard/Native Share:** The generated text must be copied to the system clipboard and, on Android, trigger the native share intent.
 
 ## 7. Saving and Data Persistence

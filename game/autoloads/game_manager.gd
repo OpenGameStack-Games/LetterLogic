@@ -38,6 +38,8 @@ var current_guess: String = ""
 var guesses: Array[String] = []
 var guess_results: Array[Array] = [] # Array of Array[TileState]
 var keyboard_states: Dictionary = {} # String (letter) -> TileState
+var active_play_time: float = 0.0
+var _timer_running: bool = false
 
 var _word_bank_ref: Node = null
 
@@ -82,6 +84,8 @@ func start_game(mode: GameMode = GameMode.CONTINUOUS, target_word: String = "") 
 	guess_results.clear()
 	keyboard_states.clear()
 	game_status = GameStatus.IN_PROGRESS
+	active_play_time = 0.0
+	_timer_running = true
 	
 	if target_word != "":
 		secret_word = target_word.strip_edges().to_upper()
@@ -162,9 +166,11 @@ func submit_guess() -> Dictionary:
 	
 	if submitted_word == secret_word:
 		game_status = GameStatus.WON
+		_timer_running = false
 		game_won.emit(submitted_row + 1, secret_word)
 	elif current_row >= MAX_ROWS:
 		game_status = GameStatus.LOST
+		_timer_running = false
 		game_lost.emit(secret_word)
 	
 	return { "success": true, "reason": "", "results": results }
@@ -221,3 +227,28 @@ func get_letter_state(letter: String) -> TileState:
 	if keyboard_states.has(upper):
 		return keyboard_states[upper]
 	return TileState.EMPTY
+
+func _process(delta: float) -> void:
+	if _timer_running and game_status == GameStatus.IN_PROGRESS:
+		active_play_time += delta
+
+func get_active_time() -> float:
+	return active_play_time
+
+func pause_timer() -> void:
+	_timer_running = false
+
+func resume_timer() -> void:
+	if game_status == GameStatus.IN_PROGRESS:
+		_timer_running = true
+
+static func format_time(time_sec: float) -> String:
+	var total_secs: int = int(time_sec)
+	var hrs: int = total_secs / 3600
+	var mins: int = (total_secs % 3600) / 60
+	var secs: int = total_secs % 60
+	if hrs > 0:
+		return "%02d:%02d:%02d" % [hrs, mins, secs]
+	else:
+		return "%02d:%02d" % [mins, secs]
+
