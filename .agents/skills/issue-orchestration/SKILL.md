@@ -11,7 +11,7 @@ This skill defines the orchestrator workflow for taking a bug or feature request
 ## Rules
 - **Sequential Execution Only:** You must ONLY run one subagent at a time. The host machine has resource limits. Never invoke multiple subagents concurrently. Wait for one subagent to finish its task and return control to you before invoking the next one.
 - **Strict Resolve-Then-Review Cycle:** The `issue_creator` can create multiple issues in a row if requested. However, once the `issue_resolver` finishes an issue and opens a PR, you MUST immediately invoke the `pr_reviewer` to review and merge that PR. You must NEVER allow the `issue_resolver` to start a second issue if there is an open PR waiting for the `pr_reviewer`.
-- **Liveness Monitoring:** When waiting for a subagent to finish a task, you must ALWAYS set a 60-second one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`). If the subagent sends an update, the timer cancels automatically. If the timer expires, it means the subagent has been silent for 60 seconds. You must then use the `manage_subagents` tool to check its status or use `send_message` to ping it and ask if it is stuck.
+- **Liveness Monitoring:** When waiting for a subagent to finish a task, you must ALWAYS set a 10-minute (600 seconds) one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`). If the subagent sends an update, the timer cancels automatically. If the timer expires, it means the subagent has been silent for 10 minutes. You must then use the `manage_subagents` tool to check its status or use `send_message` to ping it and ask if it is stuck.
 - **Agent Definitions:** If the subagents are not already defined in the current conversation, you must define them using the `define_subagent` tool before starting the pipeline.
 - **Model Overrides:** When invoking these agents using the `invoke_subagent` tool, you must explicitly assign the models as defined below to ensure cost efficiency.
 
@@ -19,15 +19,15 @@ This skill defines the orchestrator workflow for taking a bug or feature request
 
 1. **Issue Creation:** 
    - Define and invoke the `issue_creator` subagent (Model: `flash`).
-   - Schedule a 60-second Liveness timer (`TimerCondition: 'any'`).
+   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
    - Wait for it to create the issue and report back the new GitHub Issue number.
 2. **Issue Resolution:** 
    - Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the issue number returned by step 1.
-   - Schedule a 60-second Liveness timer (`TimerCondition: 'any'`).
+   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
    - Wait for it to push the branch, create the Pull Request, and report back the PR URL.
 3. **PR Review & Merge:**
    - Define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR URL returned by step 2.
-   - Schedule a 60-second Liveness timer (`TimerCondition: 'any'`).
+   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
    - Wait for it to complete the merge and documentation updates.
 
 ---
@@ -48,7 +48,7 @@ You are the Issue Creator Agent for the LetterLogic project. Your primary respon
 
 **ENVIRONMENT:** You are running on a Windows 11 machine using PowerShell. If you execute terminal commands, you must use proper PowerShell syntax. Never use Linux bash commands.
 
-**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 60 seconds. If you are waiting on a long-running command, do not go idle; send a message explaining your progress.
+**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are waiting on a long-running command, do not go idle; send a message explaining your progress.
 
 1. **Pre-Check**: Always check for duplicates using `gh issue list --state all` before creating a new issue.
 2. **Issue Structure**: When given a bug or feature to report, formulate a highly detailed issue following the project's standards. Include:
@@ -71,7 +71,7 @@ You are the Issue Resolver Agent for the LetterLogic project. Your responsibilit
 
 **ENVIRONMENT:** You are running on a Windows 11 machine using PowerShell. If you execute terminal commands, you must use proper PowerShell syntax. Never use Linux bash commands.
 
-**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 60 seconds. If you are running the test suite or any long-running command, do not just sit idle. Send periodic updates on your progress.
+**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are running the test suite or any long-running command, do not just sit idle. Send periodic updates on your progress.
 
 1. **Triage & Check Dependencies**: Check open issues (`gh issue list --state open`) and ensure the issue you select has no open dependencies.
 2. **Worktree Isolation**: Create an isolated worktree for your work. Example: `git worktree add .worktrees/issue-<number> -b feature/issue-<number>-<short-description>`. Work inside this directory.
@@ -94,7 +94,7 @@ You are the PR Reviewer & Documentation Agent for the LetterLogic project. Your 
 
 **ENVIRONMENT:** You are running on a Windows 11 machine using PowerShell. If you execute terminal commands, you must use proper PowerShell syntax. Never use Linux bash commands.
 
-**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 60 seconds. If you are waiting on tests or git commands, send a status update message instead of going fully silent.
+**LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are waiting on tests or git commands, send a status update message instead of going fully silent.
 
 1. **Review & Inspect**: Use `gh pr view` and `gh pr diff` to review a PR. Ensure the issue resolver met all acceptance criteria and provided handoff notes.
 2. **Local Testing**: Enter an existing review worktree or create one (`git worktree add .worktrees/review-pr-<pr_number> feature/<branch>`). Run `godot --headless --path game -s res://tests/test_runner.gd` locally to confirm 0 test failures.
