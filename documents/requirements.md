@@ -36,3 +36,11 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 
 ## 7. Saving and Data Persistence
 - **REQ-7.1 - Persistence:** The game must save player statistics and daily challenge records locally to the device so they persist between sessions.
+
+## 8. User Interface & Visual Design
+- **REQ-8.1 - 1930s Monochrome UI Aesthetic:** Menus, modals, and UI containers follow a 1930s vintage monochrome animation visual language using high-contrast black, charcoal, and crisp white outlines. Chromatic color is strictly reserved for gameplay deduction evaluation cues (Green `#538d4e` 🟩, Yellow `#b59f3b` 🟨, and Flat Red `#b53b3b` 🟥).
+- **REQ-8.2 - Button Styling & Interaction States:** Standard buttons throughout the application must feature:
+  - **Normal State:** Dark charcoal fill (`#1c1c1e`), 2px solid white border (`#ffffff`), 8px rounded corners, and crisp white text (`#ffffff`).
+  - **Hover/Focused State:** Brightened charcoal fill (`#2c2c30`) with a 2px solid white border.
+  - **Pressed State:** Deep black fill (`#0e0e10`) with a 2px solid white border for tactile feedback.
+- **REQ-8.3 - Centralized UI Theme System:** Project UI styling must be managed via a centralized Godot theme resource (`res://assets/theme/letter_logic_theme.tres`) configured as the project-wide custom GUI theme. Panel containers feature a deep black fill (`#0e0e10`), 3px solid white border (`#ffffff`), and 12px corner radii, ensuring consistent presentation across all menus, dialogs, and modals.
