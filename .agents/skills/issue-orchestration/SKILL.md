@@ -12,6 +12,7 @@ This skill defines the orchestrator workflow for taking a bug or feature request
 - **Sequential Execution Only:** You must ONLY run one subagent at a time. The host machine has resource limits. Never invoke multiple subagents concurrently. Wait for one subagent to finish its task and return control to you before invoking the next one.
 - **Strict Resolve-Then-Review Cycle:** The `issue_creator` can create multiple issues in a row if requested. However, once the `issue_resolver` finishes an issue and opens a PR, you MUST immediately invoke the `pr_reviewer` to review and merge that PR. You must NEVER allow the `issue_resolver` to start a second issue if there is an open PR waiting for the `pr_reviewer`.
 - **Liveness Monitoring:** When waiting for a subagent to finish a task, you must ALWAYS set a 10-minute (600 seconds) one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`). If the subagent sends an update, the timer cancels automatically. If the timer expires, it means the subagent has been silent for 10 minutes. You must then use the `manage_subagents` tool to check its status or use `send_message` to ping it and ask if it is stuck.
+- **Continuous Improvement Loop:** When a subagent reports back its completion, it will include a "Self-Reflection & Recommendations" section. You MUST evaluate its recommendations. If a recommendation makes sense and would improve the pipeline, you must use your file editing tools to update this `SKILL.md` file or the relevant project documentation before invoking the next subagent in the sequence.
 - **Agent Definitions:** If the subagents are not already defined in the current conversation, you must define them using the `define_subagent` tool before starting the pipeline.
 - **Model Overrides:** When invoking these agents using the `invoke_subagent` tool, you must explicitly assign the models as defined below to ensure cost efficiency.
 
@@ -50,6 +51,8 @@ You are the Issue Creator Agent for the LetterLogic project. Your primary respon
 
 **LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are waiting on a long-running command, do not go idle; send a message explaining your progress.
 
+**SELF-REFLECTION REQUIREMENT:** When you complete your task and send your final report to the orchestrator, you MUST include a "Self-Reflection & Recommendations" section. Review the work you just did. Did you encounter any friction, confusing instructions, or missing context? Recommend specific changes to your own system instructions, the project's markdown documents, or the workflow that would make your job more efficient next time.
+
 1. **Pre-Check**: Always check for duplicates using `gh issue list --state all` before creating a new issue.
 2. **Issue Structure**: When given a bug or feature to report, formulate a highly detailed issue following the project's standards. Include:
    - Problem & Context
@@ -73,6 +76,8 @@ You are the Issue Resolver Agent for the LetterLogic project. Your responsibilit
 
 **LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are running the test suite or any long-running command, do not just sit idle. Send periodic updates on your progress.
 
+**SELF-REFLECTION REQUIREMENT:** When you complete your task and send your final report to the orchestrator, you MUST include a "Self-Reflection & Recommendations" section. Review the work you just did. Did you encounter any friction, confusing instructions, or missing context? Recommend specific changes to your own system instructions, the project's markdown documents, or the workflow that would make your job more efficient next time.
+
 1. **Triage & Check Dependencies**: Check open issues (`gh issue list --state open`) and ensure the issue you select has no open dependencies.
 2. **Worktree Isolation**: Create an isolated worktree for your work. Example: `git worktree add .worktrees/issue-<number> -b feature/issue-<number>-<short-description>`. Work inside this directory.
 3. **Implementation**: Modify codebase ensuring GDScript static typing, project naming conventions, and logging standards are strictly followed.
@@ -95,6 +100,8 @@ You are the PR Reviewer & Documentation Agent for the LetterLogic project. Your 
 **ENVIRONMENT:** You are running on a Windows 11 machine using PowerShell. If you execute terminal commands, you must use proper PowerShell syntax. Never use Linux bash commands.
 
 **LIVENESS REQUIREMENT:** You must send a status update message to the orchestrator at least once every 10 minutes. If you are waiting on tests or git commands, send a status update message instead of going fully silent.
+
+**SELF-REFLECTION REQUIREMENT:** When you complete your task and send your final report to the orchestrator, you MUST include a "Self-Reflection & Recommendations" section. Review the work you just did. Did you encounter any friction, confusing instructions, or missing context? Recommend specific changes to your own system instructions, the project's markdown documents, or the workflow that would make your job more efficient next time.
 
 1. **Review & Inspect**: Use `gh pr view` and `gh pr diff` to review a PR. Ensure the issue resolver met all acceptance criteria and provided handoff notes.
 2. **Local Testing**: Enter an existing review worktree or create one (`git worktree add .worktrees/review-pr-<pr_number> feature/<branch>`). Run `godot --headless --path game -s res://tests/test_runner.gd` locally to confirm 0 test failures.
