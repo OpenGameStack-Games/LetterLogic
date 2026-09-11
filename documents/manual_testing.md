@@ -173,3 +173,23 @@ This document outlines the manual test cases used to verify the requirements out
   7. Verify that no chromatic colors appear on buttons or panels—chromatic colors remain strictly reserved for the letter evaluation tiles (🟩, 🟨, 🟥).
 - **Expected Result:** All modals, panels, and buttons across the entire application exhibit uniform 1930s monochrome styling inherited from the centralized project GUI theme.
 
+### Test 5.3: Main Menu Mascot & Breathing Animation
+- **Requirement(s):** REQ-8.4, REQ-8.5
+- **Steps:**
+  1. Launch the game to the Main Menu.
+  2. Observe the cartoon mascot situated directly above the `LETTERLOGIC` title box.
+  3. Verify the mascot displays classic 1930s rubber-hose cartoon styling: anthropomorphic tile with pie-eyes, cartoon white gloves, letter "L" on chest, and rounded white ink outlines in monochrome.
+  4. Watch the mascot for several seconds without interacting.
+  5. Verify the mascot plays a smooth, continuous rubber-hose "breathing" loop (gentle squash-and-stretch scale oscillation between ~0.97 and 1.03 over a 2-second cycle) centered evenly on its pivot without jitter or position drift.
+  6. Navigate to Continuous Play, Daily Challenge, or open the How to Play modal, then return to the Main Menu.
+  7. Verify the animation resumes smoothly upon returning without stutter or memory leaks.
+- **Expected Result:** The mascot animates smoothly with subtle squash-and-stretch breathing and clean scene transitions.
+
+### Test 5.4: Application Launcher Icon
+- **Requirement(s):** REQ-8.4
+- **Steps:**
+  1. Inspect the desktop window titlebar/taskbar (or export and install APK on an Android device/emulator).
+  2. Look at the application launcher icon on the Android home screen or desktop taskbar.
+  3. Verify the icon renders crisp and clear at 512x512 resolution without clipping, distortion, or chromatic artifacts.
+- **Expected Result:** The 1930s rubber-hose mascot icon is displayed cleanly as the application launcher icon.
+

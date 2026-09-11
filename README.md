@@ -1,12 +1,16 @@
 # LetterLogic
 
+<p align="center">
+  <img src="game/assets/icons/icon.png" alt="LetterLogic Mascot" width="160" height="160" />
+</p>
+
 LetterLogic is a Wordle-inspired word-guessing game built with the [Godot Engine](https://godotengine.org/) (4.x). 
 
 What sets LetterLogic apart is its unique constraint: **all valid guesses and secret words must be 5-letter isograms** (words containing no duplicate letters). This introduces a new layer of deduction and strategy to the familiar core gameplay loop.
 
 ## Features
 - **Isogram Ruleset:** Every valid 5-letter word in the game's dictionary is an isogram. The on-screen keyboard actively prevents you from typing a letter you've already used in your current guess.
-- **1930s Monochrome Visual Aesthetic:** A striking vintage black-and-white art style featuring high-contrast charcoal buttons, rounded white borders, and sleek panels, reserving chromatic color strictly for gameplay evaluation cues so deduction pops with maximum impact.
+- **1930s Mascot & Monochrome Visual Aesthetic:** Featuring an expressive 1930s rubber-hose cartoon tile mascot with animated squash-and-stretch breathing on the main menu! High-contrast charcoal buttons, rounded white borders, and sleek panels embrace a vintage black-and-white art style, reserving chromatic color strictly for gameplay evaluation cues so deduction pops with maximum impact.
 - **Active Puzzle Timer:** Live running timer during gameplay with automatic app lifecycle pausing (backgrounding/minimizing) to encourage speed-solving and deduction efficiency.
 - **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
 - **Daily Challenge:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date.
