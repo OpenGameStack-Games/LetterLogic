@@ -81,7 +81,7 @@ Before publishing an issue via GitHub:
 1. [ ] **Search Existing Issues:** Run `gh issue list --state all` to confirm the issue doesn't already exist or duplicate past work.
 2. [ ] **Inspect Codebase:** Verify the exact file paths, variable names, and current behavior in the code.
 3. [ ] **Clarify Design Choices:** Resolve any open design questions (e.g., color hex codes, UI behaviors, platform fallbacks) before publishing so the issue body contains firm decisions rather than open questions.
-4. [ ] **Include Documentation Acceptance Criteria:** Ensure the mandatory documentation coordination checklist is included per `.agents/rules/workflows.md`.
+4. [ ] **Include Documentation Acceptance Criteria:** Ensure the mandatory documentation coordination checklist is included per `documents/reviewing_and_merging_prs.md`.
 
 ---
 
@@ -102,7 +102,7 @@ Short description of the bug or feature and its context.
 ### 2. Automated Tests
 - [ ] Verify test suite passes with updates.
 
-### 3. Documentation Coordination (per .agents/rules/workflows.md)
+### 3. Documentation Coordination (per documents/reviewing_and_merging_prs.md)
 - [ ] Update documents/requirements.md.
 - [ ] Update documents/manual_testing.md.
 - [ ] Update README.md if applicable.
