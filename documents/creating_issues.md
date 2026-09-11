@@ -16,7 +16,11 @@ Every issue created in this repository must meet the following criteria:
 
 ## 2. Standard Issue Structure
 
-All issues should follow this markdown layout:
+All issues filed in LetterLogic must follow this standardized layout. When creating an issue on GitHub, use one of the predefined templates in `.github/ISSUE_TEMPLATE/`:
+* **Bug Report (`.github/ISSUE_TEMPLATE/bug_report.md`):** For defects, unexpected behavior, logic bugs, or UI glitches. Pre-labeled with `bug`.
+* **Feature Request (`.github/ISSUE_TEMPLATE/feature_request.md`):** For new gameplay mechanics, visual enhancements, or architectural improvements. Pre-labeled with `enhancement`.
+
+Both templates implement the following required markdown structure:
 
 ```markdown
 **Depends on #<issue_number>** (Include only if this issue has blockers)
@@ -87,28 +91,46 @@ Before publishing an issue via GitHub:
 
 ## 5. Creating Issues via GitHub CLI
 
-To create an issue from the command line using the GitHub CLI (`gh`), format the body into a variable or markdown string:
+Contributors and agents can create issues directly from the command line using the GitHub CLI (`gh`).
 
+### Option A: Using Predefined Templates (Recommended)
+You can invoke the repository issue templates directly with the `--template` flag:
+```powershell
+# Create a bug report using the bug_report.md template
+gh issue create --template "bug_report.md"
+
+# Create a feature request using the feature_request.md template
+gh issue create --template "feature_request.md" --title "UI - Add Haptic Feedback on Keypress"
+```
+
+### Option B: Scripted / Headless Creation
+When generating an issue programmatically, format the body string according to the full standard structure:
 ```powershell
 $body = @"
-Short description of the bug or feature and its context.
+### 1. Problem & Context
+Short description of the bug or feature and its user impact.
 
-## Acceptance Criteria
+### 2. Technical Scope & Affected Files
+- game/scripts/<file>.gd
+- game/scenes/<file>.tscn
 
-### 1. [Component Name]
+### 3. Acceptance Criteria
+
+#### [Component / Feature Area]
 - [ ] Action item 1
 - [ ] Action item 2
 
-### 2. Automated Tests
-- [ ] Verify test suite passes with updates.
+#### Automated Tests (game/tests/)
+- [ ] Add unit test cases in game/tests/<test_file>.gd.
+- [ ] Ensure test suite passes with 0 failures.
 
-### 3. Documentation Coordination (per documents/reviewing_and_merging_prs.md)
+#### Documentation Coordination (Mandatory per documents/reviewing_and_merging_prs.md)
 - [ ] Update documents/requirements.md.
 - [ ] Update documents/manual_testing.md.
 - [ ] Update README.md if applicable.
 "@
 
-gh issue create --title "<Prefix> - <Short Summary>" --body "$body" --label "<label_name>"
+gh issue create --title "<Prefix> - <Short Summary>" --body "$body" --label "<bug|enhancement>"
 ```
 
 ---

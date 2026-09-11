@@ -146,7 +146,7 @@ git push -u origin feature/issue-<number>-<short-description>
 ```
 
 ### 2. Create the Pull Request
-Submit the PR targeting `main` using GitHub CLI. The PR body must follow the **Highly Detailed Pull Request Standard** so that the PR Reviewer & Documentation Agent has all the required context.
+Submit the PR targeting `main` using GitHub CLI. The PR body must follow the **Highly Detailed Pull Request Standard** (pre-populated automatically from `.github/pull_request_template.md`) so that the PR Reviewer & Documentation Agent has all the required context.
 
 ```powershell
 gh pr create --title "<type>: <concise description> (Resolves #<number>)" --body "$pr_body" --base main
