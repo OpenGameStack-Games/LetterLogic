@@ -74,3 +74,14 @@ func test_signal_handling() -> void:
 	assert_eq(board.get_tile(0, 2).current_state, GameManagerScript.TileState.ABSENT, "Tile (0,2) should be ABSENT")
 	assert_eq(board.get_tile(0, 3).current_state, GameManagerScript.TileState.CORRECT, "Tile (0,3) should be CORRECT")
 	assert_eq(board.get_tile(0, 4).current_state, GameManagerScript.TileState.ABSENT, "Tile (0,4) should be ABSENT")
+
+func test_absent_tile_colors() -> void:
+	var tile: Node = board.get_tile(0, 0)
+	tile.set_state(GameManagerScript.TileState.ABSENT)
+	assert_eq(tile.COLOR_BG_ABSENT.to_html(false).to_lower(), "b53b3b", "Tile absent bg color should be flat red (#b53b3b)")
+	assert_eq(tile.COLOR_BORDER_ABSENT.to_html(false).to_lower(), "b53b3b", "Tile absent border color should be flat red (#b53b3b)")
+	var style_box: StyleBoxFlat = tile.get_theme_stylebox("panel") as StyleBoxFlat
+	assert_true(style_box != null, "StyleBox should exist")
+	if style_box != null:
+		assert_eq(style_box.bg_color.to_html(false).to_lower(), "b53b3b", "Applied tile bg color should be flat red")
+		assert_eq(style_box.border_color.to_html(false).to_lower(), "b53b3b", "Applied tile border color should be flat red")

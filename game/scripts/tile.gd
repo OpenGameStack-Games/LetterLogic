@@ -10,13 +10,13 @@ const COLOR_BG_EMPTY: Color = Color("121213")
 const COLOR_BG_TYPING: Color = Color("121213")
 const COLOR_BG_CORRECT: Color = Color("538d4e")
 const COLOR_BG_PRESENT: Color = Color("b59f3b")
-const COLOR_BG_ABSENT: Color = Color("3a3a3c")
+const COLOR_BG_ABSENT: Color = Color("b53b3b")
 
 const COLOR_BORDER_EMPTY: Color = Color("3a3a3c")
 const COLOR_BORDER_TYPING: Color = Color("565758")
 const COLOR_BORDER_CORRECT: Color = Color("538d4e")
 const COLOR_BORDER_PRESENT: Color = Color("b59f3b")
-const COLOR_BORDER_ABSENT: Color = Color("3a3a3c")
+const COLOR_BORDER_ABSENT: Color = Color("b53b3b")
 
 const COLOR_TEXT: Color = Color("ffffff")
 

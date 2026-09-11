@@ -9,11 +9,11 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const COLOR_BG_DEFAULT: Color = Color("818384")
 const COLOR_BG_CORRECT: Color = Color("538d4e")
 const COLOR_BG_PRESENT: Color = Color("b59f3b")
-const COLOR_BG_ABSENT: Color = Color("3a3a3c")
+const COLOR_BG_ABSENT: Color = Color("b53b3b")
 const COLOR_BG_DISABLED: Color = Color("272729")
 
 const COLOR_TEXT_DEFAULT: Color = Color("ffffff")
-const COLOR_TEXT_ABSENT: Color = Color("808080")
+const COLOR_TEXT_ABSENT: Color = Color("ffffff")
 const COLOR_TEXT_DISABLED: Color = Color("505050")
 
 var key_name: String = ""

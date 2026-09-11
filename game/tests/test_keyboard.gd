@@ -101,3 +101,23 @@ func test_reset_keyboard() -> void:
 	keyboard.reset_keyboard()
 	assert_false(key_a.is_row_disabled, "Key A should not be disabled after reset")
 	assert_eq(key_a.key_state, GameManagerScript.TileState.EMPTY, "Key A state should be EMPTY after reset")
+
+func test_absent_and_disabled_key_colors() -> void:
+	var key_k: Node = keyboard.get_key("K")
+	assert_eq(key_k.COLOR_BG_ABSENT.to_html(false).to_lower(), "b53b3b", "KeyboardKey absent bg color should be flat red (#b53b3b)")
+	assert_eq(key_k.COLOR_TEXT_ABSENT.to_html(false).to_lower(), "ffffff", "KeyboardKey absent text color should be white (#ffffff)")
+	
+	# Verify visual stylebox when state is ABSENT
+	key_k.set_key_state(GameManagerScript.TileState.ABSENT)
+	var style_absent: StyleBoxFlat = key_k.get_theme_stylebox("normal") as StyleBoxFlat
+	assert_true(style_absent != null, "Stylebox for absent key should exist")
+	if style_absent != null:
+		assert_eq(style_absent.bg_color.to_html(false).to_lower(), "b53b3b", "Absent key bg color should be flat red")
+	assert_eq(key_k.get_theme_color("font_color").to_html(false).to_lower(), "ffffff", "Absent key text color should be white")
+	
+	# Verify distinct disabled styling when typed in active row
+	key_k.set_row_disabled(true)
+	var style_disabled: StyleBoxFlat = key_k.get_theme_stylebox("normal") as StyleBoxFlat
+	if style_disabled != null:
+		assert_eq(style_disabled.bg_color.to_html(false).to_lower(), "272729", "Row-disabled key should remain distinctly dark gray (#272729)")
+	assert_eq(key_k.get_theme_color("font_color").to_html(false).to_lower(), "505050", "Row-disabled key text should remain dark (#505050)")
