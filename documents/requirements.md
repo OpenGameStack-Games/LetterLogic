@@ -8,12 +8,13 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-2.2 - Tile Evaluation:** After a valid guess is submitted, each letter tile is evaluated and colored based on its presence in the secret word:
   - **Correct (Green / 🟩):** The letter is in the secret word and in the correct position.
   - **Present (Yellow / 🟨):** The letter is in the secret word but in the wrong position.
-  - **Absent (Dark Gray / ⬛):** The letter is not in the secret word.
+  - **Absent (Flat Red / 🟥):** The letter is not in the secret word.
 - **REQ-2.3 - Win/Loss Condition:** The game is won if the player guesses the secret word exactly within 6 attempts. The game is lost if the 6th attempt is incorrect.
-- **REQ-2.4 - Keyboard State Update:** The on-screen virtual keyboard must update its keys to reflect the best-known state of each letter (Correct > Present > Absent) based on all submitted guesses.
+- **REQ-2.4 - Keyboard State Update:** The on-screen virtual keyboard must update its keys to reflect the best-known state of each letter (Correct > Present > Absent) based on all submitted guesses. Absent keys display in flat red (`#b53b3b`) with white text (`#ffffff`).
 
 ## 3. Input & Validation
-- **REQ-3.1 - Isogram Typing Constraint:** While typing a guess, the game must prevent the user from inputting a letter that already exists in the current active row.
+- **REQ-3.1 - Isogram Typing Constraint:** While typing a guess, the game must prevent the user from inputting a letter that already exists in the current active row. Keys currently typed in the active row are temporarily disabled and visually styled in dark gray (`#272729`), maintaining clear differentiation from absent letters (flat red / `#b53b3b`).
+
 - **REQ-3.2 - Dictionary Validation:** The game must reject guesses that are not present in the internal dictionary of 5-letter isograms. A rejected guess does not consume an attempt.
 - **REQ-3.3 - Length Validation:** The game must reject guesses that are shorter than 5 letters.
 

@@ -9,7 +9,7 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 - **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
 - **Daily Challenge:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date.
 - **Comprehensive Statistics:** Track your progress separately across Daily and Continuous modes. Monitor your total wins, current streak, max streak, and guess distributions.
-- **Social Sharing:** Easily share your Daily Challenge results with friends using a generated emoji grid (🟩🟨⬛) via the native Android share intent or clipboard.
+- **Social Sharing:** Easily share your Daily Challenge results with friends using a generated emoji grid (🟩🟨🟥) via the native Android share intent or clipboard.
 
 ## Project Structure
 - `/game` - The root directory for the Godot project containing all scenes, scripts, autoloads, and assets.

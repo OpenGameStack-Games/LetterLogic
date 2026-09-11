@@ -10,13 +10,14 @@ This document outlines the manual test cases used to verify the requirements out
 
 ## 1. Core Gameplay & Input Constraints
 
-### Test 1.1: Isogram Typing Restriction
+### Test 1.1: Isogram Typing Restriction & Key Disabling
 - **Requirement(s):** REQ-3.1
 - **Steps:**
   1. Start a Continuous Play game.
   2. Tap the letter 'A' on the on-screen keyboard.
-  3. Attempt to tap the letter 'A' again or press 'A' on the physical keyboard.
-- **Expected Result:** The second 'A' should not appear in the grid. The game prevents duplicate letters in the current row.
+  3. Observe the 'A' key styling on the virtual keyboard.
+  4. Attempt to tap the letter 'A' again or press 'A' on the physical keyboard.
+- **Expected Result:** The 'A' key on the keyboard is temporarily disabled and styled in dark gray (`#272729`). The second 'A' does not appear in the grid. The game prevents duplicate letters in the current row.
 
 ### Test 1.2: Dictionary and Length Validation
 - **Requirement(s):** REQ-3.2, REQ-3.3
@@ -32,7 +33,8 @@ This document outlines the manual test cases used to verify the requirements out
   1. (Godot Editor only) Use the debugger or print statements to determine the current `secret_word`.
   2. Input a valid 5-letter isogram that contains at least one correct letter in the right spot, one correct letter in the wrong spot, and some letters not in the word.
   3. Submit the guess.
-- **Expected Result:** The tiles in the grid update to Green, Yellow, and Dark Gray correctly. The on-screen keyboard keys also update to match the highest state of each guessed letter.
+- **Expected Result:** The tiles in the grid update to Green (`#538d4e`), Yellow (`#b59f3b`), and Flat Red (`#b53b3b`) correctly. The on-screen keyboard keys update to match the highest state of each guessed letter (Absent keys appear in Flat Red with white text).
+
 
 ### Test 1.4: Win/Loss Conditions
 - **Requirement(s):** REQ-2.3
@@ -92,7 +94,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps (Android device required):**
   1. Complete a Daily Challenge.
   2. Tap the "Share" button on the results screen.
-- **Expected Result:** The Android native share sheet appears. Selecting a destination (e.g., Messages, Keep Notes) pastes a formatted string containing the date, score (e.g., 3/6), emoji grid (🟩🟨⬛), and the Google Play Store link.
+- **Expected Result:** The Android native share sheet appears. Selecting a destination (e.g., Messages, Keep Notes) pastes a formatted string containing the date, score (e.g., 3/6), emoji grid (🟩🟨🟥), and the Google Play Store link.
 
 ### Test 4.2: Clipboard Fallback (Godot PC)
 - **Requirement(s):** REQ-6.2
@@ -100,4 +102,5 @@ This document outlines the manual test cases used to verify the requirements out
   1. Run the project in the Godot Editor on a PC.
   2. Complete a Daily Challenge and tap "Share".
   3. Open Notepad and press `Ctrl+V`.
-- **Expected Result:** The same formatted share string with the emoji grid is pasted from the clipboard.
+- **Expected Result:** The same formatted share string with the emoji grid (🟩🟨🟥) is pasted from the clipboard.
+
