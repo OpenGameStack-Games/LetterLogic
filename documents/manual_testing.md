@@ -66,7 +66,17 @@ This document outlines the manual test cases used to verify the requirements out
   5. (Optional) Change the device date to tomorrow and verify the Daily Challenge unlocks with a new word.
 - **Expected Result:** After completion, the player is locked out of the Daily Challenge until the next UTC midnight. The menu shows a countdown timer.
 
+### Test 2.3: Mode Header Title Display
+- **Requirement(s):** REQ-4.1, REQ-4.2
+- **Steps:**
+  1. From the Main Menu, tap "Daily Challenge".
+  2. Observe the header text above the board.
+  3. Return to the Main Menu and tap "Continuous Play".
+  4. Observe the header text above the board.
+- **Expected Result:** When entering Daily Challenge, the header displays `DAILY CHALLENGE • YYYY-MM-DD` with today's UTC date. When entering Continuous Play, the header displays `CONTINUOUS PLAY`.
+
 ---
+
 
 ## 3. Statistics and Persistence
 

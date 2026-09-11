@@ -19,9 +19,10 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-3.3 - Length Validation:** The game must reject guesses that are shorter than 5 letters.
 
 ## 4. Game Modes
-- **REQ-4.1 - Continuous Play:** A sandbox mode where players can play unlimited consecutive games. Secret words are selected randomly from the word bank.
-- **REQ-4.2 - Daily Challenge:** A synchronized daily mode where all players attempt to guess the same deterministic secret word, based on the current UTC date.
+- **REQ-4.1 - Continuous Play:** A sandbox mode where players can play unlimited consecutive games. Secret words are selected randomly from the word bank. The game screen header displays `CONTINUOUS PLAY`.
+- **REQ-4.2 - Daily Challenge:** A synchronized daily mode where all players attempt to guess the same deterministic secret word, based on the current UTC date. The game screen header displays `DAILY CHALLENGE • YYYY-MM-DD` reflecting the current UTC date.
 - **REQ-4.3 - Daily Lockout:** A player can only complete the Daily Challenge once per UTC day. A countdown timer should indicate when the next challenge unlocks.
+
 
 ## 5. Statistics Tracking
 - **REQ-5.1 - Segregated Stats:** The game must track statistics separately for "Continuous Play" and "Daily Challenge" modes.

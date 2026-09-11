@@ -61,3 +61,34 @@ func test_main_game_scene_loads() -> void:
 	assert_true(header_title != null, "Header title should exist in MainGame")
 	
 	main_game.free()
+
+func test_main_game_header_mode_display() -> void:
+	var game_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(game_scn != null, "main_game.tscn must be loadable")
+	
+	var main_game: Node = game_scn.instantiate()
+	assert_true(main_game != null, "main_game must instantiate")
+	
+	var mode_lbl: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	assert_true(mode_lbl != null, "ModeLabel must exist under TitleBox")
+	
+	var gm_script: GDScript = load("res://autoloads/game_manager.gd") as GDScript
+	var dm_script: GDScript = load("res://autoloads/daily_manager.gd") as GDScript
+	
+	var gm: Node = gm_script.new()
+	var dm: Node = dm_script.new()
+	# Verify DAILY mode header text
+	gm.set("current_mode", gm_script.GameMode.DAILY)
+	var expected_date: String = dm.call("get_current_utc_date_string")
+	main_game.call("_update_header", gm, dm)
+	assert_eq(mode_lbl.text, "DAILY CHALLENGE • %s" % expected_date, "Header should show DAILY CHALLENGE with current UTC date")
+	
+	# Verify CONTINUOUS mode header text
+	gm.set("current_mode", gm_script.GameMode.CONTINUOUS)
+	main_game.call("_update_header", gm, dm)
+	assert_eq(mode_lbl.text, "CONTINUOUS PLAY", "Header should show CONTINUOUS PLAY")
+	
+	gm.free()
+	dm.free()
+	main_game.free()
+
