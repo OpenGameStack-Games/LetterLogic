@@ -193,3 +193,21 @@ This document outlines the manual test cases used to verify the requirements out
   3. Verify the icon renders crisp and clear at 512x512 resolution without clipping, distortion, or chromatic artifacts.
 - **Expected Result:** The 1930s rubber-hose mascot icon is displayed cleanly as the application launcher icon.
 
+### Test 5.5: How to Play Modal Dimensions & Red Absent Tile Color Copy
+- **Requirement(s):** REQ-8.1, REQ-8.3, REQ-8.6
+- **Steps:**
+  1. Launch the game to the Main Menu.
+  2. Tap the "How to Play" button to open the instructions modal.
+  3. Verify the modal panel container is centered and sized at 460x600 px (`custom_minimum_size = Vector2(460, 600)`).
+  4. Verify that all instructions and text content fit comfortably within the modal without requiring vertical scrolling at the standard 720x1280 portrait resolution.
+  5. Check the tile color evaluation cues:
+     - Correct is displayed as `🟩 GREEN` (`#538d4e`) - "Letter is in the word and in the correct spot."
+     - Present is displayed as `🟨 YELLOW` (`#b59f3b`) - "Letter is in the word but wrong spot."
+     - Absent is displayed as `🟥 RED` (`#b53b3b`) - "Letter is not in the word." (confirm it is NOT gray `⬛ GRAY` or `#808080`).
+  6. Verify the special rule states that words never contain duplicate letters (5-letter isograms) and that keys typed in the current row are temporarily disabled.
+  7. Verify game modes (Daily Challenge with UTC midnight reset, Continuous Play unlimited sandbox) are clearly described.
+  8. If tested on smaller displays or with enlarged system font scaling, verify the `RichTextLabel` vertical scrollbar engages cleanly (`scroll_active = true`).
+  9. Tap "Got It!" and verify the modal dismisses smoothly and returns focus to the Main Menu.
+- **Expected Result:** The modal opens centered at 600px height with all text fully legible without scrolling at standard resolution, displays flat red (`🟥 RED` / `#b53b3b`) for absent tiles, and dismisses cleanly.
+
+
