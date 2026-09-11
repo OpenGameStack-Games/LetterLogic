@@ -92,3 +92,41 @@ func test_main_game_header_mode_display() -> void:
 	dm.free()
 	main_game.free()
 
+func test_mascot_asset_exists() -> void:
+	var icon_path: String = "res://assets/icons/icon.png"
+	var icon_tex: Texture2D = load(icon_path) as Texture2D
+	assert_true(icon_tex != null, "icon.png asset must exist in assets/icons")
+	
+	if icon_tex != null:
+		var size: Vector2 = icon_tex.get_size()
+		assert_eq(int(size.x), 512, "App icon width should be 512")
+		assert_eq(int(size.y), 512, "App icon height should be 512")
+		
+	var app_icon: String = ProjectSettings.get_setting("application/config/icon", "")
+	assert_eq(app_icon, icon_path, "Project config/icon should be set to the mascot icon")
+
+func test_main_menu_mascot_node() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	
+	var mascot: TextureRect = menu.find_child("MascotRect", true, false) as TextureRect
+	menu.set("mascot_rect", mascot)
+	if mascot != null and menu.has_method("_start_mascot_animation"):
+		menu.call("_start_mascot_animation")
+	
+	assert_true(mascot != null, "MascotRect should exist in MainMenu")
+	
+	if mascot != null:
+		assert_true(mascot.texture != null, "MascotRect should have a texture assigned")
+		var expected_path: String = "res://assets/icons/icon.png"
+		if mascot.texture != null:
+			assert_eq(mascot.texture.resource_path, expected_path, "MascotRect should use the icon.png texture")
+	
+	# Verify that the animation is running (tween exists)
+	var menu_script_inst: Node = menu
+	assert_true(menu_script_inst.get("_mascot_tween") != null, "Mascot breathing tween should be created")
+	if menu_script_inst.get("_mascot_tween") != null:
+		assert_true(menu_script_inst.get("_mascot_tween").is_running(), "Mascot breathing tween should be running")
+	
+	menu.queue_free()
+

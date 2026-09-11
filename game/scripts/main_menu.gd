@@ -15,8 +15,10 @@ const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 @onready var how_to_play_button: Button = $CenterContainer/VBox/MenuButtons/HowToPlayButton
 @onready var how_to_play_modal: Control = $HowToPlayModal
 @onready var countdown_timer: Timer = $CountdownTimer
+@onready var mascot_rect: TextureRect = $CenterContainer/VBox/MascotRect
 
 var _is_daily_locked: bool = false
+var _mascot_tween: Tween
 
 func _ready() -> void:
 	if how_to_play_modal != null:
@@ -25,6 +27,28 @@ func _ready() -> void:
 	if countdown_timer != null:
 		countdown_timer.timeout.connect(_on_countdown_tick)
 		countdown_timer.start(1.0)
+	
+	_start_mascot_animation()
+
+func _start_mascot_animation() -> void:
+	if mascot_rect == null:
+		return
+	
+	if _mascot_tween:
+		_mascot_tween.kill()
+	
+	# Initial state
+	mascot_rect.scale = Vector2(0.97, 1.03)
+	
+	_mascot_tween = create_tween().set_loops()
+	_mascot_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_mascot_tween.tween_property(mascot_rect, "scale", Vector2(1.03, 0.97), 1.0)
+	_mascot_tween.tween_property(mascot_rect, "scale", Vector2(0.97, 1.03), 1.0)
+
+func _exit_tree() -> void:
+	if _mascot_tween:
+		_mascot_tween.kill()
+
 
 func _update_daily_button_state() -> void:
 	var dm: Node = get_node_or_null("/root/DailyManager")
