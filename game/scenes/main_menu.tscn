@@ -107,7 +107,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.8)
 
 [node name="Panel" type="PanelContainer" parent="HowToPlayModal"]
-custom_minimum_size = Vector2(460, 520)
+custom_minimum_size = Vector2(460, 600)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -115,9 +115,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -230.0
-offset_top = -260.0
+offset_top = -300.0
 offset_right = 230.0
-offset_bottom = 260.0
+offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -148,6 +148,7 @@ text = "[b]Guess the secret word in 6 attempts.[/b]
 [b]Modes:[/b]
 • [b]Daily Challenge:[/b] One synchronized word per day (resets at midnight UTC).
 • [b]Continuous Play:[/b] Play as many words as you like!"
+scroll_active = true
 
 [node name="CloseButton" type="Button" parent="HowToPlayModal/Panel/VBox"]
 custom_minimum_size = Vector2(0, 48)
