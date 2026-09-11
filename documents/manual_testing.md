@@ -145,3 +145,31 @@ This document outlines the manual test cases used to verify the requirements out
   Play now: https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic
   ```
 
+---
+
+## 5. UI Theme & Visual Styling
+
+### Test 5.1: 1930s Monochrome Button Theme & Interaction States
+- **Requirement(s):** REQ-8.1, REQ-8.2
+- **Steps:**
+  1. Launch the game to the Main Menu.
+  2. Observe the styling of all navigation buttons ("Daily Challenge", "Continuous Play", "Statistics", "How to Play").
+  3. Verify the buttons have a dark charcoal fill (`#1c1c1e`), crisp 2px white borders (`#ffffff`), 8px rounded corners, and bold white text.
+  4. Hover the mouse cursor over each button (or observe initial touch highlight).
+  5. Verify the background brightens slightly to `#2c2c30` while maintaining the prominent white border.
+  6. Press and hold down a button without releasing.
+  7. Verify the background darkens to deep black (`#0e0e10`).
+- **Expected Result:** Buttons display high-contrast 1930s monochrome styling with smooth, tactile interaction transitions for normal, hover, and pressed states.
+
+### Test 5.2: Modal & Dialog Theme Consistency
+- **Requirement(s):** REQ-8.1, REQ-8.3
+- **Steps:**
+  1. From the Main Menu, tap "How to Play" to open the instructions modal.
+  2. Observe the modal panel container and action button ("Got It!").
+  3. Close the modal, start a Continuous Play game, and complete the puzzle (win or lose).
+  4. Observe the Game Over modal panel container and action buttons ("Next Word", "Main Menu", "Share").
+  5. Verify panel containers feature deep black fill with 3px solid white borders and 12px rounded corners.
+  6. Verify all action buttons adhere strictly to the 1930s monochrome button styling and interaction states.
+  7. Verify that no chromatic colors appear on buttons or panels—chromatic colors remain strictly reserved for the letter evaluation tiles (🟩, 🟨, 🟥).
+- **Expected Result:** All modals, panels, and buttons across the entire application exhibit uniform 1930s monochrome styling inherited from the centralized project GUI theme.
+

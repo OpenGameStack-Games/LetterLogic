@@ -39,3 +39,8 @@ window/touchscreen/emulate_touch_from_mouse=true
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.0705882, 0.0705882, 0.0705882, 1)
+
+ 
+[gui]
+
+theme/custom="res://assets/theme/letter_logic_theme.tres"
