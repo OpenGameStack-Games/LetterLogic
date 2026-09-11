@@ -19,7 +19,7 @@ func cleanup() -> void:
 func test_tile_state_to_emoji() -> void:
 	assert_eq(share_mgr.tile_state_to_emoji(GameManagerScript.TileState.CORRECT), "🟩", "CORRECT should map to 🟩")
 	assert_eq(share_mgr.tile_state_to_emoji(GameManagerScript.TileState.PRESENT), "🟨", "PRESENT should map to 🟨")
-	assert_eq(share_mgr.tile_state_to_emoji(GameManagerScript.TileState.ABSENT), "⬛", "ABSENT should map to ⬛")
+	assert_eq(share_mgr.tile_state_to_emoji(GameManagerScript.TileState.ABSENT), "🟥", "ABSENT should map to 🟥")
 
 func test_generate_share_text_win() -> void:
 	var date_str: String = "2026-08-26"
@@ -32,8 +32,8 @@ func test_generate_share_text_win() -> void:
 	var text: String = share_mgr.generate_share_text(date_str, dummy_results, true, 3)
 	
 	assert_true(text.begins_with("LetterLogic 2026-08-26 3/6"), "Header should format correctly with 3/6")
-	assert_true(text.contains("⬛⬛🟨⬛🟩"), "Row 1 emojis should match")
-	assert_true(text.contains("⬛🟩⬛⬛🟩"), "Row 2 emojis should match")
+	assert_true(text.contains("🟥🟥🟨🟥🟩"), "Row 1 emojis should match")
+	assert_true(text.contains("🟥🟩🟥🟥🟩"), "Row 2 emojis should match")
 	assert_true(text.contains("🟩🟩🟩🟩🟩"), "Row 3 emojis should match")
 	assert_true(text.contains("https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic"), "Footer should contain Google Play link")
 
@@ -50,7 +50,7 @@ func test_generate_share_text_loss() -> void:
 	
 	var text: String = share_mgr.generate_share_text(date_str, dummy_results, false, 6)
 	assert_true(text.begins_with("LetterLogic 2026-08-26 X/6"), "Lost game header should format as X/6")
-	assert_true(text.contains("⬛⬛⬛⬛⬛"), "Row emojis should be all absent")
+	assert_true(text.contains("🟥🟥🟥🟥🟥"), "Row emojis should be all absent")
 
 func test_share_daily_results_clipboard() -> void:
 	var dummy_results: Array = [

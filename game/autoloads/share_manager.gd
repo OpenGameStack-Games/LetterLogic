@@ -11,7 +11,7 @@ const PLAY_STORE_URL: String = "https://play.google.com/store/apps/details?id=co
 
 const EMOJI_CORRECT: String = "🟩"
 const EMOJI_PRESENT: String = "🟨"
-const EMOJI_ABSENT: String = "⬛"
+const EMOJI_ABSENT: String = "🟥"
 
 ## Converts a GameManager.TileState enum into the corresponding square emoji.
 func tile_state_to_emoji(state: int) -> String:
