@@ -30,7 +30,7 @@ func generate_share_text(date_str: String, guess_results: Array, won: bool, atte
 	var score_str: String = "%d/6" % attempts if won else "X/6"
 	var header: String = "LetterLogic %s %s" % [date_str, score_str]
 	
-	var time_str: String = "⏱️ " + GameManagerScript.new().format_time(active_time)
+	var time_str: String = "⏱️ " + GameManagerScript.format_time(active_time)
 	
 	var grid_lines: Array[String] = []
 	for row_results in guess_results:

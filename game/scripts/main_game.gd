@@ -129,7 +129,7 @@ func _on_stats_pressed() -> void:
 			stats_scr.visible = true
 
 func _on_stats_visibility_changed() -> void:
-	var stats_scr = get_node_or_null("StatsScreen")
+	var stats_scr: Control = get_node_or_null("StatsScreen") as Control
 	if stats_scr != null and not stats_scr.visible:
 		var gm: Node = get_node_or_null("/root/GameManager")
 		if gm != null and gm.has_method("resume_timer"):
@@ -140,7 +140,7 @@ func _is_overlay_blocking() -> bool:
 	if game_over_modal != null and game_over_modal.visible:
 		return true
 	if has_node("StatsScreen"):
-		var stats_scr = get_node("StatsScreen")
+		var stats_scr: Control = get_node("StatsScreen") as Control
 		if stats_scr != null and stats_scr.visible:
 			return true
 	return false
@@ -148,7 +148,7 @@ func _is_overlay_blocking() -> bool:
 func _process(_delta: float) -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")
 	if gm != null:
-		var time_lbl = get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel")
+		var time_lbl: Label = get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel") as Label
 		if time_lbl != null:
 			time_lbl.text = gm.format_time(gm.get_active_time())
 
