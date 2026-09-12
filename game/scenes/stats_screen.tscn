@@ -2,6 +2,47 @@
 
 [ext_resource type="Script" path="res://scripts/stats_screen.gd" id="1_stats_script"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.05490196, 0.05490196, 0.0627451, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_selected"]
+bg_color = Color(0.05490196, 0.05490196, 0.0627451, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 0
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+expand_margin_bottom = 3.0
+content_margin_left = 16.0
+content_margin_right = 16.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_unselected"]
+bg_color = Color(0.10980392, 0.10980392, 0.11764706, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+content_margin_left = 16.0
+content_margin_right = 16.0
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
 [node name="StatsScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -32,155 +73,161 @@ theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 48
 
-[node name="Panel" type="PanelContainer" parent="MarginContainer"]
-layout_mode = 2
-
-[node name="VBox" type="VBoxContainer" parent="MarginContainer/Panel"]
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="Header" type="HBoxContainer" parent="MarginContainer/Panel/VBox"]
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/Panel/VBox/Header"]
+[node name="Title" type="Label" parent="MarginContainer/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 26
 text = "STATISTICS"
 horizontal_alignment = 1
 
-[node name="CloseButton" type="Button" parent="MarginContainer/Panel/VBox/Header"]
+[node name="CloseButton" type="Button" parent="MarginContainer/VBox/Header"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 text = "✕"
 
-[node name="ModeTabs" type="HBoxContainer" parent="MarginContainer/Panel/VBox"]
+[node name="ModeTabs" type="TabContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
 
-[node name="DailyTabButton" type="Button" parent="MarginContainer/Panel/VBox/ModeTabs"]
-custom_minimum_size = Vector2(0, 44)
+[node name="Continuous Play" type="MarginContainer" parent="MarginContainer/VBox/ModeTabs"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Daily Challenge"
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
-[node name="ContinuousTabButton" type="Button" parent="MarginContainer/Panel/VBox/ModeTabs"]
-custom_minimum_size = Vector2(0, 44)
+[node name="ContentVBox" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Continuous Play"
+theme_override_constants/separation = 18
 
-[node name="SummaryCards" type="HBoxContainer" parent="MarginContainer/Panel/VBox"]
+[node name="SummaryCards" type="HBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PlayedCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="PlayedCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/PlayedCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/PlayedCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/PlayedCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/PlayedCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Played"
 horizontal_alignment = 1
 
-[node name="WinPctCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="WinPctCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/WinPctCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0%"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/WinPctCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Win %"
 horizontal_alignment = 1
 
-[node name="StreakCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="StreakCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/StreakCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/StreakCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Current"
 horizontal_alignment = 1
 
-[node name="MaxStreakCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="MaxStreakCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/MaxStreakCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "0"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/MaxStreakCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Max Streak"
 horizontal_alignment = 1
 
-[node name="BestTimeCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="BestTimeCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/BestTimeCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/BestTimeCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "--:--"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/BestTimeCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/BestTimeCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Best Time"
 horizontal_alignment = 1
 
-[node name="AvgTimeCard" type="VBoxContainer" parent="MarginContainer/Panel/VBox/SummaryCards"]
+[node name="AvgTimeCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard"]
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/AvgTimeCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "--:--"
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard"]
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/AvgTimeCard"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Avg Time"
 horizontal_alignment = 1
 
-[node name="DistHeading" type="Label" parent="MarginContainer/Panel/VBox"]
+[node name="DistHeading" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "GUESS DISTRIBUTION"
 horizontal_alignment = 1
 
-[node name="DistributionContainer" type="VBoxContainer" parent="MarginContainer/Panel/VBox"]
+[node name="DistributionContainer" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[connection signal="pressed" from="MarginContainer/Panel/VBox/Header/CloseButton" to="." method="_on_close_pressed"]
-[connection signal="pressed" from="MarginContainer/Panel/VBox/ModeTabs/DailyTabButton" to="." method="_on_daily_tab_pressed"]
-[connection signal="pressed" from="MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton" to="." method="_on_continuous_tab_pressed"]
+[node name="Daily Challenge" type="MarginContainer" parent="MarginContainer/VBox/ModeTabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[connection signal="pressed" from="MarginContainer/VBox/Header/CloseButton" to="." method="_on_close_pressed"]
