@@ -259,3 +259,16 @@ This document outlines the manual test cases used to verify the requirements out
   6. Tap the statistics button to verify it responds smoothly with standard 1930s theme button interaction states (hover/pressed) and opens the Stats Screen modal.
   7. Verify the behavior is identical in both Continuous Play and Daily Challenge modes.
 - **Expected Result:** The header statistics button features a crisp 1930s monochrome bar graph icon, matches the back button in sizing and vertical alignment, and reliably opens the Statistics modal.
+
+### Test 5.8: Letter Grid Tile Font Sizing and Padding Across Aspect Ratios
+- **Requirement(s):** REQ-8.7
+- **Steps:**
+  1. Launch the game in either Continuous Play or Daily Challenge mode.
+  2. Observe the letter tiles across the game grid.
+  3. Type letters across the active row (e.g., "PLANT").
+  4. Verify that each letter renders in an enlarged font size (72px) that proportionally fills the responsive tile box (~100px–120px+).
+  5. Verify that each letter is horizontally and vertically centered within the tile.
+  6. Verify that letters maintain clean padding and margin clearance from the tile's 2px border and 4px rounded corners without clipping, touching edges, or truncating across different screen resolutions (16:9, 19.5:9, 20:9 smartphones and 4:3, 16:10 tablets).
+  7. Submit the guess and verify that evaluation colors (Green, Yellow, Flat Red) and state transitions preserve the font size and centering.
+  8. Reset or start a new game and verify font sizing is consistently applied to newly typed letters.
+- **Expected Result:** Letters render prominently at 72px font size, fill the tile interior proportionally with balanced padding, remain centered, and never touch tile borders or clip corners.
