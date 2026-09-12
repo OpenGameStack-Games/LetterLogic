@@ -223,7 +223,6 @@ size_flags_vertical = 3
 theme_override_constants/separation = 6
 
 [node name="Daily Challenge" type="MarginContainer" parent="MarginContainer/VBox/ModeTabs"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16

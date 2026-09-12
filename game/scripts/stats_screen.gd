@@ -21,15 +21,16 @@ var active_mode: int = 0 # 0 = Continuous, 1 = Daily
 var _stats_manager_ref: Node = null
 
 func _ready() -> void:
-	mode_tabs.tab_changed.connect(_on_tab_changed)
 	_update_node_references()
+	if mode_tabs != null and not mode_tabs.tab_changed.is_connected(_on_tab_changed):
+		mode_tabs.tab_changed.connect(_on_tab_changed)
 	refresh_display()
 
 func _update_node_references() -> void:
 	if mode_tabs == null:
 		mode_tabs = get_node_or_null("MarginContainer/VBox/ModeTabs") as TabContainer
-	if content_vbox == null and has_node("MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"):
-		content_vbox = get_node("MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox") as VBoxContainer
+	if content_vbox == null and mode_tabs != null:
+		content_vbox = mode_tabs.find_child("ContentVBox", true, false) as VBoxContainer
 		
 	if content_vbox != null and played_val == null and content_vbox.has_node("SummaryCards/PlayedCard/Value"):
 		played_val = content_vbox.get_node("SummaryCards/PlayedCard/Value") as Label
@@ -41,16 +42,19 @@ func _update_node_references() -> void:
 		dist_container = content_vbox.get_node("DistributionContainer") as VBoxContainer
 
 func _on_tab_changed(tab: int) -> void:
+	_update_node_references()
 	# Tab 0 is Continuous Play, Tab 1 is Daily Challenge
 	if tab == 0:
 		active_mode = GameManagerScript.GameMode.CONTINUOUS
 	else:
 		active_mode = GameManagerScript.GameMode.DAILY
 	
-	var current_tab_node = mode_tabs.get_child(tab)
-	if content_vbox.get_parent() != current_tab_node:
-		content_vbox.get_parent().remove_child(content_vbox)
-		current_tab_node.add_child(content_vbox)
+	if mode_tabs != null and content_vbox != null and tab < mode_tabs.get_child_count():
+		var current_tab_node: Node = mode_tabs.get_child(tab)
+		if content_vbox.get_parent() != current_tab_node:
+			content_vbox.owner = null
+			content_vbox.get_parent().remove_child(content_vbox)
+			current_tab_node.add_child(content_vbox)
 	
 	refresh_display()
 
@@ -66,13 +70,12 @@ func get_stats_manager() -> Node:
 
 func set_mode(mode: int) -> void:
 	active_mode = mode
+	_update_node_references()
+	var target_tab: int = 0 if mode == GameManagerScript.GameMode.CONTINUOUS else 1
 	if mode_tabs != null:
-		if mode == GameManagerScript.GameMode.CONTINUOUS:
-			mode_tabs.current_tab = 0
-		else:
-			mode_tabs.current_tab = 1
-	else:
-		refresh_display()
+		if mode_tabs.current_tab != target_tab:
+			mode_tabs.current_tab = target_tab
+	_on_tab_changed(target_tab)
 
 func refresh_display() -> void:
 	_update_node_references()

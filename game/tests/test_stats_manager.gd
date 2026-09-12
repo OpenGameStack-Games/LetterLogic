@@ -65,10 +65,38 @@ func test_stats_screen_ui() -> void:
 	var screen: Node = scn.instantiate()
 	assert_true(screen != null, "stats_screen should instantiate")
 	
+	var mode_tabs: TabContainer = screen.find_child("ModeTabs", true, false) as TabContainer
+	assert_true(mode_tabs != null, "ModeTabs TabContainer should exist in StatsScreen")
+	assert_eq(mode_tabs.get_tab_count(), 2, "ModeTabs should contain 2 tabs")
+	assert_eq(mode_tabs.get_tab_title(0), "Continuous Play", "Tab 0 should be Continuous Play")
+	assert_eq(mode_tabs.get_tab_title(1), "Daily Challenge", "Tab 1 should be Daily Challenge")
+	
+	# Verify StyleBox borders for active and inactive tabs
+	var selected_style: StyleBoxFlat = mode_tabs.get_theme_stylebox("tab_selected") as StyleBoxFlat
+	assert_true(selected_style != null, "tab_selected stylebox should exist")
+	assert_eq(selected_style.border_width_bottom, 0, "Selected tab should have no bottom border to merge with panel")
+	
+	var unselected_style: StyleBoxFlat = mode_tabs.get_theme_stylebox("tab_unselected") as StyleBoxFlat
+	assert_true(unselected_style != null, "tab_unselected stylebox should exist")
+	assert_true(unselected_style.border_width_bottom > 0, "Unselected tab should have a bottom border separating it from panel")
+	
+	# Programmatic mode switching via set_mode
 	screen.call("set_mode", GameManagerScript.GameMode.DAILY)
+	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.DAILY, "active_mode should be DAILY")
+	
 	var dist_box: Node = screen.find_child("DistributionContainer", true, false)
 	assert_true(dist_box != null, "DistributionContainer should exist in StatsScreen")
 	assert_eq(dist_box.get_child_count(), 7, "DistributionContainer should render 7 rows (1..6 + loss)")
+	
+	screen.call("set_mode", GameManagerScript.GameMode.CONTINUOUS)
+	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.CONTINUOUS, "active_mode should be CONTINUOUS")
+	
+	# Verify tab changed handler responds to user tab switches
+	screen.call("_on_tab_changed", 1)
+	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.DAILY, "active_mode should update to DAILY on tab changed")
+	
+	screen.call("_on_tab_changed", 0)
+	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.CONTINUOUS, "active_mode should update to CONTINUOUS on tab changed")
 	
 	screen.free()
 
