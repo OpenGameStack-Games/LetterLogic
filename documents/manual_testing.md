@@ -59,7 +59,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Requirement(s):** REQ-2.6
 - **Steps:**
   1. Start a game and allow the timer to reach ~`00:05`.
-  2. Tap the Statistics icon button in the header to open the Stats Screen overlay.
+  2. Tap the Statistics icon button in the header (bar graph icon) to open the Stats Screen overlay.
   3. Wait 5 seconds.
   4. Close the Stats Screen modal.
   5. Check whether the timer elapsed during the modal.
@@ -247,5 +247,14 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
 - **Expected Result:** All UI elements dynamically scale and maintain proportional sizing across phones and tablets, avoiding letterbox bars, clipping, or overlapping controls.
 
-
-
+### Test 5.7: Header Statistics Button & 1930s Monochrome Bar Graph Icon
+- **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.10
+- **Steps:**
+  1. Start a game in either Continuous Play or Daily Challenge mode.
+  2. Observe the statistics button located in the top-right corner of the header.
+  3. Verify that the button does NOT display a colorful unicode emoji (`📊`).
+  4. Verify that the button displays the custom 1930s monochrome bar graph icon texture (`res://assets/icons/stats_icon.png`) centered and scaled cleanly.
+  5. Inspect the button touch target size and visual symmetry with the Back button on the opposite side (both buttons have 56x56 minimum dimensions in a 56px height header).
+  6. Tap the statistics button to verify it responds smoothly with standard 1930s theme button interaction states (hover/pressed) and opens the Stats Screen modal.
+  7. Verify the behavior is identical in both Continuous Play and Daily Challenge modes.
+- **Expected Result:** The header statistics button features a crisp 1930s monochrome bar graph icon, matches the back button in sizing and vertical alignment, and reliably opens the Statistics modal.
