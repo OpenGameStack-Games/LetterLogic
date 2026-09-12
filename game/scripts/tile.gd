@@ -38,7 +38,7 @@ func _ensure_label() -> void:
 			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			lbl.add_theme_color_override("font_color", COLOR_TEXT)
-			lbl.add_theme_font_size_override("font_size", 32)
+			lbl.add_theme_font_size_override("font_size", 72)
 			add_child(lbl)
 			label = lbl
 
