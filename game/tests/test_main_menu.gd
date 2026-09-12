@@ -136,7 +136,8 @@ func test_standing_mascot_asset_exists() -> void:
 	
 	if mascot_tex != null:
 		var size: Vector2 = mascot_tex.get_size()
-		assert_true(size.x > 0.0 and size.y > 0.0, "mascot_standing.png must have valid positive dimensions")
+		assert_eq(int(size.x), 512, "mascot_standing.png width should be 512")
+		assert_eq(int(size.y), 512, "mascot_standing.png height should be 512")
 
 func test_main_menu_mascot_node() -> void:
 	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
@@ -154,6 +155,8 @@ func test_main_menu_mascot_node() -> void:
 		var expected_path: String = "res://assets/icons/mascot_standing.png"
 		if mascot.texture != null:
 			assert_eq(mascot.texture.resource_path, expected_path, "MascotRect should use the mascot_standing.png texture")
+		assert_eq(mascot.scale, Vector2.ONE, "MascotRect scale should remain fixed at Vector2.ONE")
+		assert_eq(mascot.pivot_offset, Vector2(128, 128), "MascotRect pivot_offset should be centered at Vector2(128, 128)")
 	
 	# Verify that the animation is running (tween exists)
 	var menu_script_inst: Node = menu
