@@ -19,13 +19,15 @@ This document outlines the manual test cases used to verify the requirements out
   4. Attempt to tap the letter 'A' again or press 'A' on the physical keyboard.
 - **Expected Result:** The 'A' key on the keyboard is temporarily disabled and styled in dark gray (`#272729`). The second 'A' does not appear in the grid. The game prevents duplicate letters in the current row.
 
-### Test 1.2: Dictionary and Length Validation
-- **Requirement(s):** REQ-3.2, REQ-3.3
+### Test 1.2: Dictionary, Length Validation & Toast Popup Layout
+- **Requirement(s):** REQ-3.2, REQ-3.3, REQ-8.9
 - **Steps:**
-  1. Start a game.
-  2. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
-  3. Type 5 letters of an invalid word (e.g., "QWERT") and submit. 
-- **Expected Result:** The game shows an "invalid word" or "not in word list" notification. The row does not advance, and the attempt is not consumed.
+  1. Start a game in either Continuous Play or Daily Challenge mode.
+  2. Note the location of the running puzzle timer in the header directly below the game mode label.
+  3. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
+  4. Type 5 letters of an invalid word (e.g., "QWERT") and submit. 
+  5. Observe the location and presentation of the "Not in word list" toast popup.
+- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast does not obscure or overlap the header, back button, timer, or game board tiles. The row does not advance, and the attempt is not consumed. The toast dismisses automatically after ~1.8 seconds.
 
 ### Test 1.3: Guess Evaluation and Keyboard Colors
 - **Requirement(s):** REQ-2.2, REQ-2.4

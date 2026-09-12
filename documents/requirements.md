@@ -57,5 +57,14 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
   - **Active Tab:** Matches content panel background (`#0e0e10`), 3px solid white borders (`#ffffff`) on top, left, and right, with the bottom border removed (`border_width_bottom = 0`) to merge seamlessly into the statistics content panel below. Top corners feature 12px rounded radii, with square 0px bottom corners.
   - **Inactive Tab:** Dark charcoal fill (`#1c1c1e`), 3px solid white borders (`#ffffff`) on all sides (retaining bottom boundary line separating it from the panel), 12px rounded top corners, and square 0px bottom corners.
   - **Content Panel:** Deep black fill (`#0e0e10`), 3px solid white border (`#ffffff`), and 12px corner radii, aligning cleanly with the active tab header without gaps, misalignments, or missing outlines.
+- **REQ-8.9 - Main Game Vertical Hierarchy & Constrained Toast Overlay:** The primary gameplay screen (`main_game.tscn`) organizes its visual layout strictly inside a responsive `VBoxContainer` with mathematically constrained top-to-bottom hierarchy:
+  1. Title (`LETTERLOGIC`)
+  2. Game Mode Label (`DAILY CHALLENGE • YYYY-MM-DD` / `CONTINUOUS PLAY`)
+  3. Active Puzzle Timer (`00:00`)
+  4. Toast Popup Notification (`ToastOverlay` / `ToastPanel` / `ToastLabel`)
+  5. Game Board Grid (`BoardArea` / `GameBoard`)
+  6. On-Screen Virtual Keyboard (`KeyboardArea` / `Keyboard`)
+  The `ToastOverlay` is integrated natively into the `VBoxContainer` directly between `Header` and `BoardArea` without hardcoded pixel offsets. When inactive, it is hidden (`visible = false`) and occupies zero vertical space. When active, it renders horizontally centered within the natural vertical gap between the header timer and letter grid without obscuring, clipping, or overlapping the active puzzle timer or grid tiles across any screen dimensions or aspect ratios.
+
 
 
