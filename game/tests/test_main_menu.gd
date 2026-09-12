@@ -154,3 +154,44 @@ func test_main_menu_mascot_node() -> void:
 	
 	menu.queue_free()
 
+func test_stats_icon_asset_exists() -> void:
+	var stats_icon_path: String = "res://assets/icons/stats_icon.png"
+	var stats_icon_tex: Texture2D = load(stats_icon_path) as Texture2D
+	assert_true(stats_icon_tex != null, "stats_icon.png asset must exist in assets/icons and load as Texture2D")
+	
+	if stats_icon_tex != null:
+		var size: Vector2 = stats_icon_tex.get_size()
+		assert_true(size.x > 0.0 and size.y > 0.0, "stats_icon.png must have valid positive dimensions")
+
+func test_main_game_stats_button_properties() -> void:
+	var game_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(game_scn != null, "main_game.tscn must be loadable")
+	
+	var main_game: Node = game_scn.instantiate()
+	assert_true(main_game != null, "main_game must instantiate successfully")
+	
+	var stats_btn: Button = main_game.find_child("StatsButton", true, false) as Button
+	assert_true(stats_btn != null, "StatsButton should exist in MainGame header")
+	
+	if stats_btn != null:
+		assert_eq(stats_btn.text, "", "StatsButton text must be empty (emoji removed)")
+		assert_true(stats_btn.icon != null, "StatsButton icon must be assigned")
+		if stats_btn.icon != null:
+			assert_eq(stats_btn.icon.resource_path, "res://assets/icons/stats_icon.png", "StatsButton icon must reference stats_icon.png")
+		assert_true(stats_btn.expand_icon, "StatsButton expand_icon should be true")
+		assert_eq(int(stats_btn.icon_alignment), int(HORIZONTAL_ALIGNMENT_CENTER), "StatsButton icon_alignment should be centered")
+		assert_eq(stats_btn.custom_minimum_size, Vector2(56, 56), "StatsButton custom_minimum_size should be Vector2(56, 56)")
+		assert_true(stats_btn.is_connected("pressed", Callable(main_game, "_on_stats_pressed")), "StatsButton pressed signal must be connected to _on_stats_pressed")
+	
+	var back_btn: Button = main_game.find_child("BackButton", true, false) as Button
+	assert_true(back_btn != null, "BackButton should exist in MainGame header")
+	if back_btn != null and stats_btn != null:
+		assert_eq(back_btn.custom_minimum_size, stats_btn.custom_minimum_size, "BackButton and StatsButton must have symmetrical minimum size")
+	
+	var header: Control = main_game.get_node_or_null("VBoxContainer/Header") as Control
+	assert_true(header != null, "Header should exist in MainGame")
+	if header != null:
+		assert_true(header.custom_minimum_size.y >= 56.0, "Header custom_minimum_size.y must accommodate 56px buttons")
+	
+	main_game.free()
+
