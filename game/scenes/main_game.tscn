@@ -71,7 +71,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="ToastOverlay" type="CenterContainer" parent="VBoxContainer"]
-visible = false
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
 [node name="ToastPanel" type="PanelContainer" parent="VBoxContainer/ToastOverlay"]

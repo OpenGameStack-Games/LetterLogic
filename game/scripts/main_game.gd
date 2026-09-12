@@ -28,7 +28,7 @@ func _ready() -> void:
 	if toast_timer == null and toast_overlay != null:
 		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null:
-		toast_overlay.visible = false
+		toast_overlay.modulate.a = 0.0
 	if game_over_modal != null:
 		game_over_modal.visible = false
 	_connect_signals()
@@ -68,7 +68,8 @@ func show_toast(msg: String) -> void:
 		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null and toast_label != null:
 		toast_label.text = msg
-		toast_overlay.visible = true
+		var tween: Tween = create_tween()
+		tween.tween_property(toast_overlay, "modulate:a", 1.0, 0.15)
 		if toast_timer != null and toast_timer.is_inside_tree():
 			toast_timer.start(1.8)
 
@@ -76,7 +77,8 @@ func _on_toast_timer_timeout() -> void:
 	if toast_overlay == null:
 		toast_overlay = find_child("ToastOverlay", true, false) as Control
 	if toast_overlay != null:
-		toast_overlay.visible = false
+		var tween: Tween = create_tween()
+		tween.tween_property(toast_overlay, "modulate:a", 0.0, 0.3)
 
 func _on_game_won(attempts: int, secret: String) -> void:
 	var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
