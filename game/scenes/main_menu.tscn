@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu_script"]
 [ext_resource type="PackedScene" path="res://scenes/stats_screen.tscn" id="2_stats_screen"]
 
-[ext_resource type="Texture2D" uid="uid://bkgs32trxxvmh" path="res://assets/icons/mascot_standing.png" id="3_mascot"]
+[ext_resource type="Texture2D" uid="uid://btli1pthuo3db" path="res://assets/icons/mascot_standing.png" id="3_mascot"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
