@@ -23,21 +23,24 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0705882, 0.0705882, 0.0705882, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 48
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(480, 0)
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 36
 alignment = 1
 
-[node name="MascotRect" type="TextureRect" parent="CenterContainer/VBox"]
+[node name="MascotRect" type="TextureRect" parent="MarginContainer/VBox"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -46,49 +49,49 @@ expand_mode = 1
 stretch_mode = 5
 pivot_offset = Vector2(128, 128)
 
-[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBox"]
+[node name="TitleBox" type="VBoxContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBox/TitleBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 44
 text = "LETTERLOGIC"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
+[node name="SubtitleLabel" type="Label" parent="MarginContainer/VBox/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 18
 text = "The 5-Letter Isogram Word Game"
 horizontal_alignment = 1
 
-[node name="MenuButtons" type="VBoxContainer" parent="CenterContainer/VBox"]
+[node name="MenuButtons" type="VBoxContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="DailyButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+[node name="DailyButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Daily Challenge
 [Play Today's Word]"
 
-[node name="ContinuousButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+[node name="ContinuousButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Continuous Play
 [Unlimited Practice]"
 
-[node name="StatsButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+[node name="StatsButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Statistics"
 
-[node name="HowToPlayButton" type="Button" parent="CenterContainer/VBox/MenuButtons"]
+[node name="HowToPlayButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -106,32 +109,32 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.8)
 
-[node name="Panel" type="PanelContainer" parent="HowToPlayModal"]
-custom_minimum_size = Vector2(460, 600)
+[node name="MarginContainer" type="MarginContainer" parent="HowToPlayModal"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -300.0
-offset_right = 230.0
-offset_bottom = 300.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 48
 
-[node name="VBox" type="VBoxContainer" parent="HowToPlayModal/Panel"]
+[node name="Panel" type="PanelContainer" parent="HowToPlayModal/MarginContainer"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="HowToPlayModal/MarginContainer/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ModalTitle" type="Label" parent="HowToPlayModal/Panel/VBox"]
+[node name="ModalTitle" type="Label" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "HOW TO PLAY"
 horizontal_alignment = 1
 
-[node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/Panel/VBox"]
+[node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
@@ -150,7 +153,7 @@ text = "[b]Guess the secret word in 6 attempts.[/b]
 • [b]Continuous Play:[/b] Play as many words as you like!"
 scroll_active = true
 
-[node name="CloseButton" type="Button" parent="HowToPlayModal/Panel/VBox"]
+[node name="CloseButton" type="Button" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -160,8 +163,8 @@ text = "Got It!"
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/DailyButton" to="." method="_on_daily_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/ContinuousButton" to="." method="_on_continuous_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/StatsButton" to="." method="_on_stats_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBox/MenuButtons/HowToPlayButton" to="." method="_on_how_to_play_button_pressed"]
-[connection signal="pressed" from="HowToPlayModal/Panel/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/MenuButtons/DailyButton" to="." method="_on_daily_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/MenuButtons/ContinuousButton" to="." method="_on_continuous_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/MenuButtons/StatsButton" to="." method="_on_stats_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/MenuButtons/HowToPlayButton" to="." method="_on_how_to_play_button_pressed"]
+[connection signal="pressed" from="HowToPlayModal/MarginContainer/Panel/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]

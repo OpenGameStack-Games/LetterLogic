@@ -7,17 +7,17 @@ extends Control
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
 
-@onready var daily_tab_btn: Button = $Panel/VBox/ModeTabs/DailyTabButton
-@onready var continuous_tab_btn: Button = $Panel/VBox/ModeTabs/ContinuousTabButton
+@onready var daily_tab_btn: Button = $MarginContainer/Panel/VBox/ModeTabs/DailyTabButton
+@onready var continuous_tab_btn: Button = $MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton
 
-@onready var played_val: Label = $Panel/VBox/SummaryCards/PlayedCard/Value
-@onready var win_pct_val: Label = $Panel/VBox/SummaryCards/WinPctCard/Value
-@onready var streak_val: Label = $Panel/VBox/SummaryCards/StreakCard/Value
-@onready var max_streak_val: Label = $Panel/VBox/SummaryCards/MaxStreakCard/Value
-@onready var best_time_val: Label = $Panel/VBox/SummaryCards/BestTimeCard/Value
-@onready var avg_time_val: Label = $Panel/VBox/SummaryCards/AvgTimeCard/Value
+@onready var played_val: Label = $MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value
+@onready var win_pct_val: Label = $MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value
+@onready var streak_val: Label = $MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value
+@onready var max_streak_val: Label = $MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value
+@onready var best_time_val: Label = $MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value
+@onready var avg_time_val: Label = $MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value
 
-@onready var dist_container: VBoxContainer = $Panel/VBox/DistributionContainer
+@onready var dist_container: VBoxContainer = $MarginContainer/Panel/VBox/DistributionContainer
 
 var active_mode: int = 0 # 0 = Continuous, 1 = Daily
 var _stats_manager_ref: Node = null
@@ -27,24 +27,24 @@ func _ready() -> void:
 	refresh_display()
 
 func _ensure_nodes() -> void:
-	if played_val == null and has_node("Panel/VBox/SummaryCards/PlayedCard/Value"):
-		played_val = $Panel/VBox/SummaryCards/PlayedCard/Value as Label
-	if win_pct_val == null and has_node("Panel/VBox/SummaryCards/WinPctCard/Value"):
-		win_pct_val = $Panel/VBox/SummaryCards/WinPctCard/Value as Label
-	if streak_val == null and has_node("Panel/VBox/SummaryCards/StreakCard/Value"):
-		streak_val = $Panel/VBox/SummaryCards/StreakCard/Value as Label
-	if max_streak_val == null and has_node("Panel/VBox/SummaryCards/MaxStreakCard/Value"):
-		max_streak_val = $Panel/VBox/SummaryCards/MaxStreakCard/Value as Label
-	if best_time_val == null and has_node("Panel/VBox/SummaryCards/BestTimeCard/Value"):
-		best_time_val = $Panel/VBox/SummaryCards/BestTimeCard/Value as Label
-	if avg_time_val == null and has_node("Panel/VBox/SummaryCards/AvgTimeCard/Value"):
-		avg_time_val = $Panel/VBox/SummaryCards/AvgTimeCard/Value as Label
-	if dist_container == null and has_node("Panel/VBox/DistributionContainer"):
-		dist_container = $Panel/VBox/DistributionContainer as VBoxContainer
-	if daily_tab_btn == null and has_node("Panel/VBox/ModeTabs/DailyTabButton"):
-		daily_tab_btn = $Panel/VBox/ModeTabs/DailyTabButton as Button
-	if continuous_tab_btn == null and has_node("Panel/VBox/ModeTabs/ContinuousTabButton"):
-		continuous_tab_btn = $Panel/VBox/ModeTabs/ContinuousTabButton as Button
+	if played_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value"):
+		played_val = $MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value as Label
+	if win_pct_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value"):
+		win_pct_val = $MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value as Label
+	if streak_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value"):
+		streak_val = $MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value as Label
+	if max_streak_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value"):
+		max_streak_val = $MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value as Label
+	if best_time_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value"):
+		best_time_val = $MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value as Label
+	if avg_time_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value"):
+		avg_time_val = $MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value as Label
+	if dist_container == null and has_node("MarginContainer/Panel/VBox/DistributionContainer"):
+		dist_container = $MarginContainer/Panel/VBox/DistributionContainer as VBoxContainer
+	if daily_tab_btn == null and has_node("MarginContainer/Panel/VBox/ModeTabs/DailyTabButton"):
+		daily_tab_btn = $MarginContainer/Panel/VBox/ModeTabs/DailyTabButton as Button
+	if continuous_tab_btn == null and has_node("MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton"):
+		continuous_tab_btn = $MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton as Button
 
 func set_stats_manager(sm: Node) -> void:
 	_stats_manager_ref = sm
