@@ -19,18 +19,19 @@ This skill defines the orchestrator workflow for taking a bug or feature request
 
 ## Pipeline Steps
 
-1. **Issue Creation:** 
-   - Define and invoke the `issue_creator` subagent (Model: `flash`).
-   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
-   - Wait for it to create the issue and report back the new GitHub Issue number.
-2. **Issue Resolution:** 
-   - Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the issue number returned by step 1.
-   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
-   - Wait for it to push the branch, create the Pull Request, and report back the PR URL.
-3. **PR Review & Merge:**
-   - Define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR URL returned by step 2.
-   - Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
-   - Wait for it to complete the merge and documentation updates.
+**Phase 1: Batch Issue Creation**
+When the user asks to log a bug or feature request:
+1. Define and invoke the `issue_creator` subagent (Model: `flash`).
+2. Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
+3. Wait for it to create the issue and report back the new GitHub Issue number.
+4. Kill the `issue_creator`.
+5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?"
+
+**Phase 2: Resolution & Review (For each issue)**
+When the user explicitly authorizes you to begin resolving issues:
+1. **Issue Resolution:** Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the target issue. Schedule a 10-minute (600s) Liveness timer. Wait for it to push the branch and open a PR. Kill the `issue_resolver` when done.
+2. **PR Review & Merge:** Immediately define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR. Schedule a 10-minute (600s) Liveness timer. Wait for it to complete the merge and documentation updates. Kill the `pr_reviewer` when done.
+3. If there are more issues in the queue, repeat Phase 2.
 
 ---
 
