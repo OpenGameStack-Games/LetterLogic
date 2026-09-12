@@ -9,6 +9,7 @@ description: >-
 This skill defines the orchestrator workflow for taking a bug or feature request from creation to merged Pull Request.
 
 ## Rules
+- **Capability Check:** Before starting this pipeline, you must verify your own capabilities. You must possess the ability to spawn autonomous sub-agents, execute CLI commands in a local shell, and manage background tasks. If you are a simpler chat or autocomplete agent without these agentic orchestration tools, you must halt and inform the user that this pipeline requires an advanced agentic framework to execute.
 - **Sequential Execution Only:** You must ONLY run one subagent at a time. The host machine has resource limits. Never invoke multiple subagents concurrently. Wait for one subagent to finish its task and return control to you before invoking the next one.
 - **Strict Resolve-Then-Review Cycle:** The `issue_creator` can create multiple issues in a row if requested. However, once the `issue_resolver` finishes an issue and opens a PR, you MUST immediately invoke the `pr_reviewer` to review and merge that PR. You must NEVER allow the `issue_resolver` to start a second issue if there is an open PR waiting for the `pr_reviewer`.
 - **Liveness Monitoring:** When waiting for a subagent to finish a task, you must ALWAYS set a 10-minute (600 seconds) one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`). If the subagent sends an update, the timer cancels automatically. If the timer expires, it means the subagent has been silent for 10 minutes. You must then use the `manage_subagents` tool to check its status or use `send_message` to ping it and ask if it is stuck.
@@ -25,7 +26,7 @@ When the user asks to log a bug or feature request:
 2. Schedule a 10-minute (600s) Liveness timer (`TimerCondition: 'any'`).
 3. Wait for it to create the issue and report back the new GitHub Issue number.
 4. Kill the `issue_creator`.
-5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?"
+5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?" **You must ask this question EVERY TIME you log a new issue, even if the user previously gave you authorization to continuously resolve issues during a past batch. Past authorization does not carry over to newly created issues.**
 
 **Phase 2: Resolution & Review (Dynamic Queueing)**
 When the user explicitly authorizes you to begin resolving issues:
