@@ -38,12 +38,13 @@ func _start_mascot_animation() -> void:
 		_mascot_tween.kill()
 	
 	# Initial state
-	mascot_rect.scale = Vector2(0.97, 1.03)
+	mascot_rect.rotation_degrees = -3.0
+	mascot_rect.scale = Vector2(1.0, 1.0)
 	
 	_mascot_tween = create_tween().set_loops()
 	_mascot_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_mascot_tween.tween_property(mascot_rect, "scale", Vector2(1.03, 0.97), 1.0)
-	_mascot_tween.tween_property(mascot_rect, "scale", Vector2(0.97, 1.03), 1.0)
+	_mascot_tween.tween_property(mascot_rect, "rotation_degrees", 3.0, 1.5)
+	_mascot_tween.tween_property(mascot_rect, "rotation_degrees", -3.0, 1.5)
 
 func _exit_tree() -> void:
 	if _mascot_tween:
