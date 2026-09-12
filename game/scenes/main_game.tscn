@@ -88,8 +88,8 @@ visible = false
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 80.0
-offset_bottom = 140.0
+offset_top = 120.0
+offset_bottom = 180.0
 grow_horizontal = 2
 
 [node name="ToastPanel" type="PanelContainer" parent="ToastOverlay"]
