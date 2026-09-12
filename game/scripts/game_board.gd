@@ -19,21 +19,34 @@ func _ready() -> void:
 	_connect_game_manager()
 
 func _setup_grid() -> void:
-	if not has_node("CenterContainer/GridContainer"):
+	if not has_node("MarginContainer/AspectRatioContainer/GridContainer"):
 		# In case structure is instantiated programmatically
-		var center: CenterContainer = CenterContainer.new()
-		center.name = "CenterContainer"
-		center.set_anchors_preset(PRESET_FULL_RECT)
-		add_child(center)
+		var margin: MarginContainer = MarginContainer.new()
+		margin.name = "MarginContainer"
+		margin.set_anchors_preset(PRESET_FULL_RECT)
+		margin.add_theme_constant_override("margin_left", 10)
+		margin.add_theme_constant_override("margin_top", 10)
+		margin.add_theme_constant_override("margin_right", 10)
+		margin.add_theme_constant_override("margin_bottom", 10)
+		add_child(margin)
+		
+		var aspect: AspectRatioContainer = AspectRatioContainer.new()
+		aspect.name = "AspectRatioContainer"
+		aspect.size_flags_horizontal = SIZE_EXPAND_FILL
+		aspect.size_flags_vertical = SIZE_EXPAND_FILL
+		aspect.ratio = 0.8333
+		margin.add_child(aspect)
 		
 		grid_container = GridContainer.new()
 		grid_container.name = "GridContainer"
 		grid_container.columns = COLS
 		grid_container.add_theme_constant_override("h_separation", 8)
 		grid_container.add_theme_constant_override("v_separation", 8)
-		center.add_child(grid_container)
+		grid_container.size_flags_horizontal = SIZE_EXPAND_FILL
+		grid_container.size_flags_vertical = SIZE_EXPAND_FILL
+		aspect.add_child(grid_container)
 	else:
-		grid_container = $CenterContainer/GridContainer as GridContainer
+		grid_container = $MarginContainer/AspectRatioContainer/GridContainer as GridContainer
 
 	_build_tiles()
 
@@ -54,7 +67,8 @@ func _build_tiles() -> void:
 			if tile == null:
 				tile = TileScript.new()
 			
-			tile.custom_minimum_size = Vector2(62, 62)
+			tile.size_flags_horizontal = SIZE_EXPAND_FILL
+			tile.size_flags_vertical = SIZE_EXPAND_FILL
 			grid_container.add_child(tile)
 			row_tiles.append(tile)
 		tiles.append(row_tiles)

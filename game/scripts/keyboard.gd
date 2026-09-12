@@ -22,14 +22,21 @@ func _ready() -> void:
 	_connect_game_manager()
 
 func _setup_keyboard() -> void:
-	if not has_node("VBoxContainer"):
+	if not has_node("MarginContainer/VBoxContainer"):
+		var margin: MarginContainer = MarginContainer.new()
+		margin.name = "MarginContainer"
+		margin.set_anchors_preset(PRESET_FULL_RECT)
+		margin.add_theme_constant_override("margin_left", 6)
+		margin.add_theme_constant_override("margin_right", 6)
+		margin.add_theme_constant_override("margin_bottom", 12)
+		add_child(margin)
+		
 		vbox_container = VBoxContainer.new()
 		vbox_container.name = "VBoxContainer"
-		vbox_container.set_anchors_preset(PRESET_FULL_RECT)
 		vbox_container.add_theme_constant_override("separation", 8)
-		add_child(vbox_container)
+		margin.add_child(vbox_container)
 	else:
-		vbox_container = $VBoxContainer as VBoxContainer
+		vbox_container = $MarginContainer/VBoxContainer as VBoxContainer
 	
 	_build_keys()
 

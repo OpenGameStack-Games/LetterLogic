@@ -14,10 +14,10 @@ const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 @onready var toast_label: Label = $ToastOverlay/ToastPanel/ToastLabel
 @onready var toast_overlay: Control = $ToastOverlay
 @onready var game_over_modal: Control = $GameOverModal
-@onready var game_over_title: Label = $GameOverModal/Panel/VBox/TitleLabel
-@onready var game_over_message: Label = $GameOverModal/Panel/VBox/MessageLabel
-@onready var next_word_btn: Button = $GameOverModal/Panel/VBox/ButtonContainer/NextWordButton
-@onready var share_btn: Button = $GameOverModal/Panel/VBox/ButtonContainer/ShareButton
+@onready var game_over_title: Label = $GameOverModal/MarginContainer/Panel/VBox/TitleLabel
+@onready var game_over_message: Label = $GameOverModal/MarginContainer/Panel/VBox/MessageLabel
+@onready var next_word_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton
+@onready var share_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton
 @onready var toast_timer: Timer = $ToastOverlay/ToastTimer
 
 func _ready() -> void:

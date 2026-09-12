@@ -193,12 +193,12 @@ This document outlines the manual test cases used to verify the requirements out
   3. Verify the icon renders crisp and clear at 512x512 resolution without clipping, distortion, or chromatic artifacts.
 - **Expected Result:** The 1930s rubber-hose mascot icon is displayed cleanly as the application launcher icon.
 
-### Test 5.5: How to Play Modal Dimensions & Red Absent Tile Color Copy
+### Test 5.5: How to Play Modal Responsive Layout & Red Absent Tile Color Copy
 - **Requirement(s):** REQ-8.1, REQ-8.3, REQ-8.6
 - **Steps:**
   1. Launch the game to the Main Menu.
   2. Tap the "How to Play" button to open the instructions modal.
-  3. Verify the modal panel container is centered and sized at 460x600 px (`custom_minimum_size = Vector2(460, 600)`).
+  3. Verify the modal panel container is wrapped in a responsive `MarginContainer` (24px horizontal, 48px vertical margins) spanning the viewport rather than hardcoded fixed pixel offsets.
   4. Verify that all instructions and text content fit comfortably within the modal without requiring vertical scrolling at the standard 720x1280 portrait resolution.
   5. Check the tile color evaluation cues:
      - Correct is displayed as `🟩 GREEN` (`#538d4e`) - "Letter is in the word and in the correct spot."
@@ -208,6 +208,26 @@ This document outlines the manual test cases used to verify the requirements out
   7. Verify game modes (Daily Challenge with UTC midnight reset, Continuous Play unlimited sandbox) are clearly described.
   8. If tested on smaller displays or with enlarged system font scaling, verify the `RichTextLabel` vertical scrollbar engages cleanly (`scroll_active = true`).
   9. Tap "Got It!" and verify the modal dismisses smoothly and returns focus to the Main Menu.
-- **Expected Result:** The modal opens centered at 600px height with all text fully legible without scrolling at standard resolution, displays flat red (`🟥 RED` / `#b53b3b`) for absent tiles, and dismisses cleanly.
+- **Expected Result:** The modal opens adaptively within responsive margins with all text fully legible without scrolling at standard resolution, displays flat red (`🟥 RED` / `#b53b3b`) for absent tiles, and dismisses cleanly.
+
+### Test 5.6: Responsive UI Scaling Across Android Portrait Aspect Ratios
+- **Requirement(s):** REQ-8.7
+- **Steps:**
+  1. Launch the game in the Godot Editor or on an Android device / emulator.
+  2. Test or simulate diverse portrait screen resolutions across different device form factors:
+     - **16:9 Standard Portrait:** 720x1280 or 1080x1920
+     - **Tall Smartphones (19.5:9 / 20:9):** 1080x2340 or 1080x2400
+     - **Extra Tall Display (21:9):** 1080x2520
+     - **Portrait Tablets (4:3 / 16:10):** 1536x2048, 768x1024, or 1200x1920
+  3. On each aspect ratio, evaluate the Main Menu:
+     - Verify the mascot, title box, and navigation buttons scale dynamically within safe margin padding without crowding screen borders or overflowing.
+  4. Enter a game (Continuous Play or Daily Challenge):
+     - **Game Board:** Confirm the 5-column by 6-row grid preserves its 5:6 aspect ratio and square tiles via `AspectRatioContainer`, dynamically expanding across the available width while observing safe margins.
+     - **Virtual Keyboard:** Confirm letter keys stretch dynamically across the display width (`SIZE_EXPAND_FILL`), and control keys (`ENTER` and `⌫`) maintain weighted proportion (~1.4x-1.5x) without text clipping or overlapping adjacent keys.
+     - **Header Bar:** Verify the back button, game mode title, timer label, and statistics button stay neatly aligned across the top row.
+  5. Open dialog overlays (How to Play modal, Stats Screen, and Game Over modal):
+     - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
+- **Expected Result:** All UI elements dynamically scale and maintain proportional sizing across phones and tablets, avoiding letterbox bars, clipping, or overlapping controls.
+
 
 

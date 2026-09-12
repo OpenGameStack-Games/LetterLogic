@@ -9,13 +9,13 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 
-@onready var daily_button: Button = $CenterContainer/VBox/MenuButtons/DailyButton
-@onready var continuous_button: Button = $CenterContainer/VBox/MenuButtons/ContinuousButton
-@onready var stats_button: Button = $CenterContainer/VBox/MenuButtons/StatsButton
-@onready var how_to_play_button: Button = $CenterContainer/VBox/MenuButtons/HowToPlayButton
+@onready var daily_button: Button = $MarginContainer/VBox/MenuButtons/DailyButton
+@onready var continuous_button: Button = $MarginContainer/VBox/MenuButtons/ContinuousButton
+@onready var stats_button: Button = $MarginContainer/VBox/MenuButtons/StatsButton
+@onready var how_to_play_button: Button = $MarginContainer/VBox/MenuButtons/HowToPlayButton
 @onready var how_to_play_modal: Control = $HowToPlayModal
 @onready var countdown_timer: Timer = $CountdownTimer
-@onready var mascot_rect: TextureRect = $CenterContainer/VBox/MascotRect
+@onready var mascot_rect: TextureRect = $MarginContainer/VBox/MascotRect
 
 var _is_daily_locked: bool = false
 var _mascot_tween: Tween

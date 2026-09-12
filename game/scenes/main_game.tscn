@@ -115,57 +115,57 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.7)
 
-[node name="Panel" type="PanelContainer" parent="GameOverModal"]
-custom_minimum_size = Vector2(360, 240)
+[node name="MarginContainer" type="MarginContainer" parent="GameOverModal"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -120.0
-offset_right = 180.0
-offset_bottom = 120.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 120
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 120
 
-[node name="VBox" type="VBoxContainer" parent="GameOverModal/Panel"]
+[node name="Panel" type="PanelContainer" parent="GameOverModal/MarginContainer"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="GameOverModal/MarginContainer/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="GameOverModal/Panel/VBox"]
+[node name="TitleLabel" type="Label" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Splendid!"
 horizontal_alignment = 1
 
-[node name="MessageLabel" type="Label" parent="GameOverModal/Panel/VBox"]
+[node name="MessageLabel" type="Label" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "You found the word in 3/6 guesses."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="ButtonContainer" type="VBoxContainer" parent="GameOverModal/Panel/VBox"]
+[node name="ButtonContainer" type="VBoxContainer" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="NextWordButton" type="Button" parent="GameOverModal/Panel/VBox/ButtonContainer"]
+[node name="NextWordButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Next Word"
 
-[node name="ShareButton" type="Button" parent="GameOverModal/Panel/VBox/ButtonContainer"]
+[node name="ShareButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Share Results"
 
-[node name="MenuButton" type="Button" parent="GameOverModal/Panel/VBox/ButtonContainer"]
+[node name="MenuButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -178,6 +178,6 @@ layout_mode = 1
 [connection signal="pressed" from="VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
 [connection signal="pressed" from="VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
 [connection signal="timeout" from="ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
-[connection signal="pressed" from="GameOverModal/Panel/VBox/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
-[connection signal="pressed" from="GameOverModal/Panel/VBox/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
-[connection signal="pressed" from="GameOverModal/Panel/VBox/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]
