@@ -23,11 +23,12 @@ This document outlines the manual test cases used to verify the requirements out
 - **Requirement(s):** REQ-3.2, REQ-3.3, REQ-8.9
 - **Steps:**
   1. Start a game in either Continuous Play or Daily Challenge mode.
-  2. Note the location of the running puzzle timer in the header directly below the game mode label.
+  2. Note the vertical position of the letter grid (`GameBoard`) and the running puzzle timer in the header directly below the game mode label.
   3. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
   4. Type 5 letters of an invalid word (e.g., "QWERT") and submit. 
-  5. Observe the location and presentation of the "Not in word list" toast popup.
-- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast does not obscure or overlap the header, back button, timer, or game board tiles. The row does not advance, and the attempt is not consumed. The toast dismisses automatically after ~1.8 seconds.
+  5. Observe the presentation and fade-in of the "Not in word list" toast popup and verify the letter grid position.
+  6. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
+- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The row does not advance, and the attempt is not consumed. The toast dismisses smoothly via fade out after ~1.8 seconds.
 
 ### Test 1.3: Guess Evaluation and Keyboard Colors
 - **Requirement(s):** REQ-2.2, REQ-2.4
