@@ -65,6 +65,4 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
   5. Game Board Grid (`BoardArea` / `GameBoard`)
   6. On-Screen Virtual Keyboard (`KeyboardArea` / `Keyboard`)
   The `ToastOverlay` is integrated natively into the `VBoxContainer` directly between `Header` and `BoardArea` without hardcoded pixel offsets. When inactive, it is hidden (`visible = false`) and occupies zero vertical space. When active, it renders horizontally centered within the natural vertical gap between the header timer and letter grid without obscuring, clipping, or overlapping the active puzzle timer or grid tiles across any screen dimensions or aspect ratios.
-
-
-
+- **REQ-8.10 - Header Statistics Button & Monochrome Icon:** The statistics button (`StatsButton`) in the top-right corner of the main game header uses a custom 1930s monochrome cartoon bar graph icon texture (`res://assets/icons/stats_icon.png`) with an empty text string, replacing the default emoji (`📊`). The icon is centered (`icon_alignment = 1`) and expanded (`expand_icon = true`). To provide optimal touch ergonomics and padding on mobile displays, `StatsButton` and `BackButton` both feature an enlarged minimum size of `Vector2(56, 56)` within a 56px height header (`VBoxContainer/Header`), preserving visual symmetry and alignment across the top navigation bar.
