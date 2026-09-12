@@ -27,11 +27,12 @@ When the user asks to log a bug or feature request:
 4. Kill the `issue_creator`.
 5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?"
 
-**Phase 2: Resolution & Review (For each issue)**
+**Phase 2: Resolution & Review (Dynamic Queueing)**
 When the user explicitly authorizes you to begin resolving issues:
-1. **Issue Resolution:** Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the target issue. Schedule a 10-minute (600s) Liveness timer. Wait for it to push the branch and open a PR. Kill the `issue_resolver` when done.
-2. **PR Review & Merge:** Immediately define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR. Schedule a 10-minute (600s) Liveness timer. Wait for it to complete the merge and documentation updates. Kill the `pr_reviewer` when done.
-3. If there are more issues in the queue, repeat Phase 2.
+1. **Queue Assessment:** Use the terminal (`gh issue list --state open`) to fetch all open issues. Analyze the list and determine the optimal resolution order based on dependencies (e.g., global UI refactors should happen before localized UI tweaks to avoid conflicts), priority, and complexity.
+2. **Issue Resolution:** Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the TOP priority issue identified in Step 1. Schedule a 10-minute (600s) Liveness timer. Wait for it to push the branch and open a PR. Kill the `issue_resolver` when done.
+3. **PR Review & Merge:** Immediately define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR. Schedule a 10-minute (600s) Liveness timer. Wait for it to complete the merge. Kill the `pr_reviewer` when done.
+4. **Re-evaluate:** After the PR is merged, return to Step 1. Re-fetch the open issues from GitHub and perform a fresh assessment before starting the next issue. Repeat this cycle until the queue is completely empty.
 
 ---
 
