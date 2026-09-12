@@ -85,3 +85,61 @@ func test_absent_tile_colors() -> void:
 	if style_box != null:
 		assert_eq(style_box.bg_color.to_html(false).to_lower(), "b53b3b", "Applied tile bg color should be flat red")
 		assert_eq(style_box.border_color.to_html(false).to_lower(), "b53b3b", "Applied tile border color should be flat red")
+
+func test_tile_font_size() -> void:
+	# Check instantiated board tile
+	var tile: Node = board.get_tile(0, 0)
+	assert_true(tile != null, "Tile (0,0) should exist")
+	if tile.has_method("_ensure_label"):
+		tile._ensure_label()
+	var label: Label = tile.get_node_or_null("Label") as Label
+	assert_true(label != null, "Tile should have a Label child")
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Tile label font size should be 72px")
+		assert_eq(label.horizontal_alignment, HORIZONTAL_ALIGNMENT_CENTER, "Tile label should be horizontally centered")
+		assert_eq(label.vertical_alignment, VERTICAL_ALIGNMENT_CENTER, "Tile label should be vertically centered")
+
+	# Check TileScript constant
+	assert_eq(TileScript.FONT_SIZE_DEFAULT, 72, "TileScript.FONT_SIZE_DEFAULT constant should be 72")
+
+	# Check programmatic Tile fallback
+	var prog_tile: Node = TileScript.new()
+	prog_tile._ensure_label()
+	var prog_label: Label = prog_tile.get_node_or_null("Label") as Label
+	assert_true(prog_label != null, "Programmatic tile should have a Label child")
+	if prog_label != null:
+		assert_eq(prog_label.get_theme_font_size("font_size"), 72, "Programmatic tile label font size should be 72px")
+		assert_eq(prog_label.horizontal_alignment, HORIZONTAL_ALIGNMENT_CENTER, "Programmatic tile label should be horizontally centered")
+		assert_eq(prog_label.vertical_alignment, VERTICAL_ALIGNMENT_CENTER, "Programmatic tile label should be vertically centered")
+	prog_tile.free()
+
+func test_tile_font_size_preserved_across_operations() -> void:
+	var tile: Node = board.get_tile(1, 1)
+	assert_true(tile != null, "Tile (1,1) should exist")
+	if tile.has_method("_ensure_label"):
+		tile._ensure_label()
+	var label: Label = tile.get_node_or_null("Label") as Label
+	assert_true(label != null, "Tile should have a Label child")
+
+	# Verify font size is preserved after setting a letter
+	board.set_tile_letter(1, 1, "K")
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after setting letter")
+
+	# Verify font size is preserved after setting tile state
+	board.set_tile_state(1, 1, GameManagerScript.TileState.CORRECT)
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after setting state to CORRECT")
+
+	board.set_tile_state(1, 1, GameManagerScript.TileState.PRESENT)
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after setting state to PRESENT")
+
+	board.set_tile_state(1, 1, GameManagerScript.TileState.ABSENT)
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after setting state to ABSENT")
+
+	# Verify font size is preserved after board reset
+	board.reset_board()
+	if label != null:
+		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after board reset")

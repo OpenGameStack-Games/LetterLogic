@@ -19,6 +19,7 @@ const COLOR_BORDER_PRESENT: Color = Color("b59f3b")
 const COLOR_BORDER_ABSENT: Color = Color("b53b3b")
 
 const COLOR_TEXT: Color = Color("ffffff")
+const FONT_SIZE_DEFAULT: int = 72
 
 var label: Label = null
 var current_state: int = 0
@@ -38,7 +39,7 @@ func _ensure_label() -> void:
 			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			lbl.add_theme_color_override("font_color", COLOR_TEXT)
-			lbl.add_theme_font_size_override("font_size", 72)
+			lbl.add_theme_font_size_override("font_size", FONT_SIZE_DEFAULT)
 			add_child(lbl)
 			label = lbl
 
