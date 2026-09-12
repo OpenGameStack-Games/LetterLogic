@@ -68,6 +68,23 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "📊"
 
+[node name="ToastOverlay" type="CenterContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ToastPanel" type="PanelContainer" parent="VBoxContainer/ToastOverlay"]
+layout_mode = 2
+
+[node name="ToastLabel" type="Label" parent="VBoxContainer/ToastOverlay/ToastPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Not in word list"
+horizontal_alignment = 1
+
+[node name="ToastTimer" type="Timer" parent="VBoxContainer/ToastOverlay"]
+one_shot = true
+
 [node name="BoardArea" type="Control" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -82,28 +99,6 @@ layout_mode = 2
 
 [node name="Keyboard" parent="VBoxContainer/KeyboardArea" instance=ExtResource("3_keyboard")]
 layout_mode = 1
-
-[node name="ToastOverlay" type="CenterContainer" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 120.0
-offset_bottom = 180.0
-grow_horizontal = 2
-
-[node name="ToastPanel" type="PanelContainer" parent="ToastOverlay"]
-layout_mode = 2
-
-[node name="ToastLabel" type="Label" parent="ToastOverlay/ToastPanel"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "Not in word list"
-horizontal_alignment = 1
-
-[node name="ToastTimer" type="Timer" parent="ToastOverlay"]
-one_shot = true
 
 [node name="GameOverModal" type="ColorRect" parent="."]
 visible = false
@@ -177,7 +172,7 @@ layout_mode = 1
 
 [connection signal="pressed" from="VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
 [connection signal="pressed" from="VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
-[connection signal="timeout" from="ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
+[connection signal="timeout" from="VBoxContainer/ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]

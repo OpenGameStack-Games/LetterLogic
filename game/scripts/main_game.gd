@@ -11,16 +11,22 @@ const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 @onready var game_board: Control = $VBoxContainer/BoardArea/GameBoard
 @onready var game_keyboard: Control = $VBoxContainer/KeyboardArea/Keyboard
 @onready var mode_label: Label = $VBoxContainer/Header/TitleBox/ModeLabel
-@onready var toast_label: Label = $ToastOverlay/ToastPanel/ToastLabel
-@onready var toast_overlay: Control = $ToastOverlay
+@onready var toast_label: Label = $VBoxContainer/ToastOverlay/ToastPanel/ToastLabel
+@onready var toast_overlay: Control = $VBoxContainer/ToastOverlay
 @onready var game_over_modal: Control = $GameOverModal
 @onready var game_over_title: Label = $GameOverModal/MarginContainer/Panel/VBox/TitleLabel
 @onready var game_over_message: Label = $GameOverModal/MarginContainer/Panel/VBox/MessageLabel
 @onready var next_word_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton
 @onready var share_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton
-@onready var toast_timer: Timer = $ToastOverlay/ToastTimer
+@onready var toast_timer: Timer = $VBoxContainer/ToastOverlay/ToastTimer
 
 func _ready() -> void:
+	if toast_overlay == null:
+		toast_overlay = find_child("ToastOverlay", true, false) as Control
+	if toast_label == null and toast_overlay != null:
+		toast_label = toast_overlay.find_child("ToastLabel", true, false) as Label
+	if toast_timer == null and toast_overlay != null:
+		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null:
 		toast_overlay.visible = false
 	if game_over_modal != null:
@@ -29,7 +35,7 @@ func _ready() -> void:
 	_update_header()
 
 func _connect_signals() -> void:
-	var gm: Node = get_node_or_null("/root/GameManager")
+	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
 	if gm != null:
 		if not gm.invalid_guess.is_connected(_on_invalid_guess):
 			gm.invalid_guess.connect(_on_invalid_guess)
@@ -41,10 +47,10 @@ func _connect_signals() -> void:
 func _update_header(gm_override: Node = null, dm_override: Node = null) -> void:
 	if mode_label == null:
 		mode_label = get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
-	var gm: Node = gm_override if gm_override != null else get_node_or_null("/root/GameManager")
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
 	if gm != null and mode_label != null:
 		if gm.current_mode == GameManagerScript.GameMode.DAILY:
-			var dm: Node = dm_override if dm_override != null else get_node_or_null("/root/DailyManager")
+			var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
 			var date_str: String = dm.get_current_utc_date_string() if dm != null else "DAILY"
 			mode_label.text = "DAILY CHALLENGE • %s" % date_str
 		else:
@@ -54,13 +60,21 @@ func _on_invalid_guess(reason: String) -> void:
 	show_toast(reason)
 
 func show_toast(msg: String) -> void:
+	if toast_overlay == null:
+		toast_overlay = find_child("ToastOverlay", true, false) as Control
+	if toast_label == null and toast_overlay != null:
+		toast_label = toast_overlay.find_child("ToastLabel", true, false) as Label
+	if toast_timer == null and toast_overlay != null:
+		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null and toast_label != null:
 		toast_label.text = msg
 		toast_overlay.visible = true
-		if toast_timer != null:
+		if toast_timer != null and toast_timer.is_inside_tree():
 			toast_timer.start(1.8)
 
 func _on_toast_timer_timeout() -> void:
+	if toast_overlay == null:
+		toast_overlay = find_child("ToastOverlay", true, false) as Control
 	if toast_overlay != null:
 		toast_overlay.visible = false
 
