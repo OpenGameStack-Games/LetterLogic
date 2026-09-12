@@ -14,7 +14,7 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 - **Active Puzzle Timer:** Live running timer during gameplay with automatic app lifecycle pausing (backgrounding/minimizing) to encourage speed-solving and deduction efficiency.
 - **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
 - **Daily Challenge:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date.
-- **Comprehensive Statistics:** Track your progress separately across Daily and Continuous modes. Monitor your total wins, win streak, personal Best Time, Average Solve Time, and guess distributions.
+- **Comprehensive Statistics & Connected Tabular UI:** Track your progress separately across Daily and Continuous modes using a seamless 1930s monochrome tabular layout. Monitor your total wins, win streak, personal Best Time, Average Solve Time, and guess distributions.
 - **Social Sharing:** Easily share your Daily Challenge results with friends—including your completion time (⏱️) and generated emoji grid (🟩🟨🟥)—via the native Android share intent or clipboard.
 - **Responsive Android Portrait Layout:** Built with Godot's adaptive `MarginContainer` and `AspectRatioContainer` architecture to scale seamlessly across diverse portrait smartphones (16:9, 18:9, 19.5:9, 20:9) and tablets (4:3, 16:10) without clipping or distortion.
 

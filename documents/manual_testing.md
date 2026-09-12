@@ -119,6 +119,22 @@ This document outlines the manual test cases used to verify the requirements out
   4. Reopen the application.
 - **Expected Result:** All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distributions retain their exact values. The Daily Challenge remains locked out with an accurate countdown timer.
 
+### Test 3.3: Statistics Screen Connected Tabular Layout & Mode Switching
+- **Requirement(s):** REQ-5.4, REQ-8.8
+- **Steps:**
+  1. Open the Statistics Screen from the Main Menu or Game Over modal.
+  2. Observe the mode selector tabs ("Continuous Play" and "Daily Challenge").
+  3. Verify the active tab styling: deep black fill (`#0e0e10`), 3px solid white borders on top, left, and right, and no bottom border dividing line separating the tab from the statistics content panel.
+  4. Verify the inactive tab styling: dark charcoal fill (`#1c1c1e`), 3px solid white border around all sides, clearly separating it from the content panel below.
+  5. Tap the inactive tab ("Daily Challenge").
+  6. Observe the visual transition and data displayed.
+  7. Tap "Continuous Play" to switch back.
+- **Expected Result:**
+  - The active tab connects seamlessly to the content panel with no bottom border line.
+  - The inactive tab maintains a distinct 3px white outline on all sides and dark charcoal background.
+  - Tapping between tabs transitions mode data smoothly with no disappearing borders, flickering, or layout shift.
+  - All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distribution rows update immediately to reflect the selected mode.
+
 ---
 
 ## 4. Social Sharing

@@ -29,6 +29,7 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-5.1 - Segregated Stats:** The game must track statistics separately for "Continuous Play" and "Daily Challenge" modes.
 - **REQ-5.2 - Tracked Metrics:** The game must record total games played, total games won, current win streak, maximum win streak, best solve time (fastest win), average solve time, and a distribution of guess attempts (1 through 6, and losses).
 - **REQ-5.3 - Average and Best Solve Time Rules:** Best and Average Solve Times must be tracked and displayed separately per mode on the statistics screen. Average solve time is strictly calculated across won games (losses are excluded from solve time calculations). If no games have been won in a mode, best and average times are displayed as `--:--`.
+- **REQ-5.4 - Mode Selector Tabular Navigation:** The mode selector on the Statistics Screen must use a connected tabular layout (`TabContainer`) presenting "Continuous Play" and "Daily Challenge" tabs. Switching tabs immediately updates all summary metrics and the guess distribution without reload delay or UI state corruption.
 
 ## 6. Sharing
 - **REQ-6.1 - Result Generation:** Upon completing a Daily Challenge, the game must generate a shareable text block containing the header (game title, UTC date, score/attempts), a dedicated timer line with the stopwatch emoji (`⏱️ MM:SS` or `⏱️ HH:MM:SS`), an emoji grid representing the game board, and a link to the game on the Google Play Store.
@@ -52,4 +53,9 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
   - **Game Board Grid:** Wrapped in a responsive `MarginContainer` safe-area and an `AspectRatioContainer` (5:6 aspect ratio ~0.8333) utilizing `SIZE_EXPAND_FILL`, ensuring tiles expand dynamically to available width while maintaining square tile proportions.
   - **Virtual Keyboard:** Wrapped in responsive margins with horizontal and vertical expansion flags (`SIZE_EXPAND_FILL`), allowing letter keys and weighted control keys (ENTER and ⌫) to scale cleanly across screen widths.
   - **Menus & Overlays:** Main Menu, Game Over Modal, How to Play Modal, and Statistics Screen utilize responsive `MarginContainer` padding with expanding flex containers rather than hardcoded pixel dimensions or rigid `CenterContainer` constraints.
+- **REQ-8.8 - 1930s Monochrome Tabular Layout (Statistics Screen):** Mode switching on the Statistics Screen uses a connected `TabContainer` styled to match the 1930s monochrome aesthetic:
+  - **Active Tab:** Matches content panel background (`#0e0e10`), 3px solid white borders (`#ffffff`) on top, left, and right, with the bottom border removed (`border_width_bottom = 0`) to merge seamlessly into the statistics content panel below. Top corners feature 12px rounded radii, with square 0px bottom corners.
+  - **Inactive Tab:** Dark charcoal fill (`#1c1c1e`), 3px solid white borders (`#ffffff`) on all sides (retaining bottom boundary line separating it from the panel), 12px rounded top corners, and square 0px bottom corners.
+  - **Content Panel:** Deep black fill (`#0e0e10`), 3px solid white border (`#ffffff`), and 12px corner radii, aligning cleanly with the active tab header without gaps, misalignments, or missing outlines.
+
 

@@ -1,4 +1,3 @@
-# scripts/stats_screen.gd
 class_name StatsScreen
 extends Control
 
@@ -7,44 +6,57 @@ extends Control
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
 
-@onready var daily_tab_btn: Button = $MarginContainer/Panel/VBox/ModeTabs/DailyTabButton
-@onready var continuous_tab_btn: Button = $MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton
+@onready var mode_tabs: TabContainer = $"MarginContainer/VBox/ModeTabs"
+@onready var content_vbox: VBoxContainer = $"MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"
 
-@onready var played_val: Label = $MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value
-@onready var win_pct_val: Label = $MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value
-@onready var streak_val: Label = $MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value
-@onready var max_streak_val: Label = $MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value
-@onready var best_time_val: Label = $MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value
-@onready var avg_time_val: Label = $MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value
-
-@onready var dist_container: VBoxContainer = $MarginContainer/Panel/VBox/DistributionContainer
+var played_val: Label
+var win_pct_val: Label
+var streak_val: Label
+var max_streak_val: Label
+var best_time_val: Label
+var avg_time_val: Label
+var dist_container: VBoxContainer
 
 var active_mode: int = 0 # 0 = Continuous, 1 = Daily
 var _stats_manager_ref: Node = null
 
 func _ready() -> void:
-	_ensure_nodes()
+	_update_node_references()
+	if mode_tabs != null and not mode_tabs.tab_changed.is_connected(_on_tab_changed):
+		mode_tabs.tab_changed.connect(_on_tab_changed)
 	refresh_display()
 
-func _ensure_nodes() -> void:
-	if played_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value"):
-		played_val = $MarginContainer/Panel/VBox/SummaryCards/PlayedCard/Value as Label
-	if win_pct_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value"):
-		win_pct_val = $MarginContainer/Panel/VBox/SummaryCards/WinPctCard/Value as Label
-	if streak_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value"):
-		streak_val = $MarginContainer/Panel/VBox/SummaryCards/StreakCard/Value as Label
-	if max_streak_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value"):
-		max_streak_val = $MarginContainer/Panel/VBox/SummaryCards/MaxStreakCard/Value as Label
-	if best_time_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value"):
-		best_time_val = $MarginContainer/Panel/VBox/SummaryCards/BestTimeCard/Value as Label
-	if avg_time_val == null and has_node("MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value"):
-		avg_time_val = $MarginContainer/Panel/VBox/SummaryCards/AvgTimeCard/Value as Label
-	if dist_container == null and has_node("MarginContainer/Panel/VBox/DistributionContainer"):
-		dist_container = $MarginContainer/Panel/VBox/DistributionContainer as VBoxContainer
-	if daily_tab_btn == null and has_node("MarginContainer/Panel/VBox/ModeTabs/DailyTabButton"):
-		daily_tab_btn = $MarginContainer/Panel/VBox/ModeTabs/DailyTabButton as Button
-	if continuous_tab_btn == null and has_node("MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton"):
-		continuous_tab_btn = $MarginContainer/Panel/VBox/ModeTabs/ContinuousTabButton as Button
+func _update_node_references() -> void:
+	if mode_tabs == null:
+		mode_tabs = get_node_or_null("MarginContainer/VBox/ModeTabs") as TabContainer
+	if content_vbox == null and mode_tabs != null:
+		content_vbox = mode_tabs.find_child("ContentVBox", true, false) as VBoxContainer
+		
+	if content_vbox != null and played_val == null and content_vbox.has_node("SummaryCards/PlayedCard/Value"):
+		played_val = content_vbox.get_node("SummaryCards/PlayedCard/Value") as Label
+		win_pct_val = content_vbox.get_node("SummaryCards/WinPctCard/Value") as Label
+		streak_val = content_vbox.get_node("SummaryCards/StreakCard/Value") as Label
+		max_streak_val = content_vbox.get_node("SummaryCards/MaxStreakCard/Value") as Label
+		best_time_val = content_vbox.get_node("SummaryCards/BestTimeCard/Value") as Label
+		avg_time_val = content_vbox.get_node("SummaryCards/AvgTimeCard/Value") as Label
+		dist_container = content_vbox.get_node("DistributionContainer") as VBoxContainer
+
+func _on_tab_changed(tab: int) -> void:
+	_update_node_references()
+	# Tab 0 is Continuous Play, Tab 1 is Daily Challenge
+	if tab == 0:
+		active_mode = GameManagerScript.GameMode.CONTINUOUS
+	else:
+		active_mode = GameManagerScript.GameMode.DAILY
+	
+	if mode_tabs != null and content_vbox != null and tab < mode_tabs.get_child_count():
+		var current_tab_node: Node = mode_tabs.get_child(tab)
+		if content_vbox.get_parent() != current_tab_node:
+			content_vbox.owner = null
+			content_vbox.get_parent().remove_child(content_vbox)
+			current_tab_node.add_child(content_vbox)
+	
+	refresh_display()
 
 func set_stats_manager(sm: Node) -> void:
 	_stats_manager_ref = sm
@@ -58,10 +70,15 @@ func get_stats_manager() -> Node:
 
 func set_mode(mode: int) -> void:
 	active_mode = mode
-	refresh_display()
+	_update_node_references()
+	var target_tab: int = 0 if mode == GameManagerScript.GameMode.CONTINUOUS else 1
+	if mode_tabs != null:
+		if mode_tabs.current_tab != target_tab:
+			mode_tabs.current_tab = target_tab
+	_on_tab_changed(target_tab)
 
 func refresh_display() -> void:
-	_ensure_nodes()
+	_update_node_references()
 	var sm: Node = get_stats_manager()
 	var stats: Dictionary = {}
 	var win_pct: int = 0
@@ -92,18 +109,7 @@ func refresh_display() -> void:
 	if avg_time_val != null:
 		avg_time_val.text = GameManagerScript.format_time(avg_time) if avg_time > 0 else "--:--"
 	
-	_update_tab_buttons()
 	_update_distribution(stats.get("distribution", {}))
-
-func _update_tab_buttons() -> void:
-	_ensure_nodes()
-	if daily_tab_btn != null and continuous_tab_btn != null:
-		if active_mode == GameManagerScript.GameMode.DAILY:
-			daily_tab_btn.disabled = true
-			continuous_tab_btn.disabled = false
-		else:
-			daily_tab_btn.disabled = false
-			continuous_tab_btn.disabled = true
 
 func _update_distribution(dist: Dictionary) -> void:
 	if dist_container == null:
@@ -166,12 +172,6 @@ func _update_distribution(dist: Dictionary) -> void:
 		row_hbox.add_child(spacer)
 		
 		dist_container.add_child(row_hbox)
-
-func _on_daily_tab_pressed() -> void:
-	set_mode(GameManagerScript.GameMode.DAILY)
-
-func _on_continuous_tab_pressed() -> void:
-	set_mode(GameManagerScript.GameMode.CONTINUOUS)
 
 func _on_close_pressed() -> void:
 	visible = false
