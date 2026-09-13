@@ -379,3 +379,15 @@ This document outlines the manual test cases used to verify the requirements out
   6. Tap each button to confirm touch responsiveness, tactile interaction states, and seamless navigation.
 - **Expected Result:** The Main Menu presents doubled typography (88px title, 36px subtitle, 40px mode buttons, 36px utility buttons) and expanded button minimum heights (120px for mode buttons, 80px for utility buttons), providing ergonomic tap targets, no text clipping or crowding, and balanced vertical centering across all portrait aspect ratios.
 
+### Test 5.13: Custom Boot Splash Screen Display
+- **Requirement(s):** REQ-8.1, REQ-8.4, REQ-8.13
+- **Steps:**
+  1. Launch the LetterLogic application from a cold start (desktop or Android device/emulator).
+  2. Observe the initial boot splash screen prior to the Main Menu loading.
+  3. Verify that the splash screen displays the signature 1930s walking cartoon tile mascot icon (`res://assets/icons/icon.png`) centered on the screen.
+  4. Verify that the default Godot Engine logo and branding do not appear on startup.
+  5. Verify that no text, titles, subtitles, version numbers, or taglines are rendered on the splash screen (only the mascot image).
+  6. Verify that the background color behind the mascot icon is deep charcoal/black (`#121212`), matching the monochrome game theme and clear color.
+  7. Observe the transition from the boot splash screen to the Main Menu (`res://scenes/main_menu.tscn`).
+  8. Confirm there is no white flicker, flash of unstyled color, or abrupt palette jump during the transition.
+- **Expected Result:** The game launches with the custom walking mascot icon centered over a `#121212` dark monochrome background, completely free of text or default Godot branding, and transitions seamlessly into the Main Menu.
