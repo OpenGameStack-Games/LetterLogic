@@ -24,10 +24,10 @@ border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 expand_margin_bottom = 3.0
-content_margin_left = 16.0
-content_margin_right = 16.0
-content_margin_top = 8.0
-content_margin_bottom = 8.0
+content_margin_left = 20.0
+content_margin_right = 20.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_unselected"]
 bg_color = Color(0.10980392, 0.10980392, 0.11764706, 1)
@@ -38,10 +38,10 @@ border_width_bottom = 3
 border_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
-content_margin_left = 16.0
-content_margin_right = 16.0
-content_margin_top = 8.0
-content_margin_bottom = 8.0
+content_margin_left = 20.0
+content_margin_right = 20.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
 
 [node name="StatsScreen" type="Control"]
 layout_mode = 3
@@ -84,18 +84,20 @@ layout_mode = 2
 [node name="Title" type="Label" parent="MarginContainer/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 52
 text = "STATISTICS"
 horizontal_alignment = 1
 
 [node name="CloseButton" type="Button" parent="MarginContainer/VBox/Header"]
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "✕"
 
 [node name="ModeTabs" type="TabContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
@@ -111,9 +113,11 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="SummaryCards" type="HBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
+[node name="SummaryCards" type="GridContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+columns = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 16
 
 [node name="PlayedCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
@@ -121,13 +125,13 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/PlayedCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/PlayedCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Played"
 horizontal_alignment = 1
 
@@ -137,13 +141,13 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "0%"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Win %"
 horizontal_alignment = 1
 
@@ -153,13 +157,13 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Current"
 horizontal_alignment = 1
 
@@ -169,13 +173,13 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/MaxStreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/MaxStreakCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Max Streak"
 horizontal_alignment = 1
 
@@ -185,13 +189,13 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/BestTimeCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "--:--"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/BestTimeCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Best Time"
 horizontal_alignment = 1
 
@@ -201,26 +205,26 @@ size_flags_horizontal = 3
 
 [node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/AvgTimeCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 36
 text = "--:--"
 horizontal_alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/AvgTimeCard"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 18
 text = "Avg Time"
 horizontal_alignment = 1
 
 [node name="DistHeading" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 24
 text = "GUESS DISTRIBUTION"
 horizontal_alignment = 1
 
 [node name="DistributionContainer" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="Daily Challenge" type="MarginContainer" parent="MarginContainer/VBox/ModeTabs"]
 layout_mode = 2

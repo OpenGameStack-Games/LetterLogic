@@ -91,6 +91,32 @@ func test_stats_screen_ui() -> void:
 	screen.call("set_mode", GameManagerScript.GameMode.CONTINUOUS)
 	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.CONTINUOUS, "active_mode should be CONTINUOUS")
 	
+	# Typography & Layout Sizing assertions
+	var title = screen.find_child("Title", true, false)
+	if title:
+		assert_eq(title.get_theme_font_size("font_size"), 52, "Title font size should be 52")
+		
+	var close_btn = screen.find_child("CloseButton", true, false)
+	if close_btn:
+		assert_eq(close_btn.get_theme_font_size("font_size"), 32, "Close button font size should be 32")
+		assert_true(close_btn.custom_minimum_size.x >= 50 and close_btn.custom_minimum_size.y >= 50, "Close button min size should be >= 50x50")
+		
+	if mode_tabs:
+		assert_eq(mode_tabs.get_theme_font_size("font_size"), 32, "ModeTabs font size should be 32")
+		
+	var played_card = screen.find_child("PlayedCard", true, false)
+	if played_card:
+		var p_val = played_card.get_node("Value")
+		var p_lbl = played_card.get_node("Label")
+		assert_true(p_val.get_theme_font_size("font_size") >= 36, "Summary card value font size should be >= 36")
+		assert_true(p_lbl.get_theme_font_size("font_size") >= 18, "Summary card description font size should be >= 18")
+		
+	if dist_box and dist_box.get_child_count() > 0:
+		var row_hbox = dist_box.get_child(0)
+		assert_true(row_hbox.custom_minimum_size.y >= 40, "Distribution row minimum height should be >= 40")
+		var count_lbl = row_hbox.get_child(1).get_child(0)
+		assert_true(count_lbl.get_theme_font_size("font_size") >= 20, "Distribution bar text font size should be >= 20")
+	
 	# Verify tab changed handler responds to user tab switches
 	screen.call("_on_tab_changed", 1)
 	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.DAILY, "active_mode should update to DAILY on tab changed")
