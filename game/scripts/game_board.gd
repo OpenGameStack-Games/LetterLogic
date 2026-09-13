@@ -93,7 +93,12 @@ func _on_letter_removed(col: int, row: int) -> void:
 
 func _on_guess_submitted(row: int, _guess: String, results: Array) -> void:
 	for col in range(results.size()):
-		set_tile_state(row, col, results[col])
+		var delay: float = col * 0.3 # Stagger by 0.3s
+		var tile: Node = get_tile(row, col)
+		if tile != null and tile.has_method("animate_reveal"):
+			tile.animate_reveal(results[col], delay)
+		else:
+			set_tile_state(row, col, results[col])
 
 func _on_game_reset() -> void:
 	reset_board()

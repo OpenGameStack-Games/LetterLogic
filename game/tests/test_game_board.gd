@@ -143,3 +143,13 @@ func test_tile_font_size_preserved_across_operations() -> void:
 	board.reset_board()
 	if label != null:
 		assert_eq(label.get_theme_font_size("font_size"), 72, "Font size should remain 72 after board reset")
+
+func test_animate_reveal() -> void:
+	var tile: Node = board.get_tile(2, 2)
+	assert_true(tile != null, "Tile (2,2) should exist")
+	
+	# Since it's not inside tree, animate_reveal should apply state instantly
+	tile.animate_reveal(GameManagerScript.TileState.CORRECT, 0.5)
+	
+	assert_eq(tile.current_state, GameManagerScript.TileState.CORRECT, "animate_reveal should instantly set state when not in tree")
+

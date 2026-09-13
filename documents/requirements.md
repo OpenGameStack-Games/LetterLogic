@@ -5,10 +5,11 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 
 ## 2. Core Gameplay
 - **REQ-2.1 - Grid Size:** The game board consists of a 6-row by 5-column grid. Players have a maximum of 6 attempts to guess the 5-letter secret word.
-- **REQ-2.2 - Tile Evaluation:** After a valid guess is submitted, each letter tile is evaluated and colored based on its presence in the secret word:
+- **REQ-2.2 - Tile Evaluation & Staggered Reveal Animation:** After a valid guess is submitted, each letter tile is evaluated and colored based on its presence in the secret word:
   - **Correct (Green / 🟩):** The letter is in the secret word and in the correct position.
   - **Present (Yellow / 🟨):** The letter is in the secret word but in the wrong position.
   - **Absent (Flat Red / 🟥):** The letter is not in the secret word.
+  - **Staggered Reveal & Scale Pop:** Tile states and colors are revealed sequentially from left to right across the row with a staggered delay (0.3 seconds per column, `col * 0.3`). Upon each tile's reveal, it performs a 0.3-second scale 'pop' animation (scaling up to 1.1x with `TRANS_SINE` / `EASE_OUT` over 0.15s, then settling back to 1.0x with `TRANS_SINE` / `EASE_IN` over 0.15s) centered around its midpoint pivot (`pivot_offset = size / 2.0`) without disrupting parent grid layout calculations. The reveal animation applies uniformly across Continuous Play and Daily Challenge modes.
 - **REQ-2.3 - Win/Loss Condition:** The game is won if the player guesses the secret word exactly within 6 attempts. The game is lost if the 6th attempt is incorrect.
 - **REQ-2.4 - Keyboard State Update:** The on-screen virtual keyboard must update its keys to reflect the best-known state of each letter (Correct > Present > Absent) based on all submitted guesses. Absent keys display in flat red (`#b53b3b`) with white text (`#ffffff`).
 - **REQ-2.5 - Active Gameplay Timer:** An active running timer is displayed in the game header directly above the grid during gameplay. The timer starts at `00:00` upon puzzle start, increments dynamically while solving, and stops immediately upon game completion (win or loss). Time is formatted as `MM:SS` (or `HH:MM:SS` if the puzzle duration exceeds 1 hour).
@@ -141,6 +142,8 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
     2. **Audrain Entertainment:** Circular badge logo (`res://assets/icons/AudrainEntertainment.png`), attribution text `"Published by Audrain Entertainment"`, and interactive web icon button launching `https://audrain.games/`.
     3. **GitHub Open Source:** High-resolution circular badge logo (`res://assets/icons/github_icon.png`), attribution text `"LetterLogic is an open-source game hosted on GitHub"`, and interactive web icon button launching `https://github.com/OpenGameStack-Games/LetterLogic`.
   - **Modal Dismissal (`CloseButton`):** Includes a prominent dismiss button at the bottom of the modal with `custom_minimum_size = Vector2(0, 80)`, font size 36px (`theme_override_font_sizes/font_size = 36`), and text `"Got It!"`. Tapping the dismiss button hides `CreditsModal`.
+- **REQ-8.15 - Staggered Tile Reveal Animation & Scale Pop:** When a valid guess is submitted, tile color and state evaluations are revealed sequentially from left to right across the active row rather than instantly. Tile reveals are staggered with an incremental delay of 0.3 seconds per column (`col * 0.3`). As each tile's evaluation is revealed, it plays a scale pop animation (scaling up to 1.1x with `TRANS_SINE` / `EASE_OUT` over 0.15s, then returning to 1.0x with `TRANS_SINE` / `EASE_IN` over 0.15s) centered around its midpoint pivot (`pivot_offset = size / 2.0`). This creates a tactile, dynamic reveal effect while keeping the parent `GridContainer` and `AspectRatioContainer` layout completely stable without recalculation jitter or layout shift. The animation applies uniformly across Continuous Play and Daily Challenge modes.
+
 
 
 

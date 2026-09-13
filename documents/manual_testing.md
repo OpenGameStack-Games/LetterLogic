@@ -33,13 +33,13 @@ This document outlines the manual test cases used to verify the requirements out
   7. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
 - **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The row does not advance, and the attempt is not consumed. The toast dismisses smoothly via fade out after ~1.8 seconds.
 
-### Test 1.3: Guess Evaluation and Keyboard Colors
-- **Requirement(s):** REQ-2.2, REQ-2.4
+### Test 1.3: Guess Evaluation, Staggered Reveal and Keyboard Colors
+- **Requirement(s):** REQ-2.2, REQ-2.4, REQ-8.15
 - **Steps:**
   1. (Godot Editor only) Use the debugger or print statements to determine the current `secret_word`.
   2. Input a valid 5-letter isogram that contains at least one correct letter in the right spot, one correct letter in the wrong spot, and some letters not in the word.
   3. Submit the guess.
-- **Expected Result:** The tiles in the grid update to Green (`#538d4e`), Yellow (`#b59f3b`), and Flat Red (`#b53b3b`) correctly. The on-screen keyboard keys update to match the highest state of each guessed letter (Absent keys appear in Flat Red with white text).
+- **Expected Result:** The tiles in the grid reveal and update to Green (`#538d4e`), Yellow (`#b59f3b`), and Flat Red (`#b53b3b`) sequentially from left to right with a scale pop effect. The on-screen keyboard keys update to match the highest state of each guessed letter (Absent keys appear in Flat Red with white text).
 
 
 ### Test 1.4: Win/Loss Conditions & Game Over Modal
@@ -101,7 +101,22 @@ This document outlines the manual test cases used to verify the requirements out
   6. Backspace and enter a different valid word. Submit to verify normal gameplay continues.
 - **Expected Result:** Submitting an already-guessed word displays the "Word already guessed" toast notification, rejects the guess without consuming an attempt or advancing the row, and allows the player to modify their input.
 
+### Test 1.8: Staggered Tile Reveal Animation & Scale Pop
+- **Requirement(s):** REQ-2.2, REQ-8.15
+- **Steps:**
+  1. Start a game in Continuous Play or Daily Challenge mode.
+  2. Type a valid 5-letter isogram guess (e.g., "CRANE").
+  3. Submit the guess by pressing Enter.
+  4. Carefully observe the row of tiles during evaluation:
+     - Verify that tiles do not reveal their color states all at once.
+     - Verify that tiles reveal sequentially from left to right (column 0 through column 4) with a ~0.3-second delay between each tile.
+     - Verify that as each tile reveals its color, it performs a subtle scale pop (scaling up to ~1.1x and smoothly returning to 1.0x over ~0.3 seconds).
+     - Verify that the scale pop is centered on each tile without shifting the tile's position or causing layout reflow/jitter in the parent game board grid or adjacent rows.
+  5. Repeat in the other game mode (Daily Challenge or Continuous Play) to confirm uniform behavior.
+- **Expected Result:** Letters in the submitted row reveal their colors sequentially from left to right at 0.3s intervals with an elastic scale pop effect from each tile's center. The grid layout remains completely stable and undisturbed throughout the animation.
+
 ---
+
 
 ## 2. Game Modes
 

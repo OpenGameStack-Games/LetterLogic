@@ -84,6 +84,24 @@ func set_state(new_state: int) -> void:
 
 	add_theme_stylebox_override("panel", style_box)
 
+func animate_reveal(new_state: int, delay: float) -> void:
+	if not is_inside_tree():
+		set_state(new_state)
+		return
+		
+	var tween: Tween = create_tween()
+	if delay > 0:
+		tween.tween_interval(delay)
+	
+	# Set state and perform scale pop
+	tween.tween_callback(func():
+		set_state(new_state)
+		pivot_offset = size / 2.0
+	)
+	
+	tween.tween_property(self, "scale", Vector2(1.1, 1.1), 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
 func reset() -> void:
 	_ensure_label()
 	letter = ""
