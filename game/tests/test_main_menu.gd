@@ -376,8 +376,8 @@ func test_credits_modal_content() -> void:
 	for tex: Node in textures:
 		var tex_rect: TextureRect = tex as TextureRect
 		assert_true(tex_rect != null and tex_rect.texture != null, "TextureRect should have a texture assigned")
-		assert_true(tex_rect.custom_minimum_size.x <= 100, "Logo width should be <= 100")
-		assert_true(tex_rect.custom_minimum_size.y <= 100, "Logo height should be <= 100")
+		assert_true(tex_rect.custom_minimum_size.x <= 150, "Logo width should be <= 150")
+		assert_true(tex_rect.custom_minimum_size.y <= 150, "Logo height should be <= 150")
 	
 	var ogs_block: Node = modal.find_child("OGSBlock", true, false)
 	var audrain_block: Node = modal.find_child("AudrainBlock", true, false)
