@@ -149,6 +149,18 @@ func load_stats(custom_path: String = "") -> void:
 	if json.parse(text) == OK and json.data is Dictionary:
 		var loaded: Dictionary = json.data as Dictionary
 		if loaded.has("daily") and loaded.has("continuous"):
+			for mode_key in ["daily", "continuous"]:
+				var mode_data: Dictionary = loaded.get(mode_key, {}) as Dictionary
+				mode_data["played"] = int(mode_data.get("played", 0))
+				mode_data["won"] = int(mode_data.get("won", 0))
+				mode_data["current_streak"] = int(mode_data.get("current_streak", 0))
+				mode_data["max_streak"] = int(mode_data.get("max_streak", 0))
+				mode_data["best_time"] = float(mode_data.get("best_time", 0.0))
+				mode_data["total_won_time"] = float(mode_data.get("total_won_time", 0.0))
+				var dist: Dictionary = mode_data.get("distribution", {}) as Dictionary
+				for k in dist.keys():
+					dist[k] = int(dist[k])
+				mode_data["distribution"] = dist
 			_stats_data = loaded
 
 ## Resets stats (useful for testing or user data wipe).

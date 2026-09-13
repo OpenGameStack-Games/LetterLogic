@@ -111,3 +111,88 @@ func test_time_stats() -> void:
 	stats_mgr.record_game(GameManagerScript.GameMode.CONTINUOUS, false, 0, 300.0, TEST_STATS_PATH)
 	assert_eq(stats_mgr.get_best_time(GameManagerScript.GameMode.CONTINUOUS), 50.0, "Best time should remain 50")
 	assert_eq(stats_mgr.get_average_time(GameManagerScript.GameMode.CONTINUOUS), 75.0, "Avg time should remain 75")
+
+func test_stats_loading_types() -> void:
+	stats_mgr.reset_all_stats(TEST_STATS_PATH)
+	
+	# Manually write a mock JSON with float values
+	var mock_data: Dictionary = {
+		"continuous": {
+			"played": 5.0,
+			"won": 3.0,
+			"current_streak": 1.0,
+			"max_streak": 2.0,
+			"best_time": 45.5,
+			"total_won_time": 150.0,
+			"distribution": { "1": 0.0, "2": 1.0, "3": 1.0, "4": 1.0, "5": 0.0, "6": 0.0, "loss": 2.0 }
+		},
+		"daily": {
+			"played": 1.0, "won": 1.0, "current_streak": 1.0, "max_streak": 1.0,
+			"best_time": 60.0, "total_won_time": 60.0,
+			"distribution": { "1": 0.0, "2": 0.0, "3": 0.0, "4": 1.0, "5": 0.0, "6": 0.0, "loss": 0.0 }
+		}
+	}
+	var file: FileAccess = FileAccess.open(TEST_STATS_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(mock_data))
+	file.close()
+	
+	stats_mgr.load_stats(TEST_STATS_PATH)
+	var stats_cont: Dictionary = stats_mgr.get_stats_for_mode(GameManagerScript.GameMode.CONTINUOUS)
+	
+	assert_true(typeof(stats_cont["played"]) == TYPE_INT, "played should be cast to int")
+	assert_true(typeof(stats_cont["won"]) == TYPE_INT, "won should be cast to int")
+	assert_true(typeof(stats_cont["current_streak"]) == TYPE_INT, "current_streak should be cast to int")
+	assert_true(typeof(stats_cont["max_streak"]) == TYPE_INT, "max_streak should be cast to int")
+	assert_true(typeof(stats_cont["best_time"]) == TYPE_FLOAT, "best_time should remain float")
+	
+	var dist: Dictionary = stats_cont.get("distribution", {}) as Dictionary
+	assert_true(typeof(dist["2"]) == TYPE_INT, "distribution counts should be cast to int")
+
+func test_stats_screen_integer_formatting() -> void:
+	var scn: PackedScene = load("res://scenes/stats_screen.tscn") as PackedScene
+	var screen: Node = scn.instantiate()
+	
+	# Mock StatsManager with float values
+	var mock_sm = Node.new()
+	var mock_script = GDScript.new()
+	mock_script.source_code = """
+extends Node
+func get_stats_for_mode(mode: int) -> Dictionary:
+	return { "played": 5.0, "won": 3.0, "current_streak": 2.0, "max_streak": 3.0, "distribution": {} }
+func get_win_percentage(mode: int) -> int:
+	return 60
+func get_best_time(mode: int) -> float:
+	return 45.0
+func get_average_time(mode: int) -> float:
+	return 50.0
+"""
+	mock_script.reload()
+	mock_sm.set_script(mock_script)
+	
+	screen.call("set_stats_manager", mock_sm)
+	
+	# Check Continuous Play
+	screen.call("set_mode", GameManagerScript.GameMode.CONTINUOUS)
+	screen.call("refresh_display")
+	
+	var played_val = screen.get("played_val")
+	var streak_val = screen.get("streak_val")
+	var max_streak_val = screen.get("max_streak_val")
+	
+	assert_true(not played_val.text.contains("."), "Played should not contain decimal point")
+	assert_true(not streak_val.text.contains("."), "Current Streak should not contain decimal point")
+	assert_true(not max_streak_val.text.contains("."), "Max Streak should not contain decimal point")
+	
+	assert_eq(played_val.text, "5", "Played should be formatted as integer 5")
+	assert_eq(streak_val.text, "2", "Streak should be formatted as integer 2")
+	assert_eq(max_streak_val.text, "3", "Max Streak should be formatted as integer 3")
+	
+	# Check Daily Challenge
+	screen.call("set_mode", GameManagerScript.GameMode.DAILY)
+	screen.call("refresh_display")
+	
+	assert_true(not played_val.text.contains("."), "Played should not contain decimal point in Daily Challenge")
+	assert_eq(played_val.text, "5", "Played should be formatted as integer 5 in Daily Challenge")
+	
+	mock_sm.free()
+	screen.free()
