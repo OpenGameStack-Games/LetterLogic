@@ -26,10 +26,41 @@ func _ready() -> void:
 		how_to_play_modal.visible = false
 	if credits_modal != null:
 		credits_modal.visible = false
+		_bind_credits_links()
 	_update_daily_button_state()
-	if countdown_timer != null:
+	if countdown_timer != null and is_inside_tree():
 		countdown_timer.timeout.connect(_on_countdown_tick)
 		countdown_timer.start(1.0)
+
+func _bind_credits_links() -> void:
+	if credits_modal == null: return
+	
+	var ogs: Node = credits_modal.find_child("OGSBlock", true, false)
+	if ogs:
+		var btn: Button = ogs.find_child("WebIconBtn", true, false) as Button
+		if btn and not btn.pressed.is_connected(_on_ogs_pressed):
+			btn.pressed.connect(_on_ogs_pressed)
+			
+	var audrain: Node = credits_modal.find_child("AudrainBlock", true, false)
+	if audrain:
+		var btn: Button = audrain.find_child("WebIconBtn", true, false) as Button
+		if btn and not btn.pressed.is_connected(_on_audrain_pressed):
+			btn.pressed.connect(_on_audrain_pressed)
+			
+	var github: Node = credits_modal.find_child("GitHubBlock", true, false)
+	if github:
+		var btn: Button = github.find_child("WebIconBtn", true, false) as Button
+		if btn and not btn.pressed.is_connected(_on_github_pressed):
+			btn.pressed.connect(_on_github_pressed)
+
+func _on_ogs_pressed() -> void:
+	OS.shell_open("https://opengamestack.org/")
+
+func _on_audrain_pressed() -> void:
+	OS.shell_open("https://audrain.games/")
+
+func _on_github_pressed() -> void:
+	OS.shell_open("https://github.com/OpenGameStack-Games/LetterLogic")
 
 func _update_daily_button_state(dm_override: Node = null) -> void:
 	var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
