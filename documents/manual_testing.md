@@ -87,6 +87,20 @@ This document outlines the manual test cases used to verify the requirements out
   7. Return focus to the game.
 - **Expected Result:** The timer stops advancing while the Stats modal is open and resumes when the modal is closed. Similarly, losing application focus or sending the app to the background pauses the timer, resuming only upon refocusing the active puzzle.
 
+### Test 1.7: Duplicate Word Submission Prevention
+- **Requirement(s):** REQ-3.4
+- **Steps:**
+  1. Start a game in either Continuous Play or Daily Challenge mode.
+  2. Type a valid 5-letter isogram (e.g., "PLANT") and submit the guess.
+  3. Verify that the guess is evaluated and displayed on row 1, and the active row advances to row 2.
+  4. Type the exact same word again ("PLANT") into row 2 and submit the guess.
+  5. Observe the UI response:
+     - Verify that a toast notification with the message `"Word already guessed"` appears between the header and the game board.
+     - Verify the active row does not advance (remains on row 2).
+     - Verify no attempt is consumed and the duplicate letters remain in the current row.
+  6. Backspace and enter a different valid word. Submit to verify normal gameplay continues.
+- **Expected Result:** Submitting an already-guessed word displays the "Word already guessed" toast notification, rejects the guess without consuming an attempt or advancing the row, and allows the player to modify their input.
+
 ---
 
 ## 2. Game Modes

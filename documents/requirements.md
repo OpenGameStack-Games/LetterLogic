@@ -33,6 +33,7 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 
 - **REQ-3.2 - Dictionary Validation:** The game must reject guesses that are not present in the internal dictionary of 5-letter isograms. A rejected guess does not consume an attempt.
 - **REQ-3.3 - Length Validation:** The game must reject guesses that are shorter than 5 letters.
+- **REQ-3.4 - Duplicate Word Submission Prevention:** The game must prevent players from submitting the same word multiple times within the same puzzle across all game modes (Continuous Play and Daily Challenge). If a submitted valid word has already been guessed in the current puzzle, the submission is rejected without consuming an attempt or advancing the active row, and a toast message stating "Word already guessed" is displayed.
 
 ## 4. Game Modes
 - **REQ-4.1 - Continuous Play:** A sandbox mode where players can play unlimited consecutive games. Secret words are selected randomly from the word bank. The game screen header displays `CONTINUOUS PLAY`.
