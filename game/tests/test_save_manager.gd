@@ -110,3 +110,19 @@ func test_game_manager_roundtrip() -> void:
 	
 	gm_src.free()
 	gm_dst.free()
+
+func test_serialize_active_play_time() -> void:
+	var gm: Node = GameManagerScript.new()
+	gm.start_game(GameManagerScript.GameMode.DAILY, "LOGIC")
+	gm.active_play_time = 42.5
+	
+	var data: Dictionary = save_mgr.serialize_game_manager(gm)
+	assert_eq(data.get("active_play_time", 0.0), 42.5, "active_play_time should be serialized")
+	
+	var new_gm: Node = GameManagerScript.new()
+	var restore_ok: bool = save_mgr.deserialize_to_game_manager(data, new_gm)
+	assert_true(restore_ok, "Deserialization should succeed")
+	assert_eq(new_gm.active_play_time, 42.5, "active_play_time should be deserialized")
+	
+	gm.free()
+	new_gm.free()

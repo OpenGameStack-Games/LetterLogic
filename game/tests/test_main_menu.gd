@@ -3,6 +3,8 @@ extends "res://tests/test_base.gd"
 
 ## Automated unit tests for MainMenu and navigation scenes.
 
+const GameManagerScript = preload("res://autoloads/game_manager.gd")
+
 func test_main_scene_configuration() -> void:
 	var main_scene: String = String(ProjectSettings.get_setting("application/run/main_scene", ""))
 	assert_eq(main_scene, "res://scenes/main_menu.tscn", "Main scene in project settings must be main_menu.tscn")
@@ -265,3 +267,60 @@ func test_main_game_back_button_properties() -> void:
 		assert_eq(font_color, Color(1, 1, 1, 1), "BackButton font_color should be crisp solid white")
 	
 	main_game.free()
+
+func test_daily_button_completed_text() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	menu.daily_button = menu.find_child("DailyButton", true, false) as Button
+	
+	var dm: Node = preload("res://autoloads/daily_manager.gd").new()
+	var test_date: String = dm.get_current_utc_date_string()
+	dm.mark_daily_completed(test_date, true, 3, "user://test_menu_daily_records.json")
+	
+	menu._update_daily_button_state(dm)
+	
+	assert_true(menu.daily_button.text.begins_with("Daily Challenge - Completed"), "Button text should begin with completed text")
+	assert_true(menu.daily_button.text.contains("[Next in:"), "Button should show countdown")
+	
+	dm.clear_records("user://test_menu_daily_records.json")
+	dm.free()
+	menu.free()
+
+func test_daily_button_pressed_when_completed() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	menu.daily_button = menu.find_child("DailyButton", true, false) as Button
+	
+	var dm: Node = preload("res://autoloads/daily_manager.gd").new()
+	var sm: Node = preload("res://autoloads/save_manager.gd").new()
+	var gm: Node = GameManagerScript.new()
+	
+	var test_date: String = dm.get_current_utc_date_string()
+	dm.mark_daily_completed(test_date, true, 3, "user://test_menu_daily_records.json")
+	
+	var dummy_save: Dictionary = {
+		"status": 1,
+		"secret_word": "TESTS",
+		"active_play_time": 33.0,
+		"guesses": ["TESTS"],
+		"guess_results": [[2, 2, 2, 2, 2]],
+		"keyboard_states": {"T": 2, "E": 2, "S": 2}
+	}
+	sm.save_game_state(GameManagerScript.GameMode.DAILY, dummy_save, "user://test_menu_save_daily.json")
+	gm.current_mode = 999 as GameManagerScript.GameMode
+	
+	# Pass overrides directly into _on_daily_button_pressed
+	var is_completed: bool = dm.is_daily_completed(test_date)
+	assert_true(is_completed, "Daily must be completed")
+	var loaded_data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY, "user://test_menu_save_daily.json")
+	sm.deserialize_to_game_manager(loaded_data, gm)
+	
+	assert_ne(int(gm.current_mode), 1, "start_game should not be called, mode should remain unchanged")
+	assert_eq(gm.secret_word, "TESTS", "Saved state secret word should be restored into GameManager")
+	
+	dm.clear_records("user://test_menu_daily_records.json")
+	sm.clear_game_state(GameManagerScript.GameMode.DAILY, "user://test_menu_save_daily.json")
+	dm.free()
+	sm.free()
+	gm.free()
+	menu.free()

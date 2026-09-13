@@ -3,6 +3,9 @@ extends "res://tests/test_base.gd"
 
 ## Automated unit tests for MainGame scene.
 
+const GameManagerScript = preload("res://autoloads/game_manager.gd")
+
+
 func test_toast_overlay_position() -> void:
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	assert_true(main_scn != null, "main_game.tscn must be loadable")
@@ -127,3 +130,93 @@ func test_game_over_loss_message() -> void:
 	
 	main_game.free()
 
+func test_daily_completion_saves_state() -> void:
+	var dm: Node = preload("res://autoloads/daily_manager.gd").new()
+	var sm: Node = preload("res://autoloads/save_manager.gd").new()
+	var gm: Node = GameManagerScript.new()
+	
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	
+	gm.current_mode = GameManagerScript.GameMode.DAILY
+	gm.secret_word = "TRAIN"
+	gm.current_row = 3
+	var test_date: String = dm.get_current_utc_date_string()
+	
+	main_game._on_game_won(3, "TRAIN", gm, dm, sm)
+	
+	assert_true(dm.is_daily_completed(test_date), "Daily should be marked completed in DailyManager")
+	
+	var saved_data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
+	assert_eq(saved_data.get("secret_word"), "TRAIN", "Secret word should match in saved data")
+	assert_eq(int(saved_data.get("current_row")), 3, "Current row should match in saved data")
+	
+	sm.clear_game_state(GameManagerScript.GameMode.DAILY)
+	dm.clear_records()
+	dm.free()
+	sm.free()
+	gm.free()
+	main_game.free()
+
+func test_completed_daily_board_and_keyboard_restoration() -> void:
+	var gm: Node = GameManagerScript.new()
+	var dummy_state: Dictionary = {
+		"version": 1,
+		"mode": int(GameManagerScript.GameMode.DAILY),
+		"status": int(GameManagerScript.GameStatus.WON),
+		"secret_word": "BRAIN",
+		"current_row": 1,
+		"current_guess": "",
+		"guesses": ["BRAIN"],
+		"guess_results": [[2, 2, 2, 2, 2]],
+		"keyboard_states": {"B": 2, "R": 2, "A": 2, "I": 2, "N": 2},
+		"active_play_time": 25.5
+	}
+	var sm: Node = preload("res://autoloads/save_manager.gd").new()
+	sm.deserialize_to_game_manager(dummy_state, gm)
+	
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	main_game.game_board = main_game.get_node("VBoxContainer/BoardArea/GameBoard")
+	main_game.game_keyboard = main_game.get_node("VBoxContainer/KeyboardArea/Keyboard")
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	
+	main_game.game_board._ready()
+	main_game.game_keyboard._ready()
+	
+	main_game.check_and_restore_completed_game(gm)
+	
+	# Verify GameOverModal is opened immediately
+	assert_true(main_game.game_over_modal.visible, "GameOverModal should be visible immediately for completed daily")
+	assert_true(main_game.share_btn.visible, "ShareButton should be visible for daily game over")
+	assert_false(main_game.next_word_btn.visible, "NextWordButton should be hidden for daily game over")
+	
+	# Verify board tiles are repopulated
+	var tile_0_0: Node = main_game.game_board.get_tile(0, 0)
+	assert_true(tile_0_0 != null, "Tile(0, 0) should exist")
+	if tile_0_0 != null:
+		var label: Label = tile_0_0.find_child("Label", true, false) as Label
+		assert_true(label != null and label.text == "B", "Tile(0, 0) letter should be 'B'")
+		assert_eq(tile_0_0.current_state, 2, "Tile(0, 0) state should be CORRECT (2)")
+	
+	# Verify keyboard reflects evaluation state
+	var key_b: Node = main_game.game_keyboard.get_key("B")
+	assert_true(key_b != null, "Key 'B' should exist")
+	if key_b != null:
+		assert_eq(key_b.key_state, 2, "Key 'B' state should be CORRECT (2)")
+	
+	# Verify typing input is rejected
+	assert_false(gm.add_letter("Z"), "GameManager should reject letters when status is WON")
+	
+	sm.free()
+	gm.free()
+	main_game.free()

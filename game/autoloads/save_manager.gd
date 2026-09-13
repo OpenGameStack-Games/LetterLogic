@@ -104,7 +104,8 @@ func serialize_game_manager(gm: Node) -> Dictionary:
 		"current_guess": gm.current_guess,
 		"guesses": gm.guesses.duplicate(),
 		"guess_results": serialized_results,
-		"keyboard_states": serialized_kb
+		"keyboard_states": serialized_kb,
+		"active_play_time": float(gm.active_play_time)
 	}
 
 ## Restores saved dictionary state back into a GameManager instance.
@@ -117,6 +118,7 @@ func deserialize_to_game_manager(data: Dictionary, gm: Node) -> bool:
 	gm.secret_word = data.get("secret_word", "")
 	gm.current_row = int(data.get("current_row", 0))
 	gm.current_guess = data.get("current_guess", "")
+	gm.active_play_time = float(data.get("active_play_time", 0.0))
 	
 	gm.guesses.clear()
 	var loaded_guesses: Array = data.get("guesses", [])

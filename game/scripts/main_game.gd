@@ -33,6 +33,34 @@ func _ready() -> void:
 		game_over_modal.visible = false
 	_connect_signals()
 	_update_header()
+	check_and_restore_completed_game()
+
+func check_and_restore_completed_game(gm_override: Node = null) -> void:
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
+	if gm != null and gm.game_status != GameManagerScript.GameStatus.IN_PROGRESS:
+		if game_board != null and game_board.has_method("populate_from_manager"):
+			game_board.populate_from_manager(gm)
+		if game_keyboard != null and game_keyboard.has_method("populate_from_manager"):
+			game_keyboard.populate_from_manager(gm)
+		
+		# Immediately show game over modal
+		var won: bool = gm.game_status == GameManagerScript.GameStatus.WON
+		if won:
+			var attempts: int = gm.current_row
+			var time_str: String = gm.format_time(gm.get_active_time()) if gm.has_method("format_time") else "00:00"
+			var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
+			var idx: int = clampi(attempts - 1, 0, titles.size() - 1)
+			var msg: String = "You found '%s' in %d/6 guesses.\nTime: %s" % [gm.secret_word, attempts, time_str]
+			_show_game_over(titles[idx], msg, true, gm)
+		else:
+			_show_game_over("Game Over", "The word was %s" % gm.secret_word, false, gm)
+		
+		# Disable inputs
+		set_process_input(false)
+		set_process_unhandled_input(false)
+		if game_keyboard != null:
+			game_keyboard.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			game_keyboard.set_process_unhandled_input(false)
 
 func _connect_signals() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
@@ -80,25 +108,45 @@ func _on_toast_timer_timeout() -> void:
 		var tween: Tween = create_tween()
 		tween.tween_property(toast_overlay, "modulate:a", 0.0, 0.3)
 
-func _on_game_won(attempts: int, secret: String) -> void:
+func _on_game_won(attempts: int, secret: String, gm_override: Node = null, dm_override: Node = null, sm_override: Node = null) -> void:
 	var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
 	var idx: int = clampi(attempts - 1, 0, titles.size() - 1)
 	var win_title: String = titles[idx]
 	
-	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
 	var time_str: String = "00:00"
 	if gm != null:
 		var time_val: float = gm.get_active_time() if gm.has_method("get_active_time") else 0.0
 		time_str = gm.format_time(time_val) if gm.has_method("format_time") else "00:00"
 		
 	var msg: String = "You found '%s' in %d/6 guesses.\nTime: %s" % [secret, attempts, time_str]
-	_show_game_over(win_title, msg, true)
+	
+	if gm != null and gm.current_mode == GameManagerScript.GameMode.DAILY:
+		var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
+		if dm != null and dm.has_method("mark_daily_completed"):
+			var date_str: String = dm.get_current_utc_date_string()
+			dm.mark_daily_completed(date_str, true, attempts)
+		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
+		if sm != null and sm.has_method("save_game_state"):
+			sm.save_game_state(GameManagerScript.GameMode.DAILY, sm.serialize_game_manager(gm))
+			
+	_show_game_over(win_title, msg, true, gm)
 
-func _on_game_lost(secret: String) -> void:
-	_show_game_over("Game Over", "The word was %s" % secret, false)
+func _on_game_lost(secret: String, gm_override: Node = null, dm_override: Node = null, sm_override: Node = null) -> void:
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
+	if gm != null and gm.current_mode == GameManagerScript.GameMode.DAILY:
+		var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
+		if dm != null and dm.has_method("mark_daily_completed"):
+			var date_str: String = dm.get_current_utc_date_string()
+			dm.mark_daily_completed(date_str, false, 6) # Assume 6 attempts for loss
+		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
+		if sm != null and sm.has_method("save_game_state"):
+			sm.save_game_state(GameManagerScript.GameMode.DAILY, sm.serialize_game_manager(gm))
+			
+	_show_game_over("Game Over", "The word was %s" % secret, false, gm)
 
-func _show_game_over(title_text: String, msg_text: String, won: bool) -> void:
-	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
+func _show_game_over(title_text: String, msg_text: String, won: bool, gm_override: Node = null) -> void:
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
 	var is_daily: bool = gm != null and gm.current_mode == GameManagerScript.GameMode.DAILY
 	
 	if game_over_modal != null:
