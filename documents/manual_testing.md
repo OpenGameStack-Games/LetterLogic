@@ -27,8 +27,11 @@ This document outlines the manual test cases used to verify the requirements out
   3. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
   4. Type 5 letters of an invalid word (e.g., "QWERT") and submit. 
   5. Observe the presentation and fade-in of the "Not in word list" toast popup and verify the letter grid position.
-  6. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
-- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The row does not advance, and the attempt is not consumed. The toast dismisses smoothly via fade out after ~1.8 seconds.
+  6. Inspect the toast notification typography and outline container padding:
+     - Verify the toast notification font size is prominently enlarged (36px).
+     - Verify the text has comfortable horizontal padding (24px) away from the 12px rounded borders of the outline container (`ToastPanel`), ensuring the first and last characters do not crowd or clip against the curved corners.
+  7. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
+- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The row does not advance, and the attempt is not consumed. The toast dismisses smoothly via fade out after ~1.8 seconds.
 
 ### Test 1.3: Guess Evaluation and Keyboard Colors
 - **Requirement(s):** REQ-2.2, REQ-2.4
@@ -295,4 +298,25 @@ This document outlines the manual test cases used to verify the requirements out
   7. Tap the back button to verify it responds smoothly with standard 1930s button interaction states (hover/pressed) and returns cleanly to the Main Menu (`res://scenes/main_menu.tscn`).
   8. Repeat the test across both Continuous Play and Daily Challenge modes.
 - **Expected Result:** The header back button displays a bold, solid white `<` arrowhead without a thin tail line, balances visually with `StatsButton` in 56x56 dimensions, contrasts sharply against the dark button background, and smoothly navigates back to the Main Menu from both game modes.
+
+### Test 5.10: Center Header Typography Scaling & Toast Padding
+- **Requirement(s):** REQ-8.9
+- **Steps:**
+  1. Start a game in Continuous Play mode.
+  2. Inspect the center header typography layout above the letter grid:
+     - **Game Title (`TitleLabel`):** Verify "LETTERLOGIC" renders in a bold, prominent 48px font size.
+     - **Mode Subtitle (`ModeLabel`):** Verify "CONTINUOUS PLAY" renders in a clearly readable 28px font size with muted gray color (`#a6a6a6`).
+     - **Active Timer (`TimerLabel`):** Verify the running timer renders legibly at 32px font size with light gray color (`#cccccc`).
+  3. Verify that the doubled center header typography integrates cleanly with the top navigation bar without vertical clipping or visual distortion of `BackButton` and `StatsButton` (both 56x56).
+  4. Trigger a toast message (e.g., submit an invalid 5-letter word or 4-letter guess).
+  5. Verify the toast notification text renders at 36px font size with comfortable 24px horizontal breathing room from the 12px rounded outline corners.
+  6. Tap the back button (`<`) to return to the Main Menu.
+  7. Launch Daily Challenge mode.
+  8. Inspect the center header typography:
+     - Verify "LETTERLOGIC" title is 48px.
+     - Verify "DAILY CHALLENGE • YYYY-MM-DD" subtitle is 28px and reflects today's UTC date.
+     - Verify active timer is 32px.
+  9. Trigger a toast message in Daily Challenge mode and confirm identical 36px typography and 24px horizontal padding.
+- **Expected Result:** Both Continuous Play and Daily Challenge headers display doubled, highly legible center typography (Title: 48px, Subtitle: 28px, Timer: 32px) and toast alerts (36px with 24px horizontal padding) without vertical clipping or misaligning adjacent navigation controls.
+
 
