@@ -348,6 +348,8 @@ func test_credits_button_and_modal() -> void:
 func test_credits_modal_content() -> void:
 	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
 	var menu: Node = menu_scn.instantiate()
+	menu._ready()
+	
 	var modal: Control = menu.find_child("CreditsModal", true, false) as Control
 	assert_true(modal != null, "CreditsModal should exist")
 	
@@ -360,24 +362,36 @@ func test_credits_modal_content() -> void:
 			if "Developed by Open Game Stack" in lbl.text: has_ogs = true
 			if "Published by Audrain Entertainment" in lbl.text: has_audrain = true
 			if "LetterLogic is an open-source game hosted on GitHub" in lbl.text: has_github = true
+			assert_false("https://" in lbl.text, "Labels should not display raw URLs")
 	
 	assert_true(has_ogs, "CreditsModal must attribute Open Game Stack")
 	assert_true(has_audrain, "CreditsModal must attribute Audrain Entertainment")
 	assert_true(has_github, "CreditsModal must have GitHub attribution")
 	
+	var hboxes: Array[Node] = modal.find_children("*", "HBoxContainer", true, false)
+	assert_true(hboxes.size() >= 3, "There should be at least 3 HBoxContainers for rows")
+	
 	var textures: Array[Node] = modal.find_children("*", "TextureRect", true, false)
 	assert_eq(textures.size(), 3, "There should be 3 TextureRects for logos")
 	for tex in textures:
 		assert_true(tex.texture != null, "TextureRect should have a texture assigned")
+		assert_true(tex.custom_minimum_size.x <= 100, "Logo width should be <= 100")
+		assert_true(tex.custom_minimum_size.y <= 100, "Logo height should be <= 100")
 	
-	var links: Array[Node] = modal.find_children("*", "LinkButton", true, false)
-	assert_eq(links.size(), 3, "There should be 3 LinkButtons for URLs")
-	var urls: Array[String] = []
-	for lnk in links:
-		if lnk is LinkButton:
-			urls.append(lnk.uri)
-	assert_true("https://opengamestack.org/" in urls, "URL for OGS should exist")
-	assert_true("https://audrain.games/" in urls, "URL for Audrain should exist")
-	assert_true("https://github.com/OpenGameStack-Games/LetterLogic" in urls, "URL for GitHub should exist")
+	var ogs_block = modal.find_child("OGSBlock", true, false)
+	var audrain_block = modal.find_child("AudrainBlock", true, false)
+	var github_block = modal.find_child("GitHubBlock", true, false)
+	
+	var ogs_btn = ogs_block.find_child("WebIconBtn", true, false)
+	var audrain_btn = audrain_block.find_child("WebIconBtn", true, false)
+	var github_btn = github_block.find_child("WebIconBtn", true, false)
+	
+	assert_true(ogs_btn != null, "OGS WebIconBtn exists")
+	assert_true(audrain_btn != null, "Audrain WebIconBtn exists")
+	assert_true(github_btn != null, "GitHub WebIconBtn exists")
+	
+	assert_true(ogs_btn.pressed.is_connected(Callable(menu, "_on_ogs_pressed")), "OGS button connected")
+	assert_true(audrain_btn.pressed.is_connected(Callable(menu, "_on_audrain_pressed")), "Audrain button connected")
+	assert_true(github_btn.pressed.is_connected(Callable(menu, "_on_github_pressed")), "GitHub button connected")
 	
 	menu.free()
