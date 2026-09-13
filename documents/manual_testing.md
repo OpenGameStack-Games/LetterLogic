@@ -331,3 +331,23 @@ This document outlines the manual test cases used to verify the requirements out
   7. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
   8. Verify that the enlarged and constrained font sizes are preserved across all visual key states and interaction feedback (hover, pressed).
 - **Expected Result:** Keyboard keys provide enlarged (~77px) vertical tap targets. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping.
+
+### Test 5.12: Main Menu Typography, Navigation Button Dimensions & Responsive Touch Targets
+- **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.12
+- **Steps:**
+  1. Launch the application to the Main Menu (`res://scenes/main_menu.tscn`).
+  2. Inspect the Main Menu title and tagline typography:
+     - **Title (`TitleLabel`):** Verify `LETTERLOGIC` renders in an enlarged, bold 88px font size centered above the navigation stack.
+     - **Subtitle (`SubtitleLabel`):** Verify `The 5-Letter Isogram Word Game` renders in a clear 36px font size with `#b3b3b3` color and clean 12px vertical separation from the title.
+  3. Inspect the primary mode navigation buttons:
+     - **Daily Challenge (`DailyButton`):** Verify the button displays at an expanded minimum height of 120px with doubled 40px typography. Ensure the two lines of text (e.g., `Daily Challenge\n[Play Today's Word]` or active countdown `Daily Challenge\n[Next in: HH:MM:SS]`) fit comfortably without vertical clipping, truncation, or crowding against borders and corner radii.
+     - **Continuous Play (`ContinuousButton`):** Verify the button displays at 120px minimum height with doubled 40px typography and two lines of text (`Continuous Play\n[Unlimited Practice]`).
+  4. Inspect the secondary utility buttons:
+     - **Statistics (`StatsButton`):** Verify the button displays at an expanded minimum height of 80px with doubled 36px typography.
+     - **How to Play (`HowToPlayButton`):** Verify the button displays at an expanded minimum height of 80px with doubled 36px typography.
+  5. Inspect vertical spacing and layout breathing room:
+     - Verify 20px vertical separation between navigation buttons.
+     - Verify the vertical container hierarchy (`VBox`) remains centered and balanced within safe margins across standard (720x1280) and tall portrait aspect ratios (18:9, 19.5:9, 20:9, 21:9) without overlapping the mascot or overflowing the display viewport.
+  6. Tap each button to confirm touch responsiveness, tactile interaction states, and seamless navigation.
+- **Expected Result:** The Main Menu presents doubled typography (88px title, 36px subtitle, 40px mode buttons, 36px utility buttons) and expanded button minimum heights (120px for mode buttons, 80px for utility buttons), providing ergonomic tap targets, no text clipping or crowding, and balanced vertical centering across all portrait aspect ratios.
+
