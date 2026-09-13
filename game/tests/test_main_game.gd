@@ -344,7 +344,7 @@ func test_notification_saves_in_progress_state() -> void:
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	var main_game: Node = main_scn.instantiate()
 	
-	main_game._notification(MainGame.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	main_game._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	assert_true(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Focus out notification should save in-progress state")
 	
 	var saved: Dictionary = sm.load_game_state(GameManagerScript.GameMode.CONTINUOUS)
