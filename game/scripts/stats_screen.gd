@@ -129,16 +129,17 @@ func _update_distribution(dist: Dictionary) -> void:
 	for k in keys:
 		var count: int = int(dist.get(k, 0))
 		var row_hbox: HBoxContainer = HBoxContainer.new()
-		row_hbox.custom_minimum_size = Vector2(0, 28)
+		row_hbox.custom_minimum_size = Vector2(0, 48)
 		row_hbox.add_theme_constant_override("separation", 8)
 		
 		# Label (1..6 or L)
 		var label_str: String = "X" if k == "loss" else k
 		var lbl: Label = Label.new()
 		lbl.text = label_str
-		lbl.custom_minimum_size = Vector2(24, 0)
+		lbl.custom_minimum_size = Vector2(36, 0)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 24)
 		row_hbox.add_child(lbl)
 		
 		# Bar panel
@@ -151,16 +152,17 @@ func _update_distribution(dist: Dictionary) -> void:
 		
 		var style: StyleBoxFlat = StyleBoxFlat.new()
 		style.bg_color = Color("538d4e") if k != "loss" and count > 0 else Color("3a3a3c")
-		style.corner_radius_top_left = 4
-		style.corner_radius_top_right = 4
-		style.corner_radius_bottom_left = 4
-		style.corner_radius_bottom_right = 4
+		style.corner_radius_top_left = 6
+		style.corner_radius_top_right = 6
+		style.corner_radius_bottom_left = 6
+		style.corner_radius_bottom_right = 6
 		bar_panel.add_theme_stylebox_override("panel", style)
 		
 		var count_lbl: Label = Label.new()
 		count_lbl.text = " %d " % count
 		count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		count_lbl.add_theme_font_size_override("font_size", 22)
 		bar_panel.add_child(count_lbl)
 		
 		row_hbox.add_child(bar_panel)
