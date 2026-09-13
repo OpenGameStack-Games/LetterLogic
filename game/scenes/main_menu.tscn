@@ -4,6 +4,9 @@
 [ext_resource type="PackedScene" path="res://scenes/stats_screen.tscn" id="2_stats_screen"]
 
 [ext_resource type="Texture2D" path="res://assets/icons/icon.png" id="3_mascot"]
+[ext_resource type="Texture2D" path="res://assets/icons/OpenGameStackMonoChrome.png" id="4_ogs_logo"]
+[ext_resource type="Texture2D" path="res://assets/icons/AudrainEntertainment.png" id="5_audrain_logo"]
+[ext_resource type="Texture2D" path="res://assets/icons/github_icon.png" id="6_github_logo"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -97,6 +100,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "How to Play"
 
+[node name="CreditsButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Credits"
+
 [node name="CountdownTimer" type="Timer" parent="."]
 
 [node name="HowToPlayModal" type="ColorRect" parent="."]
@@ -161,6 +170,131 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Got It!"
 
+[node name="CreditsModal" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="MarginContainer" type="MarginContainer" parent="CreditsModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 48
+
+[node name="Panel" type="PanelContainer" parent="CreditsModal/MarginContainer"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CreditsModal/MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ModalTitle" type="Label" parent="CreditsModal/MarginContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 84
+text = "CREDITS"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="CreditsModal/MarginContainer/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 40
+
+[node name="OGSBlock" type="VBoxContainer" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Logo" type="TextureRect" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/OGSBlock"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture = ExtResource("4_ogs_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/OGSBlock"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Developed by Open Game Stack"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LinkButton" type="LinkButton" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/OGSBlock"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "https://opengamestack.org/"
+uri = "https://opengamestack.org/"
+
+[node name="AudrainBlock" type="VBoxContainer" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Logo" type="TextureRect" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/AudrainBlock"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture = ExtResource("5_audrain_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/AudrainBlock"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Published by Audrain Entertainment"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LinkButton" type="LinkButton" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/AudrainBlock"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "https://audrain.games/"
+uri = "https://audrain.games/"
+
+[node name="GitHubBlock" type="VBoxContainer" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Logo" type="TextureRect" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/GitHubBlock"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture = ExtResource("6_github_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/GitHubBlock"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "LetterLogic is an open-source game hosted on GitHub"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="LinkButton" type="LinkButton" parent="CreditsModal/MarginContainer/Panel/VBox/Scroll/VBox/GitHubBlock"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "https://github.com/OpenGameStack-Games/LetterLogic"
+uri = "https://github.com/OpenGameStack-Games/LetterLogic"
+
+[node name="CloseButton" type="Button" parent="CreditsModal/MarginContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Got It!"
+
 [node name="StatsScreen" parent="." instance=ExtResource("2_stats_screen")]
 visible = false
 layout_mode = 1
@@ -169,4 +303,6 @@ layout_mode = 1
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/ContinuousButton" to="." method="_on_continuous_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/StatsButton" to="." method="_on_stats_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/HowToPlayButton" to="." method="_on_how_to_play_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBox/MenuButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
 [connection signal="pressed" from="HowToPlayModal/MarginContainer/Panel/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]
+[connection signal="pressed" from="CreditsModal/MarginContainer/Panel/VBox/CloseButton" to="." method="_on_close_credits_pressed"]

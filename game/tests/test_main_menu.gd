@@ -322,3 +322,62 @@ func test_daily_button_pressed_when_completed() -> void:
 	sm.free()
 	gm.free()
 	menu.free()
+
+func test_credits_button_and_modal() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	
+	var credits_btn: Button = menu.find_child("CreditsButton", true, false) as Button
+	assert_true(credits_btn != null, "CreditsButton should exist in MainMenu")
+	assert_eq(credits_btn.text, "Credits", "CreditsButton text should be Credits")
+	assert_eq(credits_btn.get_theme_font_size("font_size"), 36, "CreditsButton font size should be 36")
+	assert_true(credits_btn.custom_minimum_size.y >= 72.0, "CreditsButton minimum height >= 72")
+	
+	var modal: Control = menu.find_child("CreditsModal", true, false) as Control
+	assert_true(modal != null, "CreditsModal should exist")
+	assert_false(modal.visible, "CreditsModal should default to hidden")
+	
+	menu.call("_on_credits_button_pressed")
+	assert_true(modal.visible, "CreditsModal should be visible after pressing Credits")
+	
+	menu.call("_on_close_credits_pressed")
+	assert_false(modal.visible, "CreditsModal should be hidden after pressing Close")
+	
+	menu.free()
+
+func test_credits_modal_content() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	var menu: Node = menu_scn.instantiate()
+	var modal: Control = menu.find_child("CreditsModal", true, false) as Control
+	assert_true(modal != null, "CreditsModal should exist")
+	
+	var labels: Array[Node] = modal.find_children("*", "Label", true, false)
+	var has_ogs: bool = false
+	var has_audrain: bool = false
+	var has_github: bool = false
+	for lbl in labels:
+		if lbl is Label:
+			if "Developed by Open Game Stack" in lbl.text: has_ogs = true
+			if "Published by Audrain Entertainment" in lbl.text: has_audrain = true
+			if "LetterLogic is an open-source game hosted on GitHub" in lbl.text: has_github = true
+	
+	assert_true(has_ogs, "CreditsModal must attribute Open Game Stack")
+	assert_true(has_audrain, "CreditsModal must attribute Audrain Entertainment")
+	assert_true(has_github, "CreditsModal must have GitHub attribution")
+	
+	var textures: Array[Node] = modal.find_children("*", "TextureRect", true, false)
+	assert_eq(textures.size(), 3, "There should be 3 TextureRects for logos")
+	for tex in textures:
+		assert_true(tex.texture != null, "TextureRect should have a texture assigned")
+	
+	var links: Array[Node] = modal.find_children("*", "LinkButton", true, false)
+	assert_eq(links.size(), 3, "There should be 3 LinkButtons for URLs")
+	var urls: Array[String] = []
+	for lnk in links:
+		if lnk is LinkButton:
+			urls.append(lnk.uri)
+	assert_true("https://opengamestack.org/" in urls, "URL for OGS should exist")
+	assert_true("https://audrain.games/" in urls, "URL for Audrain should exist")
+	assert_true("https://github.com/OpenGameStack-Games/LetterLogic" in urls, "URL for GitHub should exist")
+	
+	menu.free()
