@@ -150,4 +150,3 @@ func populate_from_manager(gm_override: Node = null) -> void:
 	if gm.current_row < ROWS and gm.current_guess != "":
 		for c in range(mini(gm.current_guess.length(), COLS)):
 			set_tile_letter(gm.current_row, c, gm.current_guess[c])
-
