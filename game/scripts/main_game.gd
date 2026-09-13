@@ -84,13 +84,21 @@ func _on_game_won(attempts: int, secret: String) -> void:
 	var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
 	var idx: int = clampi(attempts - 1, 0, titles.size() - 1)
 	var win_title: String = titles[idx]
-	_show_game_over(win_title, "You found '%s' in %d/6 guesses." % [secret, attempts], true)
+	
+	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
+	var time_str: String = "00:00"
+	if gm != null:
+		var time_val: float = gm.get_active_time() if gm.has_method("get_active_time") else 0.0
+		time_str = gm.format_time(time_val) if gm.has_method("format_time") else "00:00"
+		
+	var msg: String = "You found '%s' in %d/6 guesses.\nTime: %s" % [secret, attempts, time_str]
+	_show_game_over(win_title, msg, true)
 
 func _on_game_lost(secret: String) -> void:
 	_show_game_over("Game Over", "The word was %s" % secret, false)
 
 func _show_game_over(title_text: String, msg_text: String, won: bool) -> void:
-	var gm: Node = get_node_or_null("/root/GameManager")
+	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
 	var is_daily: bool = gm != null and gm.current_mode == GameManagerScript.GameMode.DAILY
 	
 	if game_over_modal != null:
