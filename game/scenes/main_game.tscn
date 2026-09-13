@@ -46,21 +46,21 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 48
 text = "LETTERLOGIC"
 horizontal_alignment = 1
 
 [node name="ModeLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 28
 text = "CONTINUOUS PLAY"
 horizontal_alignment = 1
 
 [node name="TimerLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 32
 text = "00:00"
 horizontal_alignment = 1
 
@@ -78,10 +78,17 @@ layout_mode = 2
 [node name="ToastPanel" type="PanelContainer" parent="VBoxContainer/ToastOverlay"]
 layout_mode = 2
 
-[node name="ToastLabel" type="Label" parent="VBoxContainer/ToastOverlay/ToastPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ToastOverlay/ToastPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 8
+
+[node name="ToastLabel" type="Label" parent="VBoxContainer/ToastOverlay/ToastPanel/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 36
 text = "Not in word list"
 horizontal_alignment = 1
 

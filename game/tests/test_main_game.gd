@@ -32,7 +32,7 @@ func test_toast_overlay_position() -> void:
 	# Verify toast panel, label, and timer nodes exist
 	var toast_panel: PanelContainer = toast_overlay.get_node_or_null("ToastPanel") as PanelContainer
 	assert_true(toast_panel != null, "ToastPanel should exist in ToastOverlay")
-	var toast_label: Label = toast_overlay.get_node_or_null("ToastPanel/ToastLabel") as Label
+	var toast_label: Label = toast_overlay.get_node_or_null("ToastPanel/MarginContainer/ToastLabel") as Label
 	var toast_timer: Timer = toast_overlay.get_node_or_null("ToastTimer") as Timer
 	assert_true(toast_label != null, "ToastLabel should exist inside ToastPanel")
 	assert_true(toast_timer != null, "ToastTimer should exist inside ToastOverlay")
@@ -53,5 +53,34 @@ func test_toast_overlay_position() -> void:
 	
 	main_game.call("_on_toast_timer_timeout")
 	assert_true(toast_overlay.visible, "ToastOverlay should still remain visible after timeout")
+	
+	main_game.free()
+
+func test_header_and_toast_typography() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	
+	var title_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/TitleLabel") as Label
+	assert_true(title_label != null, "TitleLabel should exist")
+	assert_eq(title_label.get_theme_font_size("font_size"), 48, "TitleLabel font size override should be 48")
+	
+	var mode_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	assert_true(mode_label != null, "ModeLabel should exist")
+	assert_eq(mode_label.get_theme_font_size("font_size"), 28, "ModeLabel font size override should be 28")
+	
+	var timer_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel") as Label
+	assert_true(timer_label != null, "TimerLabel should exist")
+	assert_eq(timer_label.get_theme_font_size("font_size"), 32, "TimerLabel font size override should be 32")
+	
+	var toast_label: Label = main_game.get_node_or_null("VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel") as Label
+	assert_true(toast_label != null, "ToastLabel should exist")
+	assert_eq(toast_label.get_theme_font_size("font_size"), 36, "ToastLabel font size override should be 36")
+	
+	var margin_container: MarginContainer = main_game.get_node_or_null("VBoxContainer/ToastOverlay/ToastPanel/MarginContainer") as MarginContainer
+	assert_true(margin_container != null, "Toast MarginContainer should exist")
+	var margin_left: int = margin_container.get_theme_constant("margin_left")
+	var margin_right: int = margin_container.get_theme_constant("margin_right")
+	assert_true(margin_left >= 16, "ToastPanel horizontal content margin should be >= 16")
+	assert_true(margin_right >= 16, "ToastPanel horizontal content margin should be >= 16")
 	
 	main_game.free()
