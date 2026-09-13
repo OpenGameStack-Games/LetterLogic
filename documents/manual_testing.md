@@ -508,12 +508,14 @@ This document outlines the manual test cases used to verify the requirements out
   3. Tap the `Credits` button:
      - Verify that `CreditsModal` becomes visible, presenting a dark full-screen overlay (`Color(0, 0, 0, 0.8)`) with a centered vintage-styled container panel.
      - Verify the modal title `CREDITS` is centered at the top in calibrated 64px typography.
+     - Verify the expanded modal padding around the panel (64px left/right, 96px top/bottom safe margins).
      - Verify that on a standard 720x1280 mobile portrait screen, all modal elements (title, all three attribution rows, and the dismiss button) fit cleanly without requiring scrolling (while the scroll container remains intact as a safeguard).
   4. Inspect the studio attributions and circular logo badges:
-     - Verify each entry is structured as a compact horizontal row (`HBoxContainer`, 16px separation) with the logo on the left and a text/link column on the right:
-       - **Open Game Stack:** Verify the circular badge logo (`OpenGameStackMonoChrome.png`) renders cleanly at 96x96 with aspect ratio preserved, accompanied by the top-right label `"Developed by Open Game Stack"` (24px font) and bottom-right interactive web icon button (`WebIconBtn`, 48x48).
-       - **Audrain Entertainment:** Verify the Audrain circular badge logo (`AudrainEntertainment.png`) renders cleanly at 96x96 with aspect ratio preserved, accompanied by the top-right label `"Published by Audrain Entertainment"` (24px font) and bottom-right interactive web icon button (`WebIconBtn`, 48x48).
-       - **GitHub Open Source:** Verify the GitHub circular badge logo (`github_icon.png`) renders cleanly at 96x96 with aspect ratio preserved, accompanied by the top-right label `"LetterLogic is an open-source game hosted on GitHub"` (24px font) and bottom-right interactive web icon button (`WebIconBtn`, 48x48).
+     - Verify each entry is structured as a compact horizontal row (`HBoxContainer`, 16px separation) with expanded 48px vertical spacing between rows, featuring the 50% enlarged logo on the left and a left-aligned text/link column on the right:
+       - **Open Game Stack:** Verify the regenerated circular badge logo (`OpenGameStackMonoChrome.png`) renders cleanly at 144x144 with aspect ratio preserved, accompanied by the left-aligned label `"Developed by Open Game Stack"` (24px font) and left-aligned interactive web icon button (`WebIconBtn`, 48x48).
+       - **Audrain Entertainment:** Verify the Audrain circular badge logo (`AudrainEntertainment.png`) renders cleanly at 144x144 with aspect ratio preserved, accompanied by the left-aligned label `"Published by Audrain Entertainment"` (24px font) and left-aligned interactive web icon button (`WebIconBtn`, 48x48).
+       - **GitHub Open Source:** Verify the regenerated GitHub circular badge logo (`github_icon.png`) renders cleanly at 144x144 with aspect ratio preserved, accompanied by the left-aligned label `"LetterLogic is an open-source game hosted on GitHub"` (24px font) and left-aligned interactive web icon button (`WebIconBtn`, 48x48).
+     - Verify that both the attribution text and web icon button are left-justified in the right column.
      - Verify that no raw URL text strings (`https://...`) are visible on the labels or buttons.
   5. Test interactive web icon links:
      - Tap each web icon button (`WebIconBtn`) and verify that each triggers the system browser via `OS.shell_open()` to the respective destination:
@@ -523,7 +525,7 @@ This document outlines the manual test cases used to verify the requirements out
   6. Test modal dismissal:
      - Inspect the dismiss button at the bottom of the modal, verifying `text = "Got It!"`, 36px font size, and 80px minimum height.
      - Tap the `"Got It!"` button and verify that `CreditsModal` closes and the Main Menu is fully interactive again.
-- **Expected Result:** The Main Menu features an ergonomically sized Credits button (36px font, 80px height). Tapping it opens a vintage monochrome Credits modal displaying the 64px title, three compact horizontal attribution rows with uniform 96x96 circular badge logos, 24px attribution labels, 48x48 interactive web icon buttons without visible URL strings, fitting entirely within a 720x1280 mobile portrait viewport without scrolling, and an 80px "Got It!" dismiss button that closes the modal cleanly.
+- **Expected Result:** The Main Menu features an ergonomically sized Credits button (36px font, 80px height). Tapping it opens a vintage monochrome Credits modal displaying the 64px title, generous 64px/96px window margins, 48px vertical spacing between rows, three compact horizontal attribution rows with uniform 144x144 circular badge logos, 24px attribution labels, left-aligned 48x48 interactive web icon buttons without visible URL strings, fitting entirely within a 720x1280 mobile portrait viewport without scrolling, and an 80px "Got It!" dismiss button that closes the modal cleanly.
 
 ### Test 5.16: Game Over Modal Typography Scaling, Doubled Button Height & Inset Action Buttons Layout
 - **Requirement(s):** REQ-2.7, REQ-8.1, REQ-8.2, REQ-8.7
