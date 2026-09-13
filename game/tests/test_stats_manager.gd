@@ -111,6 +111,16 @@ func test_stats_screen_ui() -> void:
 		assert_true(p_val.get_theme_font_size("font_size") >= 36, "Summary card value font size should be >= 36")
 		assert_true(p_lbl.get_theme_font_size("font_size") >= 18, "Summary card description font size should be >= 18")
 		
+	var summary_cards = screen.find_child("SummaryCards", true, false)
+	if summary_cards:
+		assert_eq(summary_cards.get_child_count(), 6, "SummaryCards should have 6 children")
+		assert_eq(summary_cards.get_child(0).name, "PlayedCard", "Index 0 should be PlayedCard")
+		assert_eq(summary_cards.get_child(1).name, "MaxStreakCard", "Index 1 should be MaxStreakCard")
+		assert_eq(summary_cards.get_child(2).name, "BestTimeCard", "Index 2 should be BestTimeCard")
+		assert_eq(summary_cards.get_child(3).name, "WinPctCard", "Index 3 should be WinPctCard")
+		assert_eq(summary_cards.get_child(4).name, "StreakCard", "Index 4 should be StreakCard")
+		assert_eq(summary_cards.get_child(5).name, "AvgTimeCard", "Index 5 should be AvgTimeCard")
+		
 	if dist_box and dist_box.get_child_count() > 0:
 		var row_hbox = dist_box.get_child(0)
 		assert_true(row_hbox.custom_minimum_size.y >= 40, "Distribution row minimum height should be >= 40")
