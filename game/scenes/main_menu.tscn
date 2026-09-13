@@ -126,17 +126,19 @@ layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="HowToPlayModal/MarginContainer/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
 [node name="ModalTitle" type="Label" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 84
 text = "HOW TO PLAY"
 horizontal_alignment = 1
 
 [node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 48
+theme_override_font_sizes/bold_font_size = 48
 bbcode_enabled = true
 text = "[b]Guess the secret word in 6 attempts.[/b]
 
@@ -154,9 +156,9 @@ text = "[b]Guess the secret word in 6 attempts.[/b]
 scroll_active = true
 
 [node name="CloseButton" type="Button" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 36
 text = "Got It!"
 
 [node name="StatsScreen" parent="." instance=ExtResource("2_stats_screen")]
