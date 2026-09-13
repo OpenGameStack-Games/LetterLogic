@@ -220,3 +220,136 @@ func test_completed_daily_board_and_keyboard_restoration() -> void:
 	sm.free()
 	gm.free()
 	main_game.free()
+
+func test_in_progress_board_and_keyboard_restoration() -> void:
+	var gm: Node = GameManagerScript.new()
+	var sm: Node = preload("res://autoloads/save_manager.gd").new()
+	var dummy_state: Dictionary = {
+		"version": 1,
+		"mode": int(GameManagerScript.GameMode.CONTINUOUS),
+		"status": int(GameManagerScript.GameStatus.IN_PROGRESS),
+		"secret_word": "CLERK",
+		"current_row": 1,
+		"current_guess": "B",
+		"guesses": ["BRAIN"],
+		"guess_results": [[0, 1, 0, 0, 0]],
+		"keyboard_states": {"B": 0, "R": 1, "A": 0, "I": 0, "N": 0},
+		"active_play_time": 12.0
+	}
+	sm.deserialize_to_game_manager(dummy_state, gm)
+	
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	main_game.game_board = main_game.get_node("VBoxContainer/BoardArea/GameBoard")
+	main_game.game_keyboard = main_game.get_node("VBoxContainer/KeyboardArea/Keyboard")
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	
+	main_game.game_board._ready()
+	main_game.game_keyboard._ready()
+	
+	main_game.check_and_restore_completed_game(gm)
+	
+	# Verify GameOverModal remains hidden for in-progress games
+	assert_false(main_game.game_over_modal.visible, "GameOverModal should remain hidden for in-progress games")
+	assert_ne(main_game.game_keyboard.mouse_filter, Control.MOUSE_FILTER_IGNORE, "Keyboard mouse filter should not be ignored")
+	assert_true(gm.add_letter("Z"), "GameManager should accept letters when status is IN_PROGRESS")
+	
+	# Verify row 0 tiles are repopulated with guesses and evaluation states
+	var tile_0_0: Node = main_game.game_board.get_tile(0, 0)
+	assert_true(tile_0_0 != null, "Tile(0, 0) should exist")
+	if tile_0_0 != null:
+		var label: Label = tile_0_0.find_child("Label", true, false) as Label
+		assert_true(label != null and label.text == "B", "Tile(0, 0) letter should be 'B'")
+		assert_eq(tile_0_0.current_state, 0, "Tile(0, 0) state should be ABSENT (0)")
+	
+	var tile_0_1: Node = main_game.game_board.get_tile(0, 1)
+	assert_true(tile_0_1 != null, "Tile(0, 1) should exist")
+	if tile_0_1 != null:
+		var label: Label = tile_0_1.find_child("Label", true, false) as Label
+		assert_true(label != null and label.text == "R", "Tile(0, 1) letter should be 'R'")
+		assert_eq(tile_0_1.current_state, 1, "Tile(0, 1) state should be PRESENT (1)")
+		
+	# Verify in-progress current guess letter is rendered
+	var tile_1_0: Node = main_game.game_board.get_tile(1, 0)
+	assert_true(tile_1_0 != null, "Tile(1, 0) should exist")
+	if tile_1_0 != null:
+		var label: Label = tile_1_0.find_child("Label", true, false) as Label
+		assert_true(label != null and label.text == "B", "Tile(1, 0) letter should be 'B'")
+	
+	# Verify keyboard reflects evaluation state and active row typing restriction
+	var key_r: Node = main_game.game_keyboard.get_key("R")
+	assert_true(key_r != null, "Key 'R' should exist")
+	if key_r != null:
+		assert_eq(key_r.key_state, 1, "Key 'R' state should be PRESENT (1)")
+		
+	var key_b: Node = main_game.game_keyboard.get_key("B")
+	assert_true(key_b != null, "Key 'B' should exist")
+	if key_b != null:
+		assert_true(key_b.is_row_disabled, "Key 'B' should be row-disabled because it is typed in current row")
+	
+	sm.free()
+	gm.free()
+	main_game.free()
+
+func test_continuous_game_over_clears_save_file() -> void:
+	var sm: Node = preload("res://autoloads/save_manager.gd").new()
+	var gm: Node = GameManagerScript.new()
+	gm.current_mode = GameManagerScript.GameMode.CONTINUOUS
+	gm.secret_word = "PLANT"
+	gm.current_row = 3
+	
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	
+	# Test win clears continuous save
+	sm.save_game_state(GameManagerScript.GameMode.CONTINUOUS, {"test": "data"})
+	assert_true(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Continuous save should exist prior to win")
+	main_game._on_game_won(3, "PLANT", gm, null, sm)
+	assert_false(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Continuous save should be cleared after win")
+	
+	# Test loss clears continuous save
+	sm.save_game_state(GameManagerScript.GameMode.CONTINUOUS, {"test": "data"})
+	assert_true(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Continuous save should exist prior to loss")
+	main_game._on_game_lost("PLANT", gm, null, sm)
+	assert_false(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Continuous save should be cleared after loss")
+	
+	sm.free()
+	gm.free()
+	main_game.free()
+
+func test_notification_saves_in_progress_state() -> void:
+	var root: Node = Engine.get_main_loop().root if Engine.get_main_loop() != null else null
+	var gm: Node = root.get_node_or_null("GameManager") if root != null else null
+	var sm: Node = root.get_node_or_null("SaveManager") if root != null else null
+	if gm == null or sm == null:
+		return
+	
+	gm.start_game(GameManagerScript.GameMode.CONTINUOUS, "APPLE")
+	gm.add_letter("T")
+	gm.add_letter("R")
+	gm.add_letter("A")
+	gm.add_letter("I")
+	gm.add_letter("N")
+	gm.submit_guess()
+	
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	
+	main_game._notification(MainGame.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	assert_true(sm.has_saved_game(GameManagerScript.GameMode.CONTINUOUS), "Focus out notification should save in-progress state")
+	
+	var saved: Dictionary = sm.load_game_state(GameManagerScript.GameMode.CONTINUOUS)
+	assert_eq(saved.get("secret_word", ""), "APPLE", "Saved secret word must match")
+	assert_eq(int(saved.get("current_row", 0)), 1, "Saved current row must match")
+	
+	sm.clear_game_state(GameManagerScript.GameMode.CONTINUOUS)
+	main_game.free()
