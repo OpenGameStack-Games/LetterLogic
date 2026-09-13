@@ -129,3 +129,22 @@ func test_timer_tracking() -> void:
 	game_mgr._process(1.0)
 	assert_eq(game_mgr.get_active_time(), 2.0, "Timer should stop after game won")
 
+func test_prevent_duplicate_words() -> void:
+	game_mgr.start_game(GameManagerScript.GameMode.CONTINUOUS, "LOGIC")
+	
+	for char in "PLANT":
+		game_mgr.add_letter(char)
+	
+	var res1: Dictionary = game_mgr.submit_guess()
+	assert_true(res1.success, "First submission of 'PLANT' should succeed")
+	assert_eq(game_mgr.current_row, 1, "Row should advance to 1")
+	
+	for char in "PLANT":
+		game_mgr.add_letter(char)
+	
+	var res2: Dictionary = game_mgr.submit_guess()
+	assert_false(res2.success, "Second submission of 'PLANT' should fail")
+	assert_eq(res2.reason, "Word already guessed", "Reason should be 'Word already guessed'")
+	assert_eq(game_mgr.current_row, 1, "Row should not advance on duplicate guess")
+	assert_eq(game_mgr.guesses.size(), 1, "Guesses array should not record the duplicate")
+

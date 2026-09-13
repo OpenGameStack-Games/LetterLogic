@@ -152,6 +152,10 @@ func submit_guess() -> Dictionary:
 		invalid_guess.emit("Not in word list")
 		return { "success": false, "reason": "Not in word list", "results": [] }
 	
+	if guesses.has(current_guess):
+		invalid_guess.emit("Word already guessed")
+		return { "success": false, "reason": "Word already guessed", "results": [] }
+	
 	var results: Array[TileState] = evaluate_guess(current_guess, secret_word)
 	guesses.append(current_guess)
 	guess_results.append(results)
