@@ -130,6 +130,29 @@ func test_game_over_loss_message() -> void:
 	
 	main_game.free()
 
+func test_game_over_typography_and_layout() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	
+	var title: Label = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel") as Label
+	var msg: Label = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel") as Label
+	var btn_margin: MarginContainer = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin") as MarginContainer
+	var next_btn: Button = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton") as Button
+	var share_btn: Button = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton") as Button
+	var menu_btn: Button = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/MenuButton") as Button
+	
+	assert_true(title.get_theme_font_size("font_size") >= 48, "TitleLabel font size should be >= 48")
+	assert_true(msg.get_theme_font_size("font_size") >= 28, "MessageLabel font size should be >= 28")
+	
+	assert_true(btn_margin.get_theme_constant("margin_left") >= 56, "ButtonMargin left margin should be >= 56")
+	assert_true(btn_margin.get_theme_constant("margin_right") >= 56, "ButtonMargin right margin should be >= 56")
+	
+	for btn in [next_btn, share_btn, menu_btn]:
+		assert_true(btn.custom_minimum_size.y >= 80, "Button custom minimum height should be >= 80")
+		assert_true(btn.get_theme_font_size("font_size") >= 28, "Button font size should be >= 28")
+	
+	main_game.free()
+
 func test_daily_completion_saves_state() -> void:
 	var dm: Node = preload("res://autoloads/daily_manager.gd").new()
 	var sm: Node = preload("res://autoloads/save_manager.gd").new()
@@ -140,8 +163,8 @@ func test_daily_completion_saves_state() -> void:
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
-	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
-	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton")
 	
 	gm.current_mode = GameManagerScript.GameMode.DAILY
 	gm.secret_word = "TRAIN"
@@ -187,8 +210,8 @@ func test_completed_daily_board_and_keyboard_restoration() -> void:
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
-	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
-	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton")
 	
 	main_game.game_board._ready()
 	main_game.game_keyboard._ready()
@@ -245,8 +268,8 @@ func test_in_progress_board_and_keyboard_restoration() -> void:
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
-	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
-	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton")
 	
 	main_game.game_board._ready()
 	main_game.game_keyboard._ready()
@@ -307,8 +330,8 @@ func test_continuous_game_over_clears_save_file() -> void:
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
-	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton")
-	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton")
+	main_game.share_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton")
+	main_game.next_word_btn = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton")
 	
 	# Test win clears continuous save
 	sm.save_game_state(GameManagerScript.GameMode.CONTINUOUS, {"test": "data"})
