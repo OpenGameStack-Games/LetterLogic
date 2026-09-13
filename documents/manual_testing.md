@@ -428,3 +428,26 @@ This document outlines the manual test cases used to verify the requirements out
   6. Tap the `✕` close button and verify the modal dismisses smoothly.
 - **Expected Result:** The Statistics Screen presents doubled header and tab typography (52px title, 32px close button / 60x60, 32px tabs), a balanced 3-column by 2-row summary metrics grid with 36px values and 18px labels, and vertically expanded 48px distribution rows with 24px indicators and 22px bar counts. All elements remain legible and proportionate across standard and tall Android portrait aspect ratios.
 
+### Test 5.15: Main Menu Credits Button, Studio Attributions & Interactive Links Verification
+- **Requirement(s):** REQ-8.1, REQ-8.3, REQ-8.12, REQ-8.14
+- **Steps:**
+  1. Launch the game and navigate to the Main Menu (`res://scenes/main_menu.tscn`).
+  2. Inspect the Main Menu navigation buttons:
+     - Verify that a `Credits` button (`CreditsButton`) is positioned directly below `How to Play`.
+     - Verify that `CreditsButton` renders with `text = "Credits"`, 36px font size, and custom minimum height of 80px, maintaining uniform styling with `StatsButton` and `HowToPlayButton`.
+     - Confirm that the addition of `CreditsButton` maintains the vertical centering and safe margins of the menu layout without overflowing or clipping on standard (720x1280) and tall portrait mobile screens.
+  3. Tap the `Credits` button:
+     - Verify that `CreditsModal` becomes visible, presenting a dark full-screen overlay (`Color(0, 0, 0, 0.8)`) with a centered vintage-styled container panel.
+     - Verify the modal title `CREDITS` is centered at the top in prominent 84px typography.
+  4. Inspect the studio attributions and 1930s monochrome logos within the scrollable container:
+     - **Open Game Stack:** Verify the OGS shield logo (`OpenGameStackMonoChrome.png`) renders cleanly at 200x200 with aspect ratio preserved, accompanied by the label `"Developed by Open Game Stack"` (32px font) and interactive link button `"https://opengamestack.org/"` (28px font).
+     - **Audrain Entertainment:** Verify the Audrain game controller logo (`AudrainEntertainment.png`) renders in high-contrast monochrome tones at 200x200, accompanied by the label `"Published by Audrain Entertainment"` (32px font) and interactive link button `"https://audrain.games/"` (28px font).
+     - **GitHub Open Source:** Verify the vintage monochrome GitHub mascot logo (`github_icon.png`) renders cleanly at 200x200, accompanied by the label `"LetterLogic is an open-source game hosted on GitHub"` (32px font) and interactive link button `"https://github.com/OpenGameStack-Games/LetterLogic"` (28px font).
+  5. Test interactive links:
+     - Tap each link button (`https://opengamestack.org/`, `https://audrain.games/`, and `https://github.com/OpenGameStack-Games/LetterLogic`) and verify each triggers the system browser with the corresponding destination URL.
+  6. Test modal dismissal:
+     - Inspect the dismiss button at the bottom of the modal, verifying `text = "Got It!"`, 36px font size, and 80px minimum height.
+     - Tap the `"Got It!"` button and verify that `CreditsModal` closes and the Main Menu is fully interactive again.
+- **Expected Result:** The Main Menu features an ergonomically sized Credits button (36px font, 80px height). Tapping it opens a vintage monochrome Credits modal displaying the 84px title, three properly scaled studio/repository logos with accurate attribution labels and functional link buttons, and an 80px "Got It!" dismiss button that closes the modal cleanly.
+
+

@@ -13,7 +13,9 @@ const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 @onready var continuous_button: Button = $MarginContainer/VBox/MenuButtons/ContinuousButton
 @onready var stats_button: Button = $MarginContainer/VBox/MenuButtons/StatsButton
 @onready var how_to_play_button: Button = $MarginContainer/VBox/MenuButtons/HowToPlayButton
+@onready var credits_button: Button = $MarginContainer/VBox/MenuButtons/CreditsButton
 @onready var how_to_play_modal: Control = $HowToPlayModal
+@onready var credits_modal: Control = $CreditsModal
 @onready var countdown_timer: Timer = $CountdownTimer
 @onready var mascot_rect: TextureRect = $MarginContainer/VBox/MascotRect
 
@@ -22,6 +24,8 @@ var _is_daily_locked: bool = false
 func _ready() -> void:
 	if how_to_play_modal != null:
 		how_to_play_modal.visible = false
+	if credits_modal != null:
+		credits_modal.visible = false
 	_update_daily_button_state()
 	if countdown_timer != null:
 		countdown_timer.timeout.connect(_on_countdown_tick)
@@ -107,5 +111,22 @@ func _on_how_to_play_button_pressed() -> void:
 
 func _on_close_how_to_play_pressed() -> void:
 	var modal: Control = _get_how_to_play_modal()
+	if modal != null:
+		modal.visible = false
+
+func _get_credits_modal() -> Control:
+	if credits_modal != null:
+		return credits_modal
+	if has_node("CreditsModal"):
+		credits_modal = $CreditsModal as Control
+	return credits_modal
+
+func _on_credits_button_pressed() -> void:
+	var modal: Control = _get_credits_modal()
+	if modal != null:
+		modal.visible = true
+
+func _on_close_credits_pressed() -> void:
+	var modal: Control = _get_credits_modal()
 	if modal != null:
 		modal.visible = false
