@@ -84,3 +84,46 @@ func test_header_and_toast_typography() -> void:
 	assert_true(margin_right >= 16, "ToastPanel horizontal content margin should be >= 16")
 	
 	main_game.free()
+
+func test_game_over_win_message() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	
+	# Manually populate @onready vars since we are not in a SceneTree
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	
+	main_game._on_game_won(3, "APPLE")
+	
+	var msg_label: Label = main_game.game_over_message
+	assert_true(msg_label != null, "MessageLabel should exist")
+	
+	var expected_part1: String = "You found 'APPLE' in 3/6 guesses."
+	var expected_part2: String = "Time:"
+	
+	assert_true(msg_label.text.contains(expected_part1), "Win message should contain guess count and secret word")
+	assert_true(msg_label.text.contains(expected_part2), "Win message should contain Time:")
+	assert_true(msg_label.text.contains("00:00"), "Win message should fallback to 00:00 without GameManager")
+	
+	main_game.free()
+
+func test_game_over_loss_message() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	var main_game: Node = main_scn.instantiate()
+	
+	# Manually populate @onready vars
+	main_game.game_over_modal = main_game.get_node("GameOverModal")
+	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
+	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
+	
+	main_game._on_game_lost("APPLE")
+	
+	var msg_label: Label = main_game.game_over_message
+	assert_true(msg_label != null, "MessageLabel should exist")
+	
+	assert_eq(msg_label.text, "The word was APPLE", "Loss message should just be the secret word without time")
+	assert_false(msg_label.text.contains("Time:"), "Loss message should NOT contain Time:")
+	
+	main_game.free()
+
