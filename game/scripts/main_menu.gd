@@ -57,7 +57,7 @@ func _update_daily_button_state() -> void:
 		_is_daily_locked = dm.is_daily_completed()
 		if _is_daily_locked:
 			var countdown: String = dm.get_formatted_countdown_to_next_utc()
-			daily_button.text = "Daily Challenge\n[Next in: %s]" % countdown
+			daily_button.text = "Daily Challenge - Completed\n[Next in: %s]" % countdown
 		else:
 			daily_button.text = "Daily Challenge\n[Play Today's Word]"
 
@@ -66,7 +66,7 @@ func _on_countdown_tick() -> void:
 		var dm: Node = get_node_or_null("/root/DailyManager")
 		if dm != null and daily_button != null:
 			var countdown: String = dm.get_formatted_countdown_to_next_utc()
-			daily_button.text = "Daily Challenge\n[Next in: %s]" % countdown
+			daily_button.text = "Daily Challenge - Completed\n[Next in: %s]" % countdown
 
 func _on_daily_button_pressed() -> void:
 	var dm: Node = get_node_or_null("/root/DailyManager")
@@ -74,13 +74,19 @@ func _on_daily_button_pressed() -> void:
 	var sm: Node = get_node_or_null("/root/SaveManager")
 	
 	if gm != null:
-		var daily_word: String = dm.get_daily_word() if dm != null else "LOGIC"
-		gm.start_game(GameManagerScript.GameMode.DAILY, daily_word)
-		
-		# Restore in-progress daily save if present
-		if sm != null and sm.has_saved_game(GameManagerScript.GameMode.DAILY):
-			var data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
-			sm.deserialize_to_game_manager(data, gm)
+		var is_completed: bool = dm != null and dm.is_daily_completed()
+		if is_completed:
+			if sm != null:
+				var data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
+				sm.deserialize_to_game_manager(data, gm)
+		else:
+			var daily_word: String = dm.get_daily_word() if dm != null else "LOGIC"
+			gm.start_game(GameManagerScript.GameMode.DAILY, daily_word)
+			
+			# Restore in-progress daily save if present
+			if sm != null and sm.has_saved_game(GameManagerScript.GameMode.DAILY):
+				var data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
+				sm.deserialize_to_game_manager(data, gm)
 	
 	get_tree().change_scene_to_file("res://scenes/main_game.tscn")
 

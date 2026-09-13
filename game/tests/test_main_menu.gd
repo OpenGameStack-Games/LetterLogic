@@ -265,3 +265,50 @@ func test_main_game_back_button_properties() -> void:
 		assert_eq(font_color, Color(1, 1, 1, 1), "BackButton font_color should be crisp solid white")
 	
 	main_game.free()
+
+ f u n c   t e s t _ d a i l y _ b u t t o n _ c o m p l e t e d _ t e x t ( )   - >   v o i d : 
+ 	 v a r   m e n u :   N o d e   =   l o a d ( " r e s : / / s c e n e s / m a i n _ m e n u . t s c n " ) . i n s t a n t i a t e ( ) 
+ 	 v a r   d m :   N o d e   =   g e t _ n o d e _ o r _ n u l l ( " / r o o t / D a i l y M a n a g e r " ) 
+ 	 v a r   p r e v _ c o m p l e t e d   =   f a l s e 
+ 	 v a r   t e s t _ d a t e   =   d m . g e t _ c u r r e n t _ u t c _ d a t e _ s t r i n g ( ) 
+ 	 i f   d m . i s _ d a i l y _ c o m p l e t e d ( ) : 
+ 	 	 p r e v _ c o m p l e t e d   =   t r u e 
+ 	 e l s e : 
+ 	 	 d m . m a r k _ d a i l y _ c o m p l e t e d ( t e s t _ d a t e ,   t r u e ,   3 ) 
+ 	 
+ 	 a d d _ c h i l d _ t o _ r o o t ( m e n u ) 
+ 	 
+ 	 v a r   d a i l y _ b t n :   B u t t o n   =   m e n u . f i n d _ c h i l d ( " D a i l y B u t t o n " ,   t r u e ,   f a l s e ) 
+ 	 a s s e r t _ t r u e ( d a i l y _ b t n . t e x t . b e g i n s _ w i t h ( " D a i l y   C h a l l e n g e   -   C o m p l e t e d " ) ,   " B u t t o n   t e x t   s h o u l d   b e g i n   w i t h   c o m p l e t e d   t e x t " ) 
+ 	 a s s e r t _ t r u e ( d a i l y _ b t n . t e x t . c o n t a i n s ( " [ N e x t   i n : " ) ,   " B u t t o n   s h o u l d   s h o w   c o u n t d o w n " ) 
+ 	 
+ 	 i f   n o t   p r e v _ c o m p l e t e d : 
+ 	 	 d m . c l e a r _ r e c o r d s ( ) 
+ 	 
+ 	 m e n u . q u e u e _ f r e e ( ) 
+ 
+ f u n c   t e s t _ d a i l y _ b u t t o n _ p r e s s e d _ w h e n _ c o m p l e t e d ( )   - >   v o i d : 
+ 	 v a r   m e n u :   N o d e   =   l o a d ( " r e s : / / s c e n e s / m a i n _ m e n u . t s c n " ) . i n s t a n t i a t e ( ) 
+ 	 v a r   d m :   N o d e   =   g e t _ n o d e _ o r _ n u l l ( " / r o o t / D a i l y M a n a g e r " ) 
+ 	 v a r   g m :   N o d e   =   g e t _ n o d e _ o r _ n u l l ( " / r o o t / G a m e M a n a g e r " ) 
+ 	 v a r   t e s t _ d a t e   =   d m . g e t _ c u r r e n t _ u t c _ d a t e _ s t r i n g ( ) 
+ 	 v a r   p r e v _ c o m p l e t e d   =   d m . i s _ d a i l y _ c o m p l e t e d ( ) 
+ 	 
+ 	 i f   n o t   p r e v _ c o m p l e t e d : 
+ 	 	 d m . m a r k _ d a i l y _ c o m p l e t e d ( t e s t _ d a t e ,   t r u e ,   3 ) 
+ 	 	 
+ 	 v a r   s t a r t _ c a l l e d   =   f a l s e 
+ 	 #   W e   c a n t   e a s i l y   i n t e r c e p t   g m . s t a r t _ g a m e   w i t h o u t   a   s p y ,   b u t   w e   c a n   v e r i f y   g m   s t a t e 
+ 	 g m . c u r r e n t _ m o d e   =   9 9 9   #   i n v a l i d   m o d e 
+ 	 
+ 	 a d d _ c h i l d _ t o _ r o o t ( m e n u ) 
+ 	 v a r   d a i l y _ b t n :   B u t t o n   =   m e n u . f i n d _ c h i l d ( " D a i l y B u t t o n " ,   t r u e ,   f a l s e ) 
+ 	 d a i l y _ b t n . p r e s s e d . e m i t ( ) 
+ 	 
+ 	 a s s e r t _ e q ( g m . c u r r e n t _ m o d e ,   9 9 9 ,   " s t a r t _ g a m e   s h o u l d   n o t   b e   c a l l e d ,   m o d e   s h o u l d   r e m a i n   9 9 9 " ) 
+ 	 
+ 	 i f   n o t   p r e v _ c o m p l e t e d : 
+ 	 	 d m . c l e a r _ r e c o r d s ( ) 
+ 	 m e n u . q u e u e _ f r e e ( ) 
+  
+ 
