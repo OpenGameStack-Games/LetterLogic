@@ -51,50 +51,50 @@ pivot_offset = Vector2(128, 128)
 
 [node name="TitleBox" type="VBoxContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
 
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/VBox/TitleBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 88
 text = "LETTERLOGIC"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="MarginContainer/VBox/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 36
 text = "The 5-Letter Isogram Word Game"
 horizontal_alignment = 1
 
 [node name="MenuButtons" type="VBoxContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
 [node name="DailyButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 40
 text = "Daily Challenge
 [Play Today's Word]"
 
 [node name="ContinuousButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 40
 text = "Continuous Play
 [Unlimited Practice]"
 
 [node name="StatsButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 36
 text = "Statistics"
 
 [node name="HowToPlayButton" type="Button" parent="MarginContainer/VBox/MenuButtons"]
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 36
 text = "How to Play"
 
 [node name="CountdownTimer" type="Timer" parent="."]

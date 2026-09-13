@@ -17,6 +17,11 @@ func test_main_menu_scene_loads() -> void:
 	var title: Label = menu.find_child("TitleLabel", true, false) as Label
 	assert_true(title != null, "TitleLabel should exist in MainMenu")
 	assert_eq(title.text, "LETTERLOGIC", "Title should be LETTERLOGIC")
+	assert_eq(title.get_theme_font_size("font_size"), 88, "TitleLabel font size should be 88")
+	
+	var subtitle: Label = menu.find_child("SubtitleLabel", true, false) as Label
+	assert_true(subtitle != null, "SubtitleLabel should exist")
+	assert_eq(subtitle.get_theme_font_size("font_size"), 36, "SubtitleLabel font size should be 36")
 	
 	var daily_btn: Button = menu.find_child("DailyButton", true, false) as Button
 	var cont_btn: Button = menu.find_child("ContinuousButton", true, false) as Button
@@ -24,9 +29,20 @@ func test_main_menu_scene_loads() -> void:
 	var htp_btn: Button = menu.find_child("HowToPlayButton", true, false) as Button
 	
 	assert_true(daily_btn != null, "DailyButton should exist")
+	assert_eq(daily_btn.get_theme_font_size("font_size"), 40, "DailyButton font size should be 40")
+	assert_true(daily_btn.custom_minimum_size.y >= 110.0, "DailyButton minimum height >= 110")
+	
 	assert_true(cont_btn != null, "ContinuousButton should exist")
+	assert_eq(cont_btn.get_theme_font_size("font_size"), 40, "ContinuousButton font size should be 40")
+	assert_true(cont_btn.custom_minimum_size.y >= 110.0, "ContinuousButton minimum height >= 110")
+	
 	assert_true(stats_btn != null, "StatsButton should exist")
+	assert_eq(stats_btn.get_theme_font_size("font_size"), 36, "StatsButton font size should be 36")
+	assert_true(stats_btn.custom_minimum_size.y >= 72.0, "StatsButton minimum height >= 72")
+	
 	assert_true(htp_btn != null, "HowToPlayButton should exist")
+	assert_eq(htp_btn.get_theme_font_size("font_size"), 36, "HowToPlayButton font size should be 36")
+	assert_true(htp_btn.custom_minimum_size.y >= 72.0, "HowToPlayButton minimum height >= 72")
 	
 	menu.free()
 
