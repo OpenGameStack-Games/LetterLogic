@@ -70,6 +70,11 @@ func test_how_to_play_modal_dimensions_and_rules() -> void:
 	var modal: Control = menu.find_child("HowToPlayModal", true, false) as Control
 	assert_true(modal != null, "HowToPlayModal should exist")
 	
+	var title_lbl: Label = modal.find_child("ModalTitle", true, false) as Label
+	assert_true(title_lbl != null, "ModalTitle should exist")
+	if title_lbl != null:
+		assert_eq(title_lbl.get_theme_font_size("font_size"), 84, "ModalTitle font size override equals 84")
+	
 	var panel: PanelContainer = modal.get_node_or_null("MarginContainer/Panel") as PanelContainer
 	assert_true(panel != null, "HowToPlayModal/MarginContainer/Panel should exist")
 	if panel != null:
@@ -78,12 +83,20 @@ func test_how_to_play_modal_dimensions_and_rules() -> void:
 	var rules_label: RichTextLabel = modal.find_child("RulesText", true, false) as RichTextLabel
 	assert_true(rules_label != null, "RulesText RichTextLabel should exist")
 	if rules_label != null:
+		assert_eq(rules_label.get_theme_font_size("normal_font_size"), 48, "RulesText normal_font_size equals 48")
+		assert_true(rules_label.get_theme_font_size("bold_font_size") >= 48, "RulesText bold_font_size is at least 48")
 		var content: String = rules_label.text
 		assert_true(content.contains("#b53b3b"), "RulesText must contain red color code #b53b3b")
 		assert_true(content.contains("🟥 RED"), "RulesText must contain 🟥 RED indicator")
 		assert_false(content.contains("⬛"), "RulesText must not contain black/gray square emoji ⬛")
 		assert_false(content.contains("GRAY"), "RulesText must not contain GRAY")
 		assert_true(rules_label.scroll_active, "RulesText scroll_active must remain true for fallback scrolling")
+	
+	var close_btn: Button = modal.find_child("CloseButton", true, false) as Button
+	assert_true(close_btn != null, "CloseButton should exist")
+	if close_btn != null:
+		assert_true(close_btn.get_theme_font_size("font_size") >= 36, "CloseButton font size is at least 36")
+		assert_true(close_btn.custom_minimum_size.y >= 80.0, "CloseButton custom minimum height is at least 80px")
 	
 	menu.free()
 
