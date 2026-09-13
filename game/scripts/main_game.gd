@@ -129,6 +129,10 @@ func _on_game_won(attempts: int, secret: String, gm_override: Node = null, dm_ov
 		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
 		if sm != null and sm.has_method("save_game_state"):
 			sm.save_game_state(GameManagerScript.GameMode.DAILY, sm.serialize_game_manager(gm))
+	elif gm != null and gm.current_mode == GameManagerScript.GameMode.CONTINUOUS:
+		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
+		if sm != null and sm.has_method("clear_game_state"):
+			sm.clear_game_state(GameManagerScript.GameMode.CONTINUOUS)
 			
 	_show_game_over(win_title, msg, true, gm)
 
@@ -142,6 +146,10 @@ func _on_game_lost(secret: String, gm_override: Node = null, dm_override: Node =
 		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
 		if sm != null and sm.has_method("save_game_state"):
 			sm.save_game_state(GameManagerScript.GameMode.DAILY, sm.serialize_game_manager(gm))
+	elif gm != null and gm.current_mode == GameManagerScript.GameMode.CONTINUOUS:
+		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
+		if sm != null and sm.has_method("clear_game_state"):
+			sm.clear_game_state(GameManagerScript.GameMode.CONTINUOUS)
 			
 	_show_game_over("Game Over", "The word was %s" % secret, false, gm)
 
@@ -161,6 +169,10 @@ func _show_game_over(title_text: String, msg_text: String, won: bool, gm_overrid
 		game_over_modal.visible = true
 
 func _on_back_to_menu_pressed() -> void:
+	var gm: Node = get_node_or_null("/root/GameManager")
+	var sm: Node = get_node_or_null("/root/SaveManager")
+	if gm != null and sm != null and gm.game_status == GameManagerScript.GameStatus.IN_PROGRESS:
+		sm.save_game_state(gm.current_mode, sm.serialize_game_manager(gm))
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func _on_next_word_pressed() -> void:
@@ -225,10 +237,14 @@ func _process(_delta: float) -> void:
 			time_lbl.text = gm.format_time(gm.get_active_time())
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		var gm: Node = get_node_or_null("/root/GameManager")
-		if gm != null and gm.has_method("pause_timer"):
-			gm.pause_timer()
+		if gm != null:
+			if gm.has_method("pause_timer"):
+				gm.pause_timer()
+			var sm: Node = get_node_or_null("/root/SaveManager")
+			if sm != null and gm.game_status == GameManagerScript.GameStatus.IN_PROGRESS:
+				sm.save_game_state(gm.current_mode, sm.serialize_game_manager(gm))
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
 		var gm: Node = get_node_or_null("/root/GameManager")
 		if gm != null and gm.has_method("resume_timer"):
