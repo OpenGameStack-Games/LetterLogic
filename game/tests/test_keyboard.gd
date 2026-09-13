@@ -127,11 +127,11 @@ func test_keyboard_key_dimensions_and_typography() -> void:
 	assert_true(key_a.custom_minimum_size.y >= 76.0, "Key minimum height should be approximately 77px")
 	assert_true(key_a.get_theme_font_size("font_size") >= 42, "Standard letter key font size should be enlarged (~44px)")
 
-	var key_enter = null
-	var key_del = null
-	for c in keyboard.vbox_container.get_children():
+	var key_enter: Button = null
+	var key_del: Button = null
+	for c: Node in keyboard.vbox_container.get_children():
 		if c is HBoxContainer:
-			for b in c.get_children():
+			for b: Node in c.get_children():
 				if b is Button:
 					if b.text == "ENTER":
 						key_enter = b
@@ -148,7 +148,7 @@ func test_keyboard_key_dimensions_and_typography() -> void:
 
 func test_font_size_retained_after_state_change() -> void:
 	var key_a: Node = keyboard.get_key("A")
-	var initial_font_size = key_a.get_theme_font_size("font_size")
+	var initial_font_size: int = key_a.get_theme_font_size("font_size")
 	key_a.set_key_state(GameManagerScript.TileState.CORRECT)
 	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after CORRECT state change")
 	key_a.set_row_disabled(true)
