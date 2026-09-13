@@ -47,19 +47,24 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps:**
   1. Play a game and deliberately submit 6 incorrect valid words.
   2. Observe the Game Over modal that appears:
-     - Verify the title displays "Game Over".
-     - Verify the message displays the single line `The word was <secret>`.
+     - Verify the title displays "Game Over" with an enlarged font size of 56px, centered horizontally.
+     - Verify the message displays the single line `The word was <secret>` with an enlarged font size of 32px and centered alignment.
      - Verify that elapsed solve time is strictly omitted from the loss modal.
+     - Verify the action buttons ("Next Word" / "Share Results" and "Main Menu"):
+       - Buttons have their minimum height doubled to 96px (`custom_minimum_size = Vector2(0, 96)`), providing comfortable mobile touch targets.
+       - Button text renders in an enlarged 32px font size.
+       - Buttons are inset from the modal panel edges with 64px horizontal margins (shortening button width by ~20%), appearing as distinct centered buttons rather than edge-to-edge bars.
+       - Buttons maintain 12px vertical separation.
   3. Play another game and observe the active running timer in the header.
   4. Submit the exact secret word to win the puzzle (e.g., on attempt 3).
   5. Observe the Game Over modal that appears:
-     - Verify the title displays the appropriate attempt-based accolade (e.g., "Impressive!" for 3 attempts).
-     - Verify the message displays a two-line summary:
+     - Verify the title displays the appropriate attempt-based accolade (e.g., "Impressive!" for 3 attempts) in 56px font size, centered horizontally.
+     - Verify the message displays a two-line summary in 32px font size:
        - Line 1: `You found '<secret>' in 3/6 guesses.`
        - Line 2: `Time: MM:SS` (matching the frozen header timer, e.g. `Time: 00:42`).
-     - Verify the message text is horizontally centered within the panel.
-     - Verify that modal action buttons ("Next Word" in Continuous Play, or "Share Results" in Daily Challenge, and "Main Menu") remain fully accessible and are not clipped or displaced.
-- **Expected Result:** On loss, the modal displays "Game Over" with single-line text revealing the word and no elapsed time. On win, the modal displays the attempt accolade and a clean two-line summary with the secret word, guess count, and formatted elapsed solve time (`Time: MM:SS` or `Time: HH:MM:SS`), rendering centered without clipping or button displacement.
+     - Verify the message text is horizontally centered with word-wrapping enabled, fitting cleanly without clipping or overflowing the modal panel.
+     - Verify that modal action buttons ("Next Word" in Continuous Play, or "Share Results" in Daily Challenge, and "Main Menu") render with 96px minimum height, 32px text font, 64px inset margins, and 12px vertical separation, remaining fully accessible without displacement.
+- **Expected Result:** On loss, the modal displays "Game Over" (56px) with single-line text revealing the word (32px) and no elapsed time. On win, the modal displays the attempt accolade (56px) and a clean two-line summary (32px) with the secret word, guess count, and formatted elapsed solve time (`Time: MM:SS` or `Time: HH:MM:SS`), rendering centered without clipping. On both win and loss screens, action buttons feature doubled minimum heights (96px), enlarged typography (32px), 64px inset horizontal margins (~20% width reduction), and 12px vertical separation, providing comfortable, centered touch targets.
 
 ### Test 1.5: Active Gameplay Timer & State Freezing
 - **Requirement(s):** REQ-2.5
@@ -505,5 +510,28 @@ This document outlines the manual test cases used to verify the requirements out
      - Inspect the dismiss button at the bottom of the modal, verifying `text = "Got It!"`, 36px font size, and 80px minimum height.
      - Tap the `"Got It!"` button and verify that `CreditsModal` closes and the Main Menu is fully interactive again.
 - **Expected Result:** The Main Menu features an ergonomically sized Credits button (36px font, 80px height). Tapping it opens a vintage monochrome Credits modal displaying the 64px title, three compact horizontal attribution rows with uniform 96x96 circular badge logos, 24px attribution labels, 48x48 interactive web icon buttons without visible URL strings, fitting entirely within a 720x1280 mobile portrait viewport without scrolling, and an 80px "Got It!" dismiss button that closes the modal cleanly.
+
+### Test 5.16: Game Over Modal Typography Scaling, Doubled Button Height & Inset Action Buttons Layout
+- **Requirement(s):** REQ-2.7, REQ-8.1, REQ-8.2, REQ-8.7
+- **Steps:**
+  1. Launch the game in Continuous Play mode.
+  2. Complete the puzzle by winning (guess the secret word).
+  3. Inspect the Game Over modal visual presentation and layout hierarchy:
+     - **Modal Title (`TitleLabel`):** Verify the title (e.g., "Splendid!", "Magnificent!") is rendered at an enlarged 56px font size, centered horizontally.
+     - **Summary Message (`MessageLabel`):** Verify the win summary text renders at an enlarged 32px font size, centered horizontally with word wrapping enabled, fitting cleanly without text truncation or clipping.
+     - **Button Inset Container (`ButtonMargin`):** Verify that the action buttons container is inset from the left and right edges of the modal panel with 64px horizontal margins (`margin_left = 64`, `margin_right = 64`), shortening button width by ~20% so they present as distinct, centered button components rather than edge-to-edge full-width bars.
+     - **Action Buttons (`NextWordButton`, `MenuButton`):**
+       - Verify each button has a doubled minimum height of 96px (`custom_minimum_size = Vector2(0, 96)`), providing comfortable, ergonomic touch targets on mobile portrait displays.
+       - Verify button text typography is enlarged to 32px (`font_size = 32`).
+       - Verify 12px vertical separation between adjacent buttons.
+       - Verify buttons exhibit 1930s monochrome styling (dark charcoal fill `#1c1c1e`, 2px solid white border, rounded corners, white text) with smooth hover/pressed state transitions.
+  4. Tap "Next Word" to begin a new round.
+  5. Deliberately exhaust all 6 attempts to trigger a loss.
+  6. Inspect the loss modal:
+     - Verify the title "Game Over" renders at 56px font size.
+     - Verify the single-line message `The word was <secret>` renders at 32px font size.
+     - Verify action buttons maintain 96px minimum height, 32px text font size, 64px horizontal inset margins, and 12px vertical separation.
+  7. Start a Daily Challenge game, complete it, and verify that "Share Results" (visible) and "Main Menu" buttons both reflect the doubled 96px height, 32px text font, and 64px inset margins.
+- **Expected Result:** The Game Over modal on both win and loss screens (in Continuous Play and Daily Challenge) displays enlarged, legible typography (56px title, 32px message, 32px button text) and doubled-height action buttons (96px) inset with 64px horizontal margins (~20% width reduction) and 12px separation, providing comfortable mobile touch ergonomics and presenting as centered button controls rather than edge-to-edge bars.
 
 
