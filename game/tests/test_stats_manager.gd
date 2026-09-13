@@ -64,6 +64,17 @@ func test_stats_screen_ui() -> void:
 	
 	var screen: Node = scn.instantiate()
 	assert_true(screen != null, "stats_screen should instantiate")
+
+	# Verify opaque full-screen background (REQ-8.8)
+	var bg: ColorRect = screen.get_node_or_null("Background") as ColorRect
+	if bg == null:
+		bg = screen.get_node_or_null("BackgroundDim") as ColorRect
+	assert_true(bg != null, "Background ColorRect should exist in StatsScreen")
+	if bg:
+		assert_eq(bg.color.a, 1.0, "Background should be completely opaque (alpha = 1.0)")
+		assert_eq(bg.color, Color(0.0705882, 0.0705882, 0.0705882, 1), "Background color should match project dark palette #121212")
+		assert_true(bg.anchor_right == 1.0 and bg.anchor_bottom == 1.0, "Background should span full viewport width and height")
+		assert_eq(bg.mouse_filter, Control.MOUSE_FILTER_STOP, "Background mouse_filter should be MOUSE_FILTER_STOP to block input pass-through")
 	
 	var mode_tabs: TabContainer = screen.find_child("ModeTabs", true, false) as TabContainer
 	assert_true(mode_tabs != null, "ModeTabs TabContainer should exist in StatsScreen")
