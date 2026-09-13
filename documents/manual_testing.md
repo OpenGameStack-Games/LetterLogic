@@ -42,13 +42,24 @@ This document outlines the manual test cases used to verify the requirements out
 - **Expected Result:** The tiles in the grid update to Green (`#538d4e`), Yellow (`#b59f3b`), and Flat Red (`#b53b3b`) correctly. The on-screen keyboard keys update to match the highest state of each guessed letter (Absent keys appear in Flat Red with white text).
 
 
-### Test 1.4: Win/Loss Conditions
-- **Requirement(s):** REQ-2.3
+### Test 1.4: Win/Loss Conditions & Game Over Modal
+- **Requirement(s):** REQ-2.3, REQ-2.7
 - **Steps:**
   1. Play a game and deliberately submit 6 incorrect valid words.
-  2. Verify the loss screen appears showing the correct secret word.
-  3. Play another game and submit the exact secret word.
-  4. Verify the win screen appears.
+  2. Observe the Game Over modal that appears:
+     - Verify the title displays "Game Over".
+     - Verify the message displays the single line `The word was <secret>`.
+     - Verify that elapsed solve time is strictly omitted from the loss modal.
+  3. Play another game and observe the active running timer in the header.
+  4. Submit the exact secret word to win the puzzle (e.g., on attempt 3).
+  5. Observe the Game Over modal that appears:
+     - Verify the title displays the appropriate attempt-based accolade (e.g., "Impressive!" for 3 attempts).
+     - Verify the message displays a two-line summary:
+       - Line 1: `You found '<secret>' in 3/6 guesses.`
+       - Line 2: `Time: MM:SS` (matching the frozen header timer, e.g. `Time: 00:42`).
+     - Verify the message text is horizontally centered within the panel.
+     - Verify that modal action buttons ("Next Word" in Continuous Play, or "Share Results" in Daily Challenge, and "Main Menu") remain fully accessible and are not clipped or displaced.
+- **Expected Result:** On loss, the modal displays "Game Over" with single-line text revealing the word and no elapsed time. On win, the modal displays the attempt accolade and a clean two-line summary with the secret word, guess count, and formatted elapsed solve time (`Time: MM:SS` or `Time: HH:MM:SS`), rendering centered without clipping or button displacement.
 
 ### Test 1.5: Active Gameplay Timer & State Freezing
 - **Requirement(s):** REQ-2.5
