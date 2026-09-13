@@ -147,40 +147,25 @@ func test_mascot_asset_exists() -> void:
 	var app_icon: String = ProjectSettings.get_setting("application/config/icon", "")
 	assert_eq(app_icon, icon_path, "Project config/icon should be set to the mascot icon")
 
-func test_standing_mascot_asset_exists() -> void:
-	var mascot_path: String = "res://assets/icons/mascot_standing.png"
-	var mascot_tex: Texture2D = load(mascot_path) as Texture2D
-	assert_true(mascot_tex != null, "mascot_standing.png asset must exist in assets/icons")
-	
-	if mascot_tex != null:
-		var size: Vector2 = mascot_tex.get_size()
-		assert_eq(int(size.x), 512, "mascot_standing.png width should be 512")
-		assert_eq(int(size.y), 512, "mascot_standing.png height should be 512")
-
 func test_main_menu_mascot_node() -> void:
 	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
 	var menu: Node = menu_scn.instantiate()
 	
 	var mascot: TextureRect = menu.find_child("MascotRect", true, false) as TextureRect
-	menu.set("mascot_rect", mascot)
-	if mascot != null and menu.has_method("_start_mascot_animation"):
-		menu.call("_start_mascot_animation")
 	
 	assert_true(mascot != null, "MascotRect should exist in MainMenu")
 	
 	if mascot != null:
 		assert_true(mascot.texture != null, "MascotRect should have a texture assigned")
-		var expected_path: String = "res://assets/icons/mascot_standing.png"
+		var expected_path: String = "res://assets/icons/icon.png"
 		if mascot.texture != null:
-			assert_eq(mascot.texture.resource_path, expected_path, "MascotRect should use the mascot_standing.png texture")
-		assert_eq(mascot.scale, Vector2.ONE, "MascotRect scale should remain fixed at Vector2.ONE")
-		assert_eq(mascot.pivot_offset, Vector2(128, 128), "MascotRect pivot_offset should be centered at Vector2(128, 128)")
+			assert_eq(mascot.texture.resource_path, expected_path, "MascotRect should use the original walking icon.png texture")
+		assert_eq(mascot.rotation_degrees, 0.0, "MascotRect rotation_degrees should be 0.0 (static)")
+		assert_eq(mascot.scale, Vector2.ONE, "MascotRect scale should be Vector2.ONE (static)")
 	
-	# Verify that the animation is running (tween exists)
+	# Verify that no animation tween exists
 	var menu_script_inst: Node = menu
-	assert_true(menu_script_inst.get("_mascot_tween") != null, "Mascot swaying tween should be created")
-	if menu_script_inst.get("_mascot_tween") != null:
-		assert_true(menu_script_inst.get("_mascot_tween").is_running(), "Mascot swaying tween should be running")
+	assert_true(not ("_mascot_tween" in menu_script_inst) or menu_script_inst.get("_mascot_tween") == null, "No Mascot tween should exist")
 	
 	menu.queue_free()
 

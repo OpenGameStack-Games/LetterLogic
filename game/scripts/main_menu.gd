@@ -18,7 +18,6 @@ const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 @onready var mascot_rect: TextureRect = $MarginContainer/VBox/MascotRect
 
 var _is_daily_locked: bool = false
-var _mascot_tween: Tween
 
 func _ready() -> void:
 	if how_to_play_modal != null:
@@ -27,29 +26,6 @@ func _ready() -> void:
 	if countdown_timer != null:
 		countdown_timer.timeout.connect(_on_countdown_tick)
 		countdown_timer.start(1.0)
-	
-	_start_mascot_animation()
-
-func _start_mascot_animation() -> void:
-	if mascot_rect == null:
-		return
-	
-	if _mascot_tween:
-		_mascot_tween.kill()
-	
-	# Initial state
-	mascot_rect.rotation_degrees = -3.0
-	mascot_rect.scale = Vector2(1.0, 1.0)
-	
-	_mascot_tween = create_tween().set_loops()
-	_mascot_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_mascot_tween.tween_property(mascot_rect, "rotation_degrees", 3.0, 1.5)
-	_mascot_tween.tween_property(mascot_rect, "rotation_degrees", -3.0, 1.5)
-
-func _exit_tree() -> void:
-	if _mascot_tween:
-		_mascot_tween.kill()
-
 
 func _update_daily_button_state(dm_override: Node = null) -> void:
 	var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
