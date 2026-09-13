@@ -174,6 +174,27 @@ func test_stats_icon_asset_exists() -> void:
 	if stats_icon_tex != null:
 		var size: Vector2 = stats_icon_tex.get_size()
 		assert_true(size.x > 0.0 and size.y > 0.0, "stats_icon.png must have valid positive dimensions")
+		
+		var image: Image = stats_icon_tex.get_image()
+		assert_true(image != null, "stats_icon.png must yield a valid Image")
+		if image != null:
+			var has_white: bool = false
+			var has_black_outline: bool = false
+			
+			for y in range(image.get_height()):
+				for x in range(image.get_width()):
+					var color: Color = image.get_pixel(x, y)
+					if color.a > 0.0:
+						if color.r == 1.0 and color.g == 1.0 and color.b == 1.0:
+							has_white = true
+						else:
+							has_black_outline = true
+							break
+				if has_black_outline:
+					break
+			
+			assert_true(has_white, "Image data analysis confirms presence of solid white pixels (#ffffff)")
+			assert_false(has_black_outline, "Image data analysis confirms absence of black outline pixels")
 
 func test_main_game_stats_button_properties() -> void:
 	var game_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
