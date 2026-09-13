@@ -28,3 +28,10 @@ func test_display_settings() -> void:
 func test_app_settings() -> void:
 	var app_name: String = String(ProjectSettings.get_setting("application/config/name", ""))
 	assert_eq(app_name, "LetterLogic", "Application name must be LetterLogic")
+
+func test_boot_splash_settings() -> void:
+	assert_eq(String(ProjectSettings.get_setting("application/boot_splash/image")), "res://assets/icons/icon.png", "Boot splash image should be configured")
+	assert_eq(bool(ProjectSettings.get_setting("application/boot_splash/show_image")), true, "Boot splash image should be shown")
+	var bg_color: Color = Color(ProjectSettings.get_setting("application/boot_splash/bg_color", Color.BLACK))
+	assert_eq(bg_color, Color(0.0705882, 0.0705882, 0.0705882, 1), "Boot splash bg color should match monochrome palette")
+	assert_true(ResourceLoader.exists("res://assets/icons/icon.png"), "Mascot icon asset must exist")
