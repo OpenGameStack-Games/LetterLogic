@@ -161,7 +161,11 @@ This document outlines the manual test cases used to verify the requirements out
   2. Observe the mode selector tabs ("Continuous Play" and "Daily Challenge").
   3. Verify the active tab styling: deep black fill (`#0e0e10`), 3px solid white borders on top, left, and right, and no bottom border dividing line separating the tab from the statistics content panel.
   4. Verify the inactive tab styling: dark charcoal fill (`#1c1c1e`), 3px solid white border around all sides, clearly separating it from the content panel below.
-  5. Verify that the 6 summary cards are arranged cleanly in a 3-column multi-row grid (`GridContainer`), with metric values (36px) and labels (18px) displaying sharp, legible typography without crowding.
+  5. Verify that the 6 summary cards are arranged cleanly in a 3-column multi-row grid (`GridContainer`, 2 rows of 3 columns) with intuitive vertical column pairings:
+     - Top Row: Played (`PlayedCard`), Max Streak (`MaxStreakCard`), Best Time (`BestTimeCard`).
+     - Bottom Row: Win % (`WinPctCard`), Current Streak (`StreakCard`), Avg Time (`AvgTimeCard`).
+     - Column Pairings: Column 1 pairs volume and win rate (Played / Win %), Column 2 pairs max and current streaks (Max Streak / Current Streak), and Column 3 pairs best and average times (Best Time / Avg Time).
+     - Verify metric values (36px) and labels (18px) display sharp, legible typography without crowding.
   6. Verify that Played, Current Streak, and Max Streak summary cards display clean whole numbers without decimal points.
   7. Tap the inactive tab ("Daily Challenge").
   8. Observe the visual transition and data displayed, confirming streak and played values are formatted as integers without decimal points.
@@ -171,7 +175,7 @@ This document outlines the manual test cases used to verify the requirements out
   - The inactive tab maintains a distinct 3px white outline on all sides and dark charcoal background.
   - Tapping between tabs transitions mode data smoothly with no disappearing borders, flickering, or layout shift.
   - All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distribution rows update immediately to reflect the selected mode.
-  - Summary metrics render in an organized 3-column by 2-row layout with enlarged typography.
+  - Summary metrics render in an organized 3-column by 2-row layout with intuitive vertical column pairings (Played & Win %, Max Streak & Current Streak, Best Time & Avg Time) and enlarged typography.
   - Played, Current Streak, and Max Streak summary cards consistently display as integers without decimal points across both tabs.
 
 ---
@@ -403,7 +407,7 @@ This document outlines the manual test cases used to verify the requirements out
   8. Confirm there is no white flicker, flash of unstyled color, or abrupt palette jump during the transition.
 - **Expected Result:** The game launches with the custom walking mascot icon centered over a `#121212` dark monochrome background, completely free of text or default Godot branding, and transitions seamlessly into the Main Menu.
 
-### Test 5.14: Statistics Screen Enlarged Typography, Multi-Row Metrics Layout & Distribution Graph Sizing
+### Test 5.14: Statistics Screen Enlarged Typography, Reordered Multi-Row Metrics Layout & Distribution Graph Sizing
 - **Requirement(s):** REQ-5.2, REQ-5.4, REQ-8.1, REQ-8.7, REQ-8.8
 - **Steps:**
   1. Launch the game and open the Statistics Screen (either via the Main Menu "Statistics" button or the in-game header `StatsButton`).
@@ -411,8 +415,13 @@ This document outlines the manual test cases used to verify the requirements out
      - **Title (`Title`):** Verify `STATISTICS` renders in doubled 52px typography centered prominently at the top.
      - **Close Button (`CloseButton`):** Verify the `✕` close button renders with doubled 32px font size and expanded dimensions (`60x60`), providing a comfortable mobile tap target.
      - **Mode Tabs (`ModeTabs`):** Verify tab titles ("Continuous Play", "Daily Challenge") render in doubled 32px font size with generous 20px horizontal and 12px vertical content padding, without text clipping or touching border edges.
-  3. Inspect the summary statistics layout and typography:
-     - Verify the 6 summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) are arranged in a 3-column multi-row grid (`GridContainer`, 2 rows of 3 columns) rather than a single cramped row.
+  3. Inspect the summary statistics layout, card ordering, and typography:
+     - Verify the 6 summary cards are arranged in a 3-column multi-row grid (`GridContainer`, 2 rows of 3 columns) ordered into intuitive vertical metric pairings:
+       - **Top Row (Overall Milestones & Peak Achievements):** Played (`PlayedCard`), Max Streak (`MaxStreakCard`), and Best Time (`BestTimeCard`).
+       - **Bottom Row (Rates, Active Status & Averages):** Win % (`WinPctCard`), Current Streak (`StreakCard`), and Avg Time (`AvgTimeCard`).
+       - **Column 1:** Played (top) and Win % (bottom).
+       - **Column 2:** Max Streak (top) and Current Streak (bottom).
+       - **Column 3:** Best Time (top) and Avg Time (bottom).
      - Verify metric values render at an enlarged 36px font size.
      - Verify metric category labels render at an enlarged 18px font size.
      - Verify Played, Current Streak, and Max Streak values display as clean integers with no floating-point decimal points.
@@ -423,10 +432,10 @@ This document outlines the manual test cases used to verify the requirements out
      - **Bar Labels:** Verify count labels inside the bar panels render at 22px font size with right alignment.
      - **Bar Panel Styling:** Verify distribution bar panels feature 6px rounded corners (`corner_radius = 6`) and scale proportionally with 8px vertical separation.
   5. Switch between "Continuous Play" and "Daily Challenge" tabs:
-     - Verify mode transitions preserve the multi-row grid layout and enlarged typography.
+     - Verify mode transitions preserve the reordered multi-row grid layout and vertical metric pairings identically across both tabs.
      - Verify all values and distribution bars update instantaneously without layout jumping or text clipping.
   6. Tap the `✕` close button and verify the modal dismisses smoothly.
-- **Expected Result:** The Statistics Screen presents doubled header and tab typography (52px title, 32px close button / 60x60, 32px tabs), a balanced 3-column by 2-row summary metrics grid with 36px values and 18px labels, and vertically expanded 48px distribution rows with 24px indicators and 22px bar counts. All elements remain legible and proportionate across standard and tall Android portrait aspect ratios.
+- **Expected Result:** The Statistics Screen presents doubled header and tab typography (52px title, 32px close button / 60x60, 32px tabs), a balanced 3-column by 2-row summary metrics grid with intuitive column pairings (Played & Win %, Max Streak & Current Streak, Best Time & Avg Time) using 36px values and 18px labels, and vertically expanded 48px distribution rows with 24px indicators and 22px bar counts. All elements remain legible and proportionate across standard and tall Android portrait aspect ratios.
 
 ### Test 5.15: Main Menu Credits Button, Compact Row Attributions, Circular Logos & Web Icon Links
 - **Requirement(s):** REQ-8.1, REQ-8.3, REQ-8.12, REQ-8.14
