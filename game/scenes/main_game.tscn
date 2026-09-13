@@ -142,38 +142,43 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 56
 text = "Splendid!"
 horizontal_alignment = 1
 
 [node name="MessageLabel" type="Label" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 32
 text = "You found the word in 3/6 guesses."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="ButtonContainer" type="VBoxContainer" parent="GameOverModal/MarginContainer/Panel/VBox"]
+[node name="ButtonMargin" type="MarginContainer" parent="GameOverModal/MarginContainer/Panel/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
 
-[node name="NextWordButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
-custom_minimum_size = Vector2(0, 48)
+[node name="ButtonContainer" type="VBoxContainer" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_constants/separation = 12
+
+[node name="NextWordButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Next Word"
 
-[node name="ShareButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
+[node name="ShareButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer"]
 visible = false
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 32
 text = "Share Results"
 
-[node name="MenuButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer"]
-custom_minimum_size = Vector2(0, 44)
+[node name="MenuButton" type="Button" parent="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer"]
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 32
 text = "Main Menu"
 
 [node name="StatsScreen" parent="." instance=ExtResource("4_stats_screen")]
@@ -183,6 +188,6 @@ layout_mode = 1
 [connection signal="pressed" from="VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
 [connection signal="pressed" from="VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
 [connection signal="timeout" from="VBoxContainer/ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
-[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
-[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
-[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
+[connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]

@@ -16,8 +16,8 @@ const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 @onready var game_over_modal: Control = $GameOverModal
 @onready var game_over_title: Label = $GameOverModal/MarginContainer/Panel/VBox/TitleLabel
 @onready var game_over_message: Label = $GameOverModal/MarginContainer/Panel/VBox/MessageLabel
-@onready var next_word_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/NextWordButton
-@onready var share_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonContainer/ShareButton
+@onready var next_word_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton
+@onready var share_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton
 @onready var toast_timer: Timer = $VBoxContainer/ToastOverlay/ToastTimer
 
 func _ready() -> void:

@@ -18,7 +18,15 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
     - Line 1: `You found '<secret>' in <attempts>/6 guesses.`
     - Line 2: `Time: MM:SS` (or `Time: HH:MM:SS` if the elapsed solve time reaches or exceeds 1 hour), displaying the final frozen active play time retrieved from `GameManager.get_active_time()` and formatted via `GameManager.format_time()`. If `GameManager` is unavailable or returns 0, it gracefully falls back to `Time: 00:00`.
   - **Loss Screen:** Displays title "Game Over" and the single-line message `The word was <secret>`. The elapsed solve time is strictly omitted on loss screens.
-  - **Layout & Responsiveness:** The summary message is horizontally centered (`horizontal_alignment = 1`) with autowrap enabled (`autowrap_mode = 2`), fitting within the modal panel without clipping, overflow, or displacing modal action buttons across all supported portrait aspect ratios.
+  - **Typography Scaling:**
+    - Modal Title (`TitleLabel`): Font size enlarged to 56px (`theme_override_font_sizes/font_size = 56`), horizontally centered.
+    - Summary Message (`MessageLabel`): Font size enlarged to 32px (`theme_override_font_sizes/font_size = 32`), horizontally centered (`horizontal_alignment = 1`) with autowrap enabled (`autowrap_mode = 2`), fitting cleanly without clipping or overflow.
+    - Action Buttons (`NextWordButton`, `ShareButton`, `MenuButton`): Font size enlarged to 32px (`theme_override_font_sizes/font_size = 32`).
+  - **Button Sizing & Inset Layout:**
+    - Action buttons feature a doubled minimum height of 96px (`custom_minimum_size = Vector2(0, 96)`), doubled from 44-48px, providing comfortable touch targets.
+    - Action buttons are wrapped in a `MarginContainer` (`ButtonMargin`) with 64px horizontal margins (`margin_left = 64`, `margin_right = 64`), insetting them from the modal panel edges by ~20% so they present as centered button controls rather than edge-to-edge bars.
+    - Vertical separation between buttons is set to 12px (`theme_override_constants/separation = 12`).
+    - Buttons retain standard 1930s monochrome styling (dark charcoal fill, 2px solid white border, 8px rounded corners, crisp white text) and dynamic visibility ("Next Word" in Continuous Play, "Share Results" in Daily Challenge, "Main Menu" in both).
 
 ## 3. Input & Validation
 - **REQ-3.1 - Isogram Typing Constraint:** While typing a guess, the game must prevent the user from inputting a letter that already exists in the current active row. Keys currently typed in the active row are temporarily disabled and visually styled in dark gray (`#272729`), maintaining clear differentiation from absent letters (flat red / `#b53b3b`).
