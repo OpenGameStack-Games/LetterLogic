@@ -134,6 +134,8 @@ func _on_game_won(attempts: int, secret: String, gm_override: Node = null, dm_ov
 		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
 		if sm != null and sm.has_method("clear_game_state"):
 			sm.clear_game_state(GameManagerScript.GameMode.CONTINUOUS)
+	if is_inside_tree():
+		await get_tree().create_timer(1.5).timeout
 			
 	_show_game_over(win_title, msg, true, gm)
 
@@ -151,6 +153,8 @@ func _on_game_lost(secret: String, gm_override: Node = null, dm_override: Node =
 		var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
 		if sm != null and sm.has_method("clear_game_state"):
 			sm.clear_game_state(GameManagerScript.GameMode.CONTINUOUS)
+	if is_inside_tree():
+		await get_tree().create_timer(1.5).timeout
 			
 	_show_game_over("Game Over", "The word was %s" % secret, false, gm)
 
@@ -168,6 +172,15 @@ func _show_game_over(title_text: String, msg_text: String, won: bool, gm_overrid
 		if next_word_btn != null:
 			next_word_btn.visible = not is_daily
 		game_over_modal.visible = true
+		
+		if is_inside_tree():
+			game_over_modal.modulate.a = 0.0
+			game_over_modal.scale = Vector2(0.8, 0.8)
+			game_over_modal.pivot_offset = game_over_modal.size / 2.0
+			var tween: Tween = create_tween()
+			tween.set_parallel(true)
+			tween.tween_property(game_over_modal, "modulate:a", 1.0, 0.3)
+			tween.tween_property(game_over_modal, "scale", Vector2(1.0, 1.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _on_back_to_menu_pressed() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")

@@ -43,10 +43,12 @@ This document outlines the manual test cases used to verify the requirements out
 
 
 ### Test 1.4: Win/Loss Conditions & Game Over Modal
-- **Requirement(s):** REQ-2.3, REQ-2.7
+- **Requirement(s):** REQ-2.3, REQ-2.7, REQ-8.16
 - **Steps:**
   1. Play a game and deliberately submit 6 incorrect valid words.
-  2. Observe the Game Over modal that appears:
+  2. Observe the transition upon submitting the 6th guess:
+     - Verify the tiles complete their staggered reveal animation across all 5 columns (~1.5 seconds) before the Game Over modal appears.
+     - Verify the Game Over modal plays an entrance animation (scaling pop from 0.8x to 1.0x with back-ease overshoot while fading in from 0.0 to 1.0 opacity over 0.3s).
      - Verify the title displays "Game Over" with an enlarged font size of 56px, centered horizontally.
      - Verify the message displays the single line `The word was <secret>` with an enlarged font size of 32px and centered alignment.
      - Verify that elapsed solve time is strictly omitted from the loss modal.
@@ -57,14 +59,16 @@ This document outlines the manual test cases used to verify the requirements out
        - Buttons maintain 12px vertical separation.
   3. Play another game and observe the active running timer in the header.
   4. Submit the exact secret word to win the puzzle (e.g., on attempt 3).
-  5. Observe the Game Over modal that appears:
+  5. Observe the transition upon submitting the winning guess:
+     - Verify the tiles complete their staggered reveal animation across all 5 columns (~1.5s delay) before the Game Over modal appears.
+     - Verify the Game Over modal smoothly pops and fades in with the same entrance animation.
      - Verify the title displays the appropriate attempt-based accolade (e.g., "Impressive!" for 3 attempts) in 56px font size, centered horizontally.
      - Verify the message displays a two-line summary in 32px font size:
        - Line 1: `You found '<secret>' in 3/6 guesses.`
        - Line 2: `Time: MM:SS` (matching the frozen header timer, e.g. `Time: 00:42`).
      - Verify the message text is horizontally centered with word-wrapping enabled, fitting cleanly without clipping or overflowing the modal panel.
      - Verify that modal action buttons ("Next Word" in Continuous Play, or "Share Results" in Daily Challenge, and "Main Menu") render with 96px minimum height, 32px text font, 64px inset margins, and 12px vertical separation, remaining fully accessible without displacement.
-- **Expected Result:** On loss, the modal displays "Game Over" (56px) with single-line text revealing the word (32px) and no elapsed time. On win, the modal displays the attempt accolade (56px) and a clean two-line summary (32px) with the secret word, guess count, and formatted elapsed solve time (`Time: MM:SS` or `Time: HH:MM:SS`), rendering centered without clipping. On both win and loss screens, action buttons feature doubled minimum heights (96px), enlarged typography (32px), 64px inset horizontal margins (~20% width reduction), and 12px vertical separation, providing comfortable, centered touch targets.
+- **Expected Result:** On loss, after waiting ~1.5s for the tile reveal animation to complete, the modal pops and fades in displaying "Game Over" (56px) with single-line text revealing the word (32px) and no elapsed time. On win, after waiting ~1.5s for the tile reveal animation to complete, the modal pops and fades in displaying the attempt accolade (56px) and a clean two-line summary (32px) with the secret word, guess count, and formatted elapsed solve time (`Time: MM:SS` or `Time: HH:MM:SS`), rendering centered without clipping. On both win and loss screens, the modal entrance animation scales up smoothly from 0.8x to 1.0x while fading in from 0.0 to 1.0 opacity over 0.3s, and action buttons feature doubled minimum heights (96px), enlarged typography (32px), 64px inset horizontal margins (~20% width reduction), and 12px vertical separation.
 
 ### Test 1.5: Active Gameplay Timer & State Freezing
 - **Requirement(s):** REQ-2.5
@@ -114,6 +118,23 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify that the scale pop is centered on each tile without shifting the tile's position or causing layout reflow/jitter in the parent game board grid or adjacent rows.
   5. Repeat in the other game mode (Daily Challenge or Continuous Play) to confirm uniform behavior.
 - **Expected Result:** Letters in the submitted row reveal their colors sequentially from left to right at 0.3s intervals with an elastic scale pop effect from each tile's center. The grid layout remains completely stable and undisturbed throughout the animation.
+
+### Test 1.9: Game Over Modal Reveal Delay & Entrance Animation
+- **Requirement(s):** REQ-2.2, REQ-2.7, REQ-8.16
+- **Steps:**
+  1. Start a game in Continuous Play mode.
+  2. Enter the winning guess and submit it by pressing Enter.
+  3. Carefully observe the game board and screen transition upon winning:
+     - Verify that the 5 letter tiles in the winning row perform their sequential staggered reveal animation from left to right (totaling ~1.5 seconds).
+     - Verify that the Game Over modal does NOT appear immediately when the guess is submitted; it waits for the full tile reveal animation across all 5 columns to complete (~1.5s delay).
+     - Verify that immediately following the completion of the tile reveal animation, the Game Over modal becomes visible and performs an entrance animation: smoothly scaling up from 0.8x to 1.0x with an elastic back-ease pop (`TRANS_BACK`, `EASE_OUT` over 0.3s) centered at its midpoint pivot (`pivot_offset = size / 2.0`) while simultaneously fading in from 0.0 to 1.0 alpha opacity.
+  4. Start a new puzzle in Continuous Play (or Daily Challenge) and deliberately exhaust all 6 guesses with incorrect valid words.
+  5. Carefully observe the game board and screen transition upon losing:
+     - Verify that all 5 tiles in the 6th row complete their staggered reveal animation.
+     - Verify that the Game Over modal delays appearance until the full tile reveal animation completes (~1.5s delay).
+     - Verify that the Game Over modal executes the exact same entrance animation (0.8x to 1.0x scale pop and 0.0 to 1.0 opacity fade-in over 0.3s) on loss.
+  6. Confirm that the delay and entrance animation execute identically and reliably in both Continuous Play and Daily Challenge modes.
+- **Expected Result:** Upon winning or losing in both Continuous Play and Daily Challenge modes, the game waits ~1.5 seconds for the staggered tile reveal animation to complete across all 5 columns before displaying the Game Over modal. When the modal appears, it plays a coordinated entrance animation (fade in and scale pop with back-ease overshoot from 0.8x to 1.0x over 0.3s) centered around its midpoint.
 
 ---
 
@@ -543,7 +564,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Expected Result:** The Main Menu features an ergonomically sized Credits button (36px font, 80px height). Tapping it opens a vintage monochrome Credits modal displaying the 64px title, generous 64px/96px window margins, 48px vertical spacing between rows, three compact horizontal attribution rows with uniform 144x144 circular badge logos, 24px attribution labels, left-aligned 48x48 interactive web icon buttons without visible URL strings, fitting entirely within a 720x1280 mobile portrait viewport without scrolling, and an 80px "Got It!" dismiss button that closes the modal cleanly.
 
 ### Test 5.16: Game Over Modal Typography Scaling, Doubled Button Height & Inset Action Buttons Layout
-- **Requirement(s):** REQ-2.7, REQ-8.1, REQ-8.2, REQ-8.7
+- **Requirement(s):** REQ-2.7, REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.16
 - **Steps:**
   1. Launch the game in Continuous Play mode.
   2. Complete the puzzle by winning (guess the secret word).
