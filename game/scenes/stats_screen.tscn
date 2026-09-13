@@ -135,38 +135,6 @@ theme_override_font_sizes/font_size = 18
 text = "Played"
 horizontal_alignment = 1
 
-[node name="WinPctCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "0%"
-horizontal_alignment = 1
-
-[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Win %"
-horizontal_alignment = 1
-
-[node name="StreakCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "0"
-horizontal_alignment = 1
-
-[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Current"
-horizontal_alignment = 1
-
 [node name="MaxStreakCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -197,6 +165,38 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Best Time"
+horizontal_alignment = 1
+
+[node name="WinPctCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "0%"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/WinPctCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Win %"
+horizontal_alignment = 1
+
+[node name="StreakCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "0"
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards/StreakCard"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Current"
 horizontal_alignment = 1
 
 [node name="AvgTimeCard" type="VBoxContainer" parent="MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox/SummaryCards"]
