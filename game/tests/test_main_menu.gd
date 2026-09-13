@@ -228,3 +228,24 @@ func test_main_game_stats_button_properties() -> void:
 	
 	main_game.free()
 
+func test_main_game_back_button_properties() -> void:
+	var game_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(game_scn != null, "main_game.tscn must be loadable")
+	
+	var main_game: Node = game_scn.instantiate()
+	assert_true(main_game != null, "main_game must instantiate successfully")
+	
+	var back_btn: Button = main_game.find_child("BackButton", true, false) as Button
+	assert_true(back_btn != null, "BackButton should exist in MainGame header")
+	
+	if back_btn != null:
+		assert_false(back_btn.text.contains("←"), "BackButton text must not contain the legacy thin arrow")
+		assert_eq(back_btn.text, "<", "BackButton text must be the left-pointing arrowhead")
+		var font_size: int = back_btn.get_theme_font_size("font_size")
+		assert_true(font_size >= 28 and font_size <= 34, "BackButton font_size should be scaled up (28px-34px)")
+		assert_eq(back_btn.custom_minimum_size, Vector2(56, 56), "BackButton custom_minimum_size should be Vector2(56, 56)")
+		assert_true(back_btn.is_connected("pressed", Callable(main_game, "_on_back_to_menu_pressed")), "BackButton pressed signal must be connected to _on_back_to_menu_pressed")
+		var font_color: Color = back_btn.get_theme_color("font_color")
+		assert_eq(font_color, Color(1, 1, 1, 1), "BackButton font_color should be crisp solid white")
+	
+	main_game.free()
