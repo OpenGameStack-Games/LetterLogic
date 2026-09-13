@@ -105,7 +105,7 @@ func _connect_game_manager() -> void:
 
 func _on_key_clicked(key_str: String) -> void:
 	var gm: Node = get_game_manager()
-	if gm == null:
+	if gm == null or gm.game_status != GameManagerScript.GameStatus.IN_PROGRESS:
 		return
 	
 	if key_str == "ENTER":
@@ -116,6 +116,10 @@ func _on_key_clicked(key_str: String) -> void:
 		gm.add_letter(key_str)
 
 func _unhandled_input(event: InputEvent) -> void:
+	var gm: Node = get_game_manager()
+	if gm != null and gm.game_status != GameManagerScript.GameStatus.IN_PROGRESS:
+		return
+
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var key_event: InputEventKey = event as InputEventKey
 		if key_event.keycode == KEY_ENTER or key_event.keycode == KEY_KP_ENTER:
@@ -175,3 +179,24 @@ func get_key(letter: String) -> Node:
 	if keys_by_letter.has(upper):
 		return keys_by_letter[upper]
 	return null
+
+## Repopulates keyboard key states and active row restrictions from GameManager.
+func populate_from_manager(gm_override: Node = null) -> void:
+	var gm: Node = gm_override if gm_override != null else get_game_manager()
+	if gm == null:
+		return
+	
+	reset_keyboard()
+	for letter in keys_by_letter.keys():
+		var key_node: Node = keys_by_letter[letter]
+		if key_node != null and key_node.has_method("set_key_state") and gm.has_method("get_letter_state"):
+			var state: int = gm.get_letter_state(letter)
+			key_node.set_key_state(state)
+	
+	if gm.has_method("get_typed_letters_in_current_row"):
+		var active_typed: Array = gm.get_typed_letters_in_current_row()
+		for letter in keys_by_letter.keys():
+			var key_node: Node = keys_by_letter[letter]
+			if key_node != null and key_node.has_method("set_row_disabled"):
+				key_node.set_row_disabled(active_typed.has(letter))
+

@@ -51,8 +51,8 @@ func _exit_tree() -> void:
 		_mascot_tween.kill()
 
 
-func _update_daily_button_state() -> void:
-	var dm: Node = get_node_or_null("/root/DailyManager")
+func _update_daily_button_state(dm_override: Node = null) -> void:
+	var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
 	if dm != null and daily_button != null:
 		_is_daily_locked = dm.is_daily_completed()
 		if _is_daily_locked:
@@ -61,17 +61,17 @@ func _update_daily_button_state() -> void:
 		else:
 			daily_button.text = "Daily Challenge\n[Play Today's Word]"
 
-func _on_countdown_tick() -> void:
+func _on_countdown_tick(dm_override: Node = null) -> void:
 	if _is_daily_locked:
-		var dm: Node = get_node_or_null("/root/DailyManager")
+		var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
 		if dm != null and daily_button != null:
 			var countdown: String = dm.get_formatted_countdown_to_next_utc()
 			daily_button.text = "Daily Challenge - Completed\n[Next in: %s]" % countdown
 
-func _on_daily_button_pressed() -> void:
-	var dm: Node = get_node_or_null("/root/DailyManager")
-	var gm: Node = get_node_or_null("/root/GameManager")
-	var sm: Node = get_node_or_null("/root/SaveManager")
+func _on_daily_button_pressed(dm_override: Node = null, gm_override: Node = null, sm_override: Node = null) -> void:
+	var dm: Node = dm_override if dm_override != null else (get_node_or_null("/root/DailyManager") if is_inside_tree() else null)
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
+	var sm: Node = sm_override if sm_override != null else (get_node_or_null("/root/SaveManager") if is_inside_tree() else null)
 	
 	if gm != null:
 		var is_completed: bool = dm != null and dm.is_daily_completed()
@@ -88,7 +88,8 @@ func _on_daily_button_pressed() -> void:
 				var data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
 				sm.deserialize_to_game_manager(data, gm)
 	
-	get_tree().change_scene_to_file("res://scenes/main_game.tscn")
+	if is_inside_tree() and get_tree() != null:
+		get_tree().change_scene_to_file("res://scenes/main_game.tscn")
 
 func _on_continuous_button_pressed() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")

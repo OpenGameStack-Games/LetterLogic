@@ -94,15 +94,32 @@ This document outlines the manual test cases used to verify the requirements out
   3. Select the option to play again.
 - **Expected Result:** The board resets immediately, a new random word is chosen, and the timer resets to `00:00`.
 
-### Test 2.2: Daily Challenge Synchronization & Lockout
-- **Requirement(s):** REQ-4.2, REQ-4.3
+### Test 2.2: Daily Challenge Completion, Menu Lockout, and Summary Screen Re-entry
+- **Requirement(s):** REQ-4.2, REQ-4.3, REQ-7.1
 - **Steps:**
-  1. Start a Daily Challenge game.
-  2. Note the target word.
-  3. Complete the Daily Challenge (win or lose).
-  4. Return to the main menu and attempt to play the Daily Challenge again.
-  5. (Optional) Change the device date to tomorrow and verify the Daily Challenge unlocks with a new word.
-- **Expected Result:** After completion, the player is locked out of the Daily Challenge until the next UTC midnight. The menu shows a countdown timer.
+  1. Start a Daily Challenge game from the Main Menu.
+  2. Complete the Daily Challenge (either by winning or by exhausting all 6 guesses).
+  3. Note the final elapsed solve time, guess count, board tiles, and keyboard evaluation colors on the Game Over modal.
+  4. Return to the Main Menu (via the back button or navigation).
+  5. Inspect the Daily Challenge button on the Main Menu:
+     - Verify the button text displays:
+       `Daily Challenge - Completed\n[Next in: HH:MM:SS]`
+     - Verify the countdown timer ticks down every second while preserving the `- Completed` prefix.
+     - Verify the two-line text fits comfortably within the button bounds without clipping or overflow.
+  6. Click or tap the completed Daily Challenge button on the Main Menu.
+  7. Observe the loaded screen:
+     - Verify that a new game is NOT started and no new word is picked.
+     - Verify that the game screen opens directly into the Game Over summary state.
+     - Verify that the `GameBoard` tiles display all previously submitted guesses with their evaluated colors (Green, Yellow, Red).
+     - Verify that the virtual `Keyboard` reflects the final evaluation states from the solved puzzle.
+     - Verify that the header timer shows the final saved solve time and remains frozen.
+     - Verify that `GameOverModal` is open immediately with the saved win/loss message.
+     - Verify that the "Share Results" button is visible and the "Next Word" button is hidden.
+     - Verify that virtual keyboard clicks and physical keystrokes are completely disabled and ignored.
+  8. Return to the Main Menu and open the Statistics Screen:
+     - Verify that re-opening and viewing the completed Daily Challenge did not trigger additional games played, increment streaks, or alter recorded solve times.
+  9. (Optional) Change the system/device clock past next UTC midnight and verify the Daily Challenge unlocks with a fresh word and the button returns to `Daily Challenge\n[Play Today's Word]`.
+- **Expected Result:** After puzzle completion, the player is locked out of playing a new daily session until next UTC midnight. The Main Menu button reflects the `- Completed` status with an active countdown. Clicking the button restores the completed session directly into the Game Over summary screen with the board, keyboard, timer, and modal accurately restored without corrupting player statistics.
 
 ### Test 2.3: Mode Header Title Display
 - **Requirement(s):** REQ-4.1, REQ-4.2

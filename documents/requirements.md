@@ -29,7 +29,9 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 ## 4. Game Modes
 - **REQ-4.1 - Continuous Play:** A sandbox mode where players can play unlimited consecutive games. Secret words are selected randomly from the word bank. The game screen header displays `CONTINUOUS PLAY`.
 - **REQ-4.2 - Daily Challenge:** A synchronized daily mode where all players attempt to guess the same deterministic secret word, based on the current UTC date. The game screen header displays `DAILY CHALLENGE • YYYY-MM-DD` reflecting the current UTC date.
-- **REQ-4.3 - Daily Lockout:** A player can only complete the Daily Challenge once per UTC day. A countdown timer should indicate when the next challenge unlocks.
+- **REQ-4.3 - Daily Lockout & Completed Summary Routing:** A player can only play and complete the Daily Challenge once per UTC day. When the daily puzzle is completed (won or lost), the Main Menu navigation button updates its primary label and countdown timer:
+  `Daily Challenge - Completed\n[Next in: HH:MM:SS]`
+  The countdown updates every second until UTC midnight reset. Pressing the completed button does not reset the board, pick a new word, or trigger new statistics entries; instead, it loads the saved daily game session and opens `res://scenes/main_game.tscn` directly into the Game Over summary state. The GameBoard and virtual keyboard are repopulated with the completed guesses and evaluated key states, the header timer displays the saved solve time and remains frozen, the `GameOverModal` is presented immediately with the "Share Results" button available and "Next Word" hidden, and in-game input (typing and virtual keyboard) is disabled.
 
 ## 5. Statistics Tracking
 - **REQ-5.1 - Segregated Stats:** The game must track statistics separately for "Continuous Play" and "Daily Challenge" modes.
@@ -42,7 +44,7 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-6.2 - Clipboard/Native Share:** The generated text must be copied to the system clipboard and, on Android, trigger the native share intent.
 
 ## 7. Saving and Data Persistence
-- **REQ-7.1 - Persistence:** The game must save player statistics and daily challenge records locally to the device so they persist between sessions.
+- **REQ-7.1 - Persistence & State Isolation:** The game must save player statistics and daily challenge records locally to the device so they persist between sessions. Upon puzzle completion (win or loss) in Daily Challenge mode, the completed game state—including `active_play_time`, submitted guesses, guess results, secret word, status, and keyboard states—is serialized and persisted to `user://save_daily.json` via `SaveManager`, and completion status is persisted to `user://daily_records.json` via `DailyManager`. Re-opening a completed Daily Challenge from the Main Menu restores this saved state without re-invoking `StatsManager.record_game()` or mutating player statistics.
 
 ## 8. User Interface & Visual Design
 - **REQ-8.1 - 1930s Monochrome UI Aesthetic:** Menus, modals, and UI containers follow a 1930s vintage monochrome animation visual language using high-contrast black, charcoal, and crisp white outlines. Chromatic color is strictly reserved for gameplay deduction evaluation cues (Green `#538d4e` 🟩, Yellow `#b59f3b` 🟨, and Flat Red `#b53b3b` 🟥).

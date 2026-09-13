@@ -74,7 +74,7 @@ func _build_tiles() -> void:
 		tiles.append(row_tiles)
 
 func _connect_game_manager() -> void:
-	var gm: Node = get_node_or_null("/root/GameManager")
+	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
 	if gm != null:
 		if not gm.letter_added.is_connected(_on_letter_added):
 			gm.letter_added.connect(_on_letter_added)
@@ -125,3 +125,24 @@ func reset_board() -> void:
 				var tile: Node = tiles[r][c]
 				if tile != null and tile.has_method("reset"):
 					tile.reset()
+
+## Repopulates the board tiles and evaluation states from the current GameManager state.
+func populate_from_manager(gm_override: Node = null) -> void:
+	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
+	if gm == null:
+		return
+	
+	reset_board()
+	for r in range(mini(gm.guesses.size(), ROWS)):
+		var guess: String = gm.guesses[r]
+		for c in range(mini(guess.length(), COLS)):
+			set_tile_letter(r, c, guess[c])
+		if r < gm.guess_results.size():
+			var results: Array = gm.guess_results[r]
+			for c in range(mini(results.size(), COLS)):
+				set_tile_state(r, c, results[c])
+	
+	if gm.current_row < ROWS and gm.current_guess != "":
+		for c in range(mini(gm.current_guess.length(), COLS)):
+			set_tile_letter(gm.current_row, c, gm.current_guess[c])
+
