@@ -83,8 +83,8 @@ func test_how_to_play_modal_dimensions_and_rules() -> void:
 	var rules_label: RichTextLabel = modal.find_child("RulesText", true, false) as RichTextLabel
 	assert_true(rules_label != null, "RulesText RichTextLabel should exist")
 	if rules_label != null:
-		assert_eq(rules_label.get_theme_font_size("normal_font_size"), 48, "RulesText normal_font_size equals 48")
-		assert_true(rules_label.get_theme_font_size("bold_font_size") >= 48, "RulesText bold_font_size is at least 48")
+		assert_eq(rules_label.get_theme_font_size("normal_font_size"), 32, "RulesText normal_font_size equals 32")
+		assert_true(rules_label.get_theme_font_size("bold_font_size") >= 32, "RulesText bold_font_size is at least 32")
 		var content: String = rules_label.text
 		assert_true(content.contains("#b53b3b"), "RulesText must contain red color code #b53b3b")
 		assert_true(content.contains("🟥 RED"), "RulesText must contain 🟥 RED indicator")
