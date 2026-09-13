@@ -114,29 +114,32 @@ This document outlines the manual test cases used to verify the requirements out
   5. Switch to the Daily Challenge tab in the Stats Screen; confirm Daily stats show `--:--` for Best Time and Avg Time, completely isolated from Continuous Play.
 
 ### Test 3.2: Save State & Time Stats Persistence
-- **Requirement(s):** REQ-7.1
+- **Requirement(s):** REQ-5.2, REQ-7.1
 - **Steps:**
   1. Complete games to record valid Best Time and Avg Time statistics.
   2. Complete today's Daily Challenge.
   3. Close the application entirely.
   4. Reopen the application.
-- **Expected Result:** All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distributions retain their exact values. The Daily Challenge remains locked out with an accurate countdown timer.
+  5. Open the Statistics Screen and inspect both "Continuous Play" and "Daily Challenge" tabs.
+- **Expected Result:** All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distributions retain their exact values. Played games, Current Streak, and Max Streak values display strictly as whole integers without decimal points (e.g., `1`, `2`, `0` instead of `1.0`, `2.0`, `0.0`). The Daily Challenge remains locked out with an accurate countdown timer.
 
 ### Test 3.3: Statistics Screen Connected Tabular Layout & Mode Switching
-- **Requirement(s):** REQ-5.4, REQ-8.8
+- **Requirement(s):** REQ-5.2, REQ-5.4, REQ-8.8
 - **Steps:**
   1. Open the Statistics Screen from the Main Menu or Game Over modal.
   2. Observe the mode selector tabs ("Continuous Play" and "Daily Challenge").
   3. Verify the active tab styling: deep black fill (`#0e0e10`), 3px solid white borders on top, left, and right, and no bottom border dividing line separating the tab from the statistics content panel.
   4. Verify the inactive tab styling: dark charcoal fill (`#1c1c1e`), 3px solid white border around all sides, clearly separating it from the content panel below.
-  5. Tap the inactive tab ("Daily Challenge").
-  6. Observe the visual transition and data displayed.
-  7. Tap "Continuous Play" to switch back.
+  5. Verify that Played, Current Streak, and Max Streak summary cards display clean whole numbers without decimal points.
+  6. Tap the inactive tab ("Daily Challenge").
+  7. Observe the visual transition and data displayed, confirming streak and played values are formatted as integers without decimal points.
+  8. Tap "Continuous Play" to switch back.
 - **Expected Result:**
   - The active tab connects seamlessly to the content panel with no bottom border line.
   - The inactive tab maintains a distinct 3px white outline on all sides and dark charcoal background.
   - Tapping between tabs transitions mode data smoothly with no disappearing borders, flickering, or layout shift.
   - All summary cards (Played, Win %, Current Streak, Max Streak, Best Time, Avg Time) and guess distribution rows update immediately to reflect the selected mode.
+  - Played, Current Streak, and Max Streak summary cards consistently display as integers without decimal points across both tabs.
 
 ---
 

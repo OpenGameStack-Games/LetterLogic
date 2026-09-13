@@ -97,13 +97,13 @@ func refresh_display() -> void:
 		}
 	
 	if played_val != null:
-		played_val.text = str(stats.get("played", 0))
+		played_val.text = str(int(stats.get("played", 0)))
 	if win_pct_val != null:
 		win_pct_val.text = "%d%%" % win_pct
 	if streak_val != null:
-		streak_val.text = str(stats.get("current_streak", 0))
+		streak_val.text = str(int(stats.get("current_streak", 0)))
 	if max_streak_val != null:
-		max_streak_val.text = str(stats.get("max_streak", 0))
+		max_streak_val.text = str(int(stats.get("max_streak", 0)))
 	if best_time_val != null:
 		best_time_val.text = GameManagerScript.format_time(best_time) if best_time > 0 else "--:--"
 	if avg_time_val != null:
