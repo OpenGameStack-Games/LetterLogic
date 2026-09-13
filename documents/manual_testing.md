@@ -178,6 +178,38 @@ This document outlines the manual test cases used to verify the requirements out
   - Summary metrics render in an organized 3-column by 2-row layout with intuitive vertical column pairings (Played & Win %, Max Streak & Current Streak, Best Time & Avg Time) and enlarged typography.
   - Played, Current Streak, and Max Streak summary cards consistently display as integers without decimal points across both tabs.
 
+### Test 3.4: In-Progress Game State Saving & Restoration (Menu Back & App Lifecycle)
+- **Requirement(s):** REQ-7.2, REQ-7.3
+- **Steps:**
+  1. Start a Continuous Play game.
+  2. Enter two valid guesses (e.g. "BRAIN" and "CLERK") and observe the evaluated tile and keyboard colors.
+  3. Type 2 letters of the next guess (e.g. "SH").
+  4. Note the elapsed time on the header timer (e.g. `00:35`).
+  5. Tap the Back button (`<`) in the top navigation bar to return to the Main Menu.
+  6. Tap "Continuous Play" from the Main Menu.
+  7. Observe the restored game screen:
+     - Verify that a new random puzzle was NOT generated.
+     - Verify rows 1 and 2 display "BRAIN" and "CLERK" with their evaluated colors (Green, Yellow, Red).
+     - Verify row 3 displays the partially typed letters "SH".
+     - Verify the keyboard retains evaluated colors and disables 'S' and 'H' from duplicate typing.
+     - Verify the header timer displays `00:35` and resumes incrementing.
+     - Verify the GameOverModal remains hidden and the keyboard/board accept input.
+  8. Minimize the application, switch to another app, or close the application completely.
+  9. Re-launch and refocus the game, then enter Continuous Play.
+  10. Verify that the exact puzzle state (guesses, partial letters, keyboard states, timer) is once again intact.
+- **Expected Result:** Leaving the game screen via the back button, minimizing the app, or terminating the process preserves the exact in-progress session. Re-entering Continuous Play restores all tiles, keyboard colors, typed letters, and play time without resetting the puzzle.
+
+### Test 3.5: Puzzle Reset Prevention and Save Clearing on Completion
+- **Requirement(s):** REQ-7.3
+- **Steps:**
+  1. Start a Continuous Play puzzle and enter at least one guess.
+  2. Repeatedly return to the Main Menu and tap "Continuous Play" several times.
+  3. Verify that the puzzle never resets to a new word while in progress.
+  4. Complete the puzzle by winning or exhausting all 6 guesses.
+  5. On the Game Over modal, tap the Back button (`<`) to return to the Main Menu, or tap "Next Word".
+  6. From the Main Menu, tap "Continuous Play".
+- **Expected Result:** An in-progress game strictly prevents resets until finished. Completing the puzzle clears the saved session file (`user://save_continuous.json`), allowing a fresh puzzle with an empty grid, new secret word, and reset timer (`00:00`) to begin on subsequent entry.
+
 ---
 
 ## 4. Social Sharing

@@ -37,30 +37,31 @@ func _ready() -> void:
 
 func check_and_restore_completed_game(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
-	if gm != null and gm.game_status != GameManagerScript.GameStatus.IN_PROGRESS:
+	if gm != null:
 		if game_board != null and game_board.has_method("populate_from_manager"):
 			game_board.populate_from_manager(gm)
 		if game_keyboard != null and game_keyboard.has_method("populate_from_manager"):
 			game_keyboard.populate_from_manager(gm)
 		
-		# Immediately show game over modal
-		var won: bool = gm.game_status == GameManagerScript.GameStatus.WON
-		if won:
-			var attempts: int = gm.current_row
-			var time_str: String = gm.format_time(gm.get_active_time()) if gm.has_method("format_time") else "00:00"
-			var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
-			var idx: int = clampi(attempts - 1, 0, titles.size() - 1)
-			var msg: String = "You found '%s' in %d/6 guesses.\nTime: %s" % [gm.secret_word, attempts, time_str]
-			_show_game_over(titles[idx], msg, true, gm)
-		else:
-			_show_game_over("Game Over", "The word was %s" % gm.secret_word, false, gm)
-		
-		# Disable inputs
-		set_process_input(false)
-		set_process_unhandled_input(false)
-		if game_keyboard != null:
-			game_keyboard.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			game_keyboard.set_process_unhandled_input(false)
+		if gm.game_status != GameManagerScript.GameStatus.IN_PROGRESS:
+			# Immediately show game over modal
+			var won: bool = gm.game_status == GameManagerScript.GameStatus.WON
+			if won:
+				var attempts: int = gm.current_row
+				var time_str: String = gm.format_time(gm.get_active_time()) if gm.has_method("format_time") else "00:00"
+				var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
+				var idx: int = clampi(attempts - 1, 0, titles.size() - 1)
+				var msg: String = "You found '%s' in %d/6 guesses.\nTime: %s" % [gm.secret_word, attempts, time_str]
+				_show_game_over(titles[idx], msg, true, gm)
+			else:
+				_show_game_over("Game Over", "The word was %s" % gm.secret_word, false, gm)
+			
+			# Disable inputs
+			set_process_input(false)
+			set_process_unhandled_input(false)
+			if game_keyboard != null:
+				game_keyboard.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				game_keyboard.set_process_unhandled_input(false)
 
 func _connect_signals() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
