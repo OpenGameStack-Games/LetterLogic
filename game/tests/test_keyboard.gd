@@ -121,3 +121,37 @@ func test_absent_and_disabled_key_colors() -> void:
 	if style_disabled != null:
 		assert_eq(style_disabled.bg_color.to_html(false).to_lower(), "272729", "Row-disabled key should remain distinctly dark gray (#272729)")
 	assert_eq(key_k.get_theme_color("font_color").to_html(false).to_lower(), "505050", "Row-disabled key text should remain dark (#505050)")
+
+func test_keyboard_key_dimensions_and_typography() -> void:
+	var key_a: Node = keyboard.get_key("A")
+	assert_true(key_a.custom_minimum_size.y >= 76.0, "Key minimum height should be approximately 77px")
+	assert_true(key_a.get_theme_font_size("font_size") >= 42, "Standard letter key font size should be enlarged (~44px)")
+
+	var key_enter = null
+	var key_del = null
+	for c in keyboard.vbox_container.get_children():
+		if c is HBoxContainer:
+			for b in c.get_children():
+				if b is Button:
+					if b.text == "ENTER":
+						key_enter = b
+					elif b.text == "⌫":
+						key_del = b
+
+	assert_true(key_enter != null, "Enter key should exist")
+	if key_enter != null:
+		assert_true(key_enter.get_theme_font_size("font_size") >= 18 and key_enter.get_theme_font_size("font_size") <= 22, "Enter key font size should be constrained")
+	
+	assert_true(key_del != null, "Delete key should exist")
+	if key_del != null:
+		assert_true(key_del.get_theme_font_size("font_size") >= 40, "Delete key font size should be enlarged")
+
+func test_font_size_retained_after_state_change() -> void:
+	var key_a: Node = keyboard.get_key("A")
+	var initial_font_size = key_a.get_theme_font_size("font_size")
+	key_a.set_key_state(GameManagerScript.TileState.CORRECT)
+	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after CORRECT state change")
+	key_a.set_row_disabled(true)
+	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after row disabled")
+	key_a.reset()
+	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after reset")

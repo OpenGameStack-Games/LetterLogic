@@ -16,6 +16,11 @@ const COLOR_TEXT_DEFAULT: Color = Color("ffffff")
 const COLOR_TEXT_ABSENT: Color = Color("ffffff")
 const COLOR_TEXT_DISABLED: Color = Color("505050")
 
+const KEY_MIN_HEIGHT: float = 77.0
+const FONT_SIZE_LETTER: int = 44
+const FONT_SIZE_DELETE: int = 44
+const FONT_SIZE_ENTER: int = 20
+
 var key_name: String = ""
 var key_state: int = 0 # GameManager.TileState
 var is_row_disabled: bool = false
@@ -27,7 +32,7 @@ func _ready() -> void:
 	focus_mode = FOCUS_NONE
 	_update_visuals()
 
-func setup(p_key_name: String, min_w: float = 48.0, min_h: float = 64.0) -> void:
+func setup(p_key_name: String, min_w: float = 48.0, min_h: float = KEY_MIN_HEIGHT) -> void:
 	key_name = p_key_name
 	text = p_key_name
 	custom_minimum_size = Vector2(min_w, min_h)
@@ -84,6 +89,13 @@ func _update_visuals() -> void:
 	add_theme_color_override("font_disabled_color", text_color)
 	add_theme_color_override("font_hover_color", text_color)
 	add_theme_color_override("font_pressed_color", text_color)
+	
+	var font_size: int = FONT_SIZE_LETTER
+	if key_name == "ENTER":
+		font_size = FONT_SIZE_ENTER
+	elif key_name == "⌫":
+		font_size = FONT_SIZE_DELETE
+	add_theme_font_size_override("font_size", font_size)
 
 func reset() -> void:
 	key_state = GameManagerScript.TileState.EMPTY

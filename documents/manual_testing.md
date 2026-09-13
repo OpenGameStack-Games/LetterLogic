@@ -319,4 +319,15 @@ This document outlines the manual test cases used to verify the requirements out
   9. Trigger a toast message in Daily Challenge mode and confirm identical 36px typography and 24px horizontal padding.
 - **Expected Result:** Both Continuous Play and Daily Challenge headers display doubled, highly legible center typography (Title: 48px, Subtitle: 28px, Timer: 32px) and toast alerts (36px with 24px horizontal padding) without vertical clipping or misaligning adjacent navigation controls.
 
-
+### Test 5.11: Virtual Keyboard Tap Targets, Typography, and Control Key Sizing
+- **Requirement(s):** REQ-8.7
+- **Steps:**
+  1. Launch the game in either Continuous Play or Daily Challenge mode on an Android device or emulator (portrait orientation).
+  2. Observe the on-screen virtual keyboard at the bottom of the screen.
+  3. Verify the vertical height of the keys is enlarged (~77px), providing a taller, more comfortable tap target compared to the default Godot button height.
+  4. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the taller key while maintaining clean margin padding.
+  5. Verify the Delete key ("⌫") icon is scaled up to match the enlarged font size of standard letter keys.
+  6. Verify the Enter key ("ENTER") text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
+  7. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
+  8. Verify that the enlarged and constrained font sizes are preserved across all visual key states and interaction feedback (hover, pressed).
+- **Expected Result:** Keyboard keys provide enlarged (~77px) vertical tap targets. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping.

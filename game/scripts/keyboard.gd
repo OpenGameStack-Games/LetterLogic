@@ -67,7 +67,7 @@ func _build_keys() -> void:
 			if key_str == "ENTER" or key_str == "⌫":
 				min_w = 68.0
 			
-			key_btn.setup(key_str, min_w, 64.0)
+			key_btn.setup(key_str, min_w, KeyboardKeyScript.KEY_MIN_HEIGHT)
 			key_btn.on_key_pressed.connect(_on_key_clicked)
 			hbox.add_child(key_btn)
 			
