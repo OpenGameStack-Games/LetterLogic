@@ -279,3 +279,20 @@ This document outlines the manual test cases used to verify the requirements out
   7. Submit the guess and verify that evaluation colors (Green, Yellow, Flat Red) and state transitions preserve the font size and centering.
   8. Reset or start a new game and verify font sizing is consistently applied to newly typed letters.
 - **Expected Result:** Letters render prominently at 72px font size, fill the tile interior proportionally with balanced padding, remain centered, and never touch tile borders or clip corners.
+
+### Test 5.9: Header Back Button Arrowhead & Navigation
+- **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.11
+- **Steps:**
+  1. Start a game in either Continuous Play or Daily Challenge mode.
+  2. Observe the back navigation button located in the top-left corner of the header (`BackButton`).
+  3. Verify that the button does NOT display the legacy thin arrow with an elongated tail (`←`).
+  4. Verify that the button displays a bold, clean left-pointing arrowhead character (`<`).
+  5. Inspect the glyph appearance and contrast:
+     - Rendered in crisp solid white (`#ffffff` / `Color(1, 1, 1, 1)`).
+     - Scaled up font size of 32px filling the button bounds prominently with balanced margins.
+     - Stands out with sharp, high contrast against the dark charcoal button background (`#1c1c1e` normal / `#2c2c30` hover).
+  6. Inspect touch target size and visual symmetry with `StatsButton` on the opposite side (both buttons have `Vector2(56, 56)` minimum dimensions in the 56px height header).
+  7. Tap the back button to verify it responds smoothly with standard 1930s button interaction states (hover/pressed) and returns cleanly to the Main Menu (`res://scenes/main_menu.tscn`).
+  8. Repeat the test across both Continuous Play and Daily Challenge modes.
+- **Expected Result:** The header back button displays a bold, solid white `<` arrowhead without a thin tail line, balances visually with `StatsButton` in 56x56 dimensions, contrasts sharply against the dark button background, and smoothly navigates back to the Main Menu from both game modes.
+
