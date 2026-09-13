@@ -226,17 +226,17 @@ This document outlines the manual test cases used to verify the requirements out
   7. Verify that no chromatic colors appear on buttons or panels—chromatic colors remain strictly reserved for the letter evaluation tiles (🟩, 🟨, 🟥).
 - **Expected Result:** All modals, panels, and buttons across the entire application exhibit uniform 1930s monochrome styling inherited from the centralized project GUI theme.
 
-### Test 5.3: Main Menu Mascot & Swaying Rotation Animation
+### Test 5.3: Static Main Menu Mascot Display
 - **Requirement(s):** REQ-8.4, REQ-8.5
 - **Steps:**
   1. Launch the game to the Main Menu.
   2. Observe the cartoon mascot situated directly above the `LETTERLOGIC` title box.
-  3. Verify the mascot displays classic 1930s rubber-hose cartoon styling: anthropomorphic tile standing upright facing the camera directly in a neutral idle stance, with pie-eyes, cartoon white gloves, letter "L" on chest, and rounded white ink outlines in monochrome (`res://assets/icons/mascot_standing.png`).
+  3. Verify the mascot displays classic 1930s rubber-hose cartoon styling in its original dynamic walking pose (`res://assets/icons/icon.png`), with pie-eyes, cartoon white gloves, letter "L" on chest, and rounded white ink outlines in monochrome.
   4. Watch the mascot for several seconds without interacting.
-  5. Verify the mascot plays a smooth, continuous subtle rocking/swaying rotation loop (gently swaying between -3.0° and +3.0° over a 3.0-second cycle) centered evenly on its pivot (`Vector2(128, 128)`) while maintaining fixed scale (`Vector2.ONE`) without scaling deformation, jitter, or translational drift.
+  5. Confirm the mascot remains completely static with zero rotation (`rotation_degrees = 0.0`), uniform scale (`scale = Vector2.ONE`), and no rocking, swaying, scaling, or motion loops.
   6. Navigate to Continuous Play, Daily Challenge, or open the How to Play modal, then return to the Main Menu.
-  7. Verify the swaying animation resumes smoothly upon returning without stutter or memory leaks.
-- **Expected Result:** The mascot displays a standing neutral pose and animates smoothly with subtle rocking/swaying rotation and clean scene transitions.
+  7. Verify the mascot continues to display statically without unwanted motion or orphaned tweens.
+- **Expected Result:** The mascot displays cleanly in its original 1930s walking pose completely static without animation or swaying.
 
 ### Test 5.4: Application Launcher Icon
 - **Requirement(s):** REQ-8.4
