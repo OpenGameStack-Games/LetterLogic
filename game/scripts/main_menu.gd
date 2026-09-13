@@ -28,28 +28,28 @@ func _ready() -> void:
 		credits_modal.visible = false
 		_bind_credits_links()
 	_update_daily_button_state()
-	if countdown_timer != null:
+	if countdown_timer != null and is_inside_tree():
 		countdown_timer.timeout.connect(_on_countdown_tick)
 		countdown_timer.start(1.0)
 
 func _bind_credits_links() -> void:
 	if credits_modal == null: return
 	
-	var ogs = credits_modal.find_child("OGSBlock", true, false)
+	var ogs: Node = credits_modal.find_child("OGSBlock", true, false)
 	if ogs:
-		var btn = ogs.find_child("WebIconBtn", true, false)
+		var btn: Button = ogs.find_child("WebIconBtn", true, false) as Button
 		if btn and not btn.pressed.is_connected(_on_ogs_pressed):
 			btn.pressed.connect(_on_ogs_pressed)
 			
-	var audrain = credits_modal.find_child("AudrainBlock", true, false)
+	var audrain: Node = credits_modal.find_child("AudrainBlock", true, false)
 	if audrain:
-		var btn = audrain.find_child("WebIconBtn", true, false)
+		var btn: Button = audrain.find_child("WebIconBtn", true, false) as Button
 		if btn and not btn.pressed.is_connected(_on_audrain_pressed):
 			btn.pressed.connect(_on_audrain_pressed)
 			
-	var github = credits_modal.find_child("GitHubBlock", true, false)
+	var github: Node = credits_modal.find_child("GitHubBlock", true, false)
 	if github:
-		var btn = github.find_child("WebIconBtn", true, false)
+		var btn: Button = github.find_child("WebIconBtn", true, false) as Button
 		if btn and not btn.pressed.is_connected(_on_github_pressed):
 			btn.pressed.connect(_on_github_pressed)
 

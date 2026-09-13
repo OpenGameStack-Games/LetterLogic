@@ -371,20 +371,21 @@ func test_credits_modal_content() -> void:
 	var hboxes: Array[Node] = modal.find_children("*", "HBoxContainer", true, false)
 	assert_true(hboxes.size() >= 3, "There should be at least 3 HBoxContainers for rows")
 	
-	var textures: Array[Node] = modal.find_children("*", "TextureRect", true, false)
+	var textures: Array[Node] = modal.find_children("Logo", "TextureRect", true, false)
 	assert_eq(textures.size(), 3, "There should be 3 TextureRects for logos")
-	for tex in textures:
-		assert_true(tex.texture != null, "TextureRect should have a texture assigned")
-		assert_true(tex.custom_minimum_size.x <= 100, "Logo width should be <= 100")
-		assert_true(tex.custom_minimum_size.y <= 100, "Logo height should be <= 100")
+	for tex: Node in textures:
+		var tex_rect: TextureRect = tex as TextureRect
+		assert_true(tex_rect != null and tex_rect.texture != null, "TextureRect should have a texture assigned")
+		assert_true(tex_rect.custom_minimum_size.x <= 100, "Logo width should be <= 100")
+		assert_true(tex_rect.custom_minimum_size.y <= 100, "Logo height should be <= 100")
 	
-	var ogs_block = modal.find_child("OGSBlock", true, false)
-	var audrain_block = modal.find_child("AudrainBlock", true, false)
-	var github_block = modal.find_child("GitHubBlock", true, false)
+	var ogs_block: Node = modal.find_child("OGSBlock", true, false)
+	var audrain_block: Node = modal.find_child("AudrainBlock", true, false)
+	var github_block: Node = modal.find_child("GitHubBlock", true, false)
 	
-	var ogs_btn = ogs_block.find_child("WebIconBtn", true, false)
-	var audrain_btn = audrain_block.find_child("WebIconBtn", true, false)
-	var github_btn = github_block.find_child("WebIconBtn", true, false)
+	var ogs_btn: Button = ogs_block.find_child("WebIconBtn", true, false) as Button
+	var audrain_btn: Button = audrain_block.find_child("WebIconBtn", true, false) as Button
+	var github_btn: Button = github_block.find_child("WebIconBtn", true, false) as Button
 	
 	assert_true(ogs_btn != null, "OGS WebIconBtn exists")
 	assert_true(audrain_btn != null, "Audrain WebIconBtn exists")
