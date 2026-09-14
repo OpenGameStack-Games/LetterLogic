@@ -38,6 +38,9 @@ jobs:
         run: |
           keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" -storepass android -keypass android
 
+      - name: Import Assets
+        run: godot --headless --path ./game --editor --quit
+
       - name: Configure Editor Settings
         run: |
           mkdir -p ~/.config/godot
@@ -50,12 +53,6 @@ jobs:
           export/android/debug_keystore_user = "androiddebugkey"
           export/android/debug_keystore_pass = "android"
           EOF
-
-      - name: Import Assets
-        run: |
-          godot --headless --path ./game --editor --quit
-          ls -la ~/.config/godot/
-          cat ~/.config/godot/editor_settings-4.3.tres
 
       - name: Export Android AAB
         run: godot --verbose --headless --path ./game --export-release "Android" LetterLogic.aab
