@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate Dummy Debug Keystore
         run: |
-          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" -storepass android -keypass android
+          keytool -genkey -v -keystore game/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" -storepass android -keypass android
 
       - name: Import Assets
         run: godot --headless --path ./game --editor --quit
@@ -50,7 +50,7 @@ jobs:
           [resource]
           export/android/android_sdk_path = "$ANDROID_HOME"
           export/android/java_sdk_path = "$JAVA_HOME"
-          export/android/debug_keystore = "$PWD/debug.keystore"
+          export/android/debug_keystore = "$PWD/game/debug.keystore"
           export/android/debug_keystore_user = "androiddebugkey"
           export/android/debug_keystore_pass = "android"
           EOF
