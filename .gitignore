@@ -52,3 +52,6 @@ blender_debug_output.txt
 
 # Logs
 *.log
+game/android/build/build/
+game/android/build/.gradle/
+game/android/build/app/build/
