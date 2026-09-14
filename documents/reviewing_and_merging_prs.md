@@ -109,7 +109,14 @@ gh pr review <pr_number> --request-changes --body "<Detailed description of what
 ### Scenario B: Approved & Ready to Merge
 Once all acceptance criteria are met, automated tests pass, and documentation is updated and pushed to the feature branch, proceed to merge.
 
-#### 1. Merge the Pull Request
+#### 1. Prepare for Merge
+Before merging, exit the review worktree, remove it, and return to the main workspace. Otherwise, `gh pr merge` will fail to delete the local branch because it is currently checked out in the worktree.
+```powershell
+cd ../..
+git worktree remove .worktrees/review-pr-<pr_number> --force
+```
+
+#### 2. Merge the Pull Request
 Merge using the GitHub CLI with a **standard merge commit** (preserving the complete Git graph and atomic commits):
 ```powershell
 gh pr merge <pr_number> --merge --delete-branch
