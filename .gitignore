@@ -2,8 +2,13 @@
 .godot/
 .import/
 export.cfg
-export_presets.cfg
 *.translation
+
+# Android Build Secrets & Binaries
+*.keystore
+*.jks
+*.apk
+*.aab
 
 # Agent Worktrees
 .worktrees/
