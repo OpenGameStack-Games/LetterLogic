@@ -617,4 +617,14 @@ This document outlines the manual test cases used to verify the requirements out
   5. Inspect the Play Console upload validation report and release dashboard.
 - **Expected Result:** The `.aab` uploads successfully without any warnings or error banners stating "Your app does not support 16 KB memory page sizes." Google Play Console accepts the release artifact for Android 15+ target devices.
 
+### Test 6.2: Android Native Debug Symbols & Obfuscation Mapping Packaging
+- **Requirement(s):** REQ-9.2
+- **Steps:**
+  1. Trigger or execute the Android release workflow (`.github/workflows/android_release.yml`) or run a local Gradle export with `gradle_build/export_debug_symbols=true`.
+  2. Verify that the build output generates `LetterLogic-Android-native-debug-symbols.zip` (or matching glob `*-native-debug-symbols.zip`) in the Godot project root / export destination.
+  3. Verify that Gradle outputs `mapping.txt` in `game/android/build/outputs/mapping/release/mapping.txt`.
+  4. Verify that the GitHub Actions artifact `LetterLogic-Android` contains the `.aab`, `*-native-debug-symbols.zip`, and `mapping.txt`.
+  5. (Optional) Upload the bundle and its corresponding native debug symbols and mapping file to Google Play Console App Bundle Explorer.
+- **Expected Result:** Google Play Console accepts the debug symbols and mapping file without throwing missing native debug symbols or missing obfuscation file warnings.
+
 

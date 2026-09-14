@@ -42,3 +42,7 @@ If the Android build template is extracted and committed to Git from a Windows m
 ## 8. Android 16 KB Memory Page Size Support
 Google Play requires apps targeting Android 15+ to support 16 KB memory page sizes. Apps that are not recompiled to support this will fail to load or crash on 16 KB page-size devices.
 **Fix:** Godot 4.3 natively compiles its shared libraries with 16 KB alignment. However, older Android Gradle Plugin (AGP) versions (like 8.2) package uncompressed native libraries with a 4 KB zip alignment, causing Google Play to reject the build. Upgrading the Android Gradle Plugin to `8.5.2` (and Gradle to `8.7`) forces AGP to 16 KB zip-align uncompressed shared libraries correctly.
+
+## 9. Native Debug Symbols and Obfuscation Mapping
+Google Play Console flags warnings if native symbols and obfuscation mapping files are not uploaded with the Android App Bundle.
+**Fix:** In `game/export_presets.cfg`, enable `gradle_build/export_debug_symbols=true`. When exporting with Gradle, Godot outputs `*-native-debug-symbols.zip` in the root export directory and Gradle produces `mapping.txt` at `game/android/build/outputs/mapping/release/mapping.txt`. Include these paths in the artifact upload step in `.github/workflows/android_release.yml`.
