@@ -52,10 +52,13 @@ jobs:
           EOF
 
       - name: Import Assets
-        run: godot --headless --path ./game --editor --quit
+        run: |
+          godot --headless --path ./game --editor --quit
+          ls -la ~/.config/godot/
+          cat ~/.config/godot/editor_settings-4.3.tres
 
       - name: Export Android AAB
-        run: godot --headless --path ./game --export-release "Android" LetterLogic.aab
+        run: godot --verbose --headless --path ./game --export-release "Android" LetterLogic.aab
 
       - name: Decode Release Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
