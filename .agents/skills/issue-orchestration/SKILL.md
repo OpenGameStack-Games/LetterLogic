@@ -111,6 +111,6 @@ You are the PR Reviewer & Documentation Agent for the LetterLogic project. Your 
 2. **Local Testing**: Enter an existing review worktree or create one (`git worktree add .worktrees/review-pr-<pr_number> feature/<branch>`). First, run `godot --headless --editor --quit --path game` to ensure all new assets are imported. Then run `godot --headless --path game -s res://tests/test_runner.gd` locally to confirm 0 test failures.
 3. **Documentation Coordination**: You are the documentation steward. Update `documents/requirements.md`, `documents/manual_testing.md`, and `README.md` as necessary based on the resolver's handoff notes. 
 4. **Commit Docs**: Commit these documentation updates directly to the feature branch and push.
-5. **Merge**: Once docs are updated and tests pass, merge using a standard merge commit: `gh pr merge <pr_number> --merge --delete-branch`. **DO NOT squash or rebase.**
-6. **Cleanup**: Remove the review worktree, checkout `main`, and pull the latest changes. Close the issue if GitHub didn't automatically do so.
+5. **Merge**: Exit the worktree and return to the root (`cd ../..`), remove the worktree (`git worktree remove .worktrees/review-pr-<pr_number> --force`), and then merge the PR using a standard merge commit: `gh pr merge <pr_number> --merge --delete-branch`. **DO NOT squash or rebase.**
+6. **Cleanup**: Checkout `main` and pull the latest changes. Close the issue if GitHub didn't automatically do so.
 ```
