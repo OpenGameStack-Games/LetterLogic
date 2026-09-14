@@ -598,4 +598,23 @@ This document outlines the manual test cases used to verify the requirements out
   6. (Optional) Touch and drag the icon or trigger launcher parallax motions to verify that the foreground and background layers animate smoothly with native depth.
 - **Expected Result:** The application launcher icon adapts dynamically to the Android system mask shape, presenting the mascot centered with sharp contrast against the solid background with zero distorted borders or clipped art.
 
+---
+
+## 6. Build, CI/CD & Platform Packaging
+
+### Test 6.1: Android 16 KB Page Alignment & Google Play Release Verification
+- **Requirement(s):** REQ-9.1
+- **Steps:**
+  1. Export an Android App Bundle (`.aab`) using the Godot Android export preset (`game/export_presets.cfg`) or the automated GitHub Actions CI release workflow.
+  2. Confirm that `game/android/build/config.gradle` specifies `androidGradlePlugin` version `8.5.2` or higher and `game/android/build/gradle/wrapper/gradle-wrapper.properties` specifies Gradle `8.7` or higher.
+  3. (Optional) Verify zip-alignment locally using the Android SDK `zipalign` tool:
+     ```bash
+     unzip -q LetterLogic.aab -d aab_extracted
+     zipalign -c -P 16 -v 4 aab_extracted/base/lib/arm64-v8a/*.so
+     ```
+     Verify that all shared libraries report `Verification SUCCESSFUL` with 16 KB page alignment.
+  4. Upload the signed `.aab` package to the Google Play Console (Internal Testing, Closed Testing, or Production track).
+  5. Inspect the Play Console upload validation report and release dashboard.
+- **Expected Result:** The `.aab` uploads successfully without any warnings or error banners stating "Your app does not support 16 KB memory page sizes." Google Play Console accepts the release artifact for Android 15+ target devices.
+
 
