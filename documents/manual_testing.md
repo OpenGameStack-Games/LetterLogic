@@ -336,13 +336,14 @@ This document outlines the manual test cases used to verify the requirements out
   7. Verify the mascot continues to display statically without unwanted motion or orphaned tweens.
 - **Expected Result:** The mascot displays cleanly in its original 1930s walking pose completely static without animation or swaying.
 
-### Test 5.4: Application Launcher Icon
-- **Requirement(s):** REQ-8.4
+### Test 5.4: Application Launcher Icon & Android Adaptive Icons
+- **Requirement(s):** REQ-8.4, REQ-8.17
 - **Steps:**
   1. Inspect the desktop window titlebar/taskbar (or export and install APK on an Android device/emulator).
   2. Look at the application launcher icon on the Android home screen or desktop taskbar.
-  3. Verify the icon renders crisp and clear at 512x512 resolution without clipping, distortion, or chromatic artifacts.
-- **Expected Result:** The 1930s rubber-hose mascot icon is displayed cleanly as the application launcher icon.
+  3. Verify the desktop icon renders crisp and clear at 512x512 resolution without clipping, distortion, or chromatic artifacts.
+  4. On Android devices (API 26+), verify that the icon renders adaptively with the mascot foreground centered over the solid dark background layer, conforming cleanly to the system launcher mask (circle, squircle, rounded square).
+- **Expected Result:** The 1930s rubber-hose mascot icon is displayed cleanly as the desktop application launcher icon, and renders natively as an adaptive icon on Android without awkward borders or clipping.
 
 ### Test 5.5: How to Play Modal Responsive Layout, Calibrated Typography & Enlarged Dismiss Button
 - **Requirement(s):** REQ-8.1, REQ-8.3, REQ-8.6
@@ -585,5 +586,16 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify action buttons maintain 96px minimum height, 32px text font size, 64px horizontal inset margins, and 12px vertical separation.
   7. Start a Daily Challenge game, complete it, and verify that "Share Results" (visible) and "Main Menu" buttons both reflect the doubled 96px height, 32px text font, and 64px inset margins.
 - **Expected Result:** The Game Over modal on both win and loss screens (in Continuous Play and Daily Challenge) displays enlarged, legible typography (56px title, 32px message, 32px button text) and doubled-height action buttons (96px) inset with 64px horizontal margins (~20% width reduction) and 12px separation, providing comfortable mobile touch ergonomics and presenting as centered button controls rather than edge-to-edge bars.
+ 
+### Test 5.17: Android Adaptive Launcher Icon Verification
+- **Requirement(s):** REQ-8.4, REQ-8.17
+- **Steps:**
+  1. Export an Android APK or AAB build using the configured Android export preset (`game/export_presets.cfg`).
+  2. Install the build on a physical Android device or emulator running Android 8.0 (API 26) or higher.
+  3. Inspect the LetterLogic launcher icon on the home screen and app drawer across different launcher mask styles (e.g. circle, rounded square, squircle, teardrop).
+  4. Verify the mascot foreground (`res://assets/icons/icon_foreground.png`, 432x432) remains centered and within the safe zone (~66% inner circle), avoiding edge clipping.
+  5. Verify the background layer (`res://assets/icons/icon_background.png`, 432x432) seamlessly fills the outer mask shape with the dark monochrome background color (`#121213`).
+  6. (Optional) Touch and drag the icon or trigger launcher parallax motions to verify that the foreground and background layers animate smoothly with native depth.
+- **Expected Result:** The application launcher icon adapts dynamically to the Android system mask shape, presenting the mascot centered with sharp contrast against the solid background with zero distorted borders or clipped art.
 
 

@@ -35,3 +35,13 @@ func test_boot_splash_settings() -> void:
 	var bg_color: Color = Color(ProjectSettings.get_setting("application/boot_splash/bg_color", Color.BLACK))
 	assert_eq(bg_color, Color(0.0705882, 0.0705882, 0.0705882, 1), "Boot splash bg color should match monochrome palette")
 	assert_true(ResourceLoader.exists("res://assets/icons/icon.png"), "Mascot icon asset must exist")
+
+func test_adaptive_icon_settings() -> void:
+	assert_true(ResourceLoader.exists("res://assets/icons/icon_foreground.png"), "Adaptive icon foreground asset must exist")
+	assert_true(ResourceLoader.exists("res://assets/icons/icon_background.png"), "Adaptive icon background asset must exist")
+	var config: ConfigFile = ConfigFile.new()
+	var err: Error = config.load("res://export_presets.cfg")
+	assert_eq(err, OK, "export_presets.cfg should load successfully")
+	if err == OK:
+		assert_eq(String(config.get_value("preset.0.options", "launcher_icons/adaptive_foreground_432x432", "")), "res://assets/icons/icon_foreground.png", "Adaptive foreground icon must be configured")
+		assert_eq(String(config.get_value("preset.0.options", "launcher_icons/adaptive_background_432x432", "")), "res://assets/icons/icon_background.png", "Adaptive background icon must be configured")
