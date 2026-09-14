@@ -55,6 +55,9 @@ jobs:
           export/android/debug_keystore_pass = "android"
           EOF
 
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x game/android/build/gradlew
+
       - name: Export Android AAB
         run: godot --verbose --headless --path ./game --export-release "Android" LetterLogic.aab
 
