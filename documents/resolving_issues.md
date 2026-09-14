@@ -124,8 +124,9 @@ Every feature or bug fix touching game logic or autoloads must be backed by auto
 * Assertions use `assert_true()`, `assert_false()`, `assert_eq()`, and `assert_ne()`.
 
 ### Running Automated Tests
-Run the headless Godot test suite:
+Run the headless Godot test suite. First, force an asset import pass to cache any newly added binary files (like PNG icons):
 ```powershell
+godot --headless --editor --quit --path game
 godot --headless --path game -s res://tests/test_runner.gd
 ```
 *(Note: Replace `godot` with the path to your local Godot 4.x console binary if it is not in your system PATH).*
