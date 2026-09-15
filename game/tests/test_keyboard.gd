@@ -124,8 +124,8 @@ func test_absent_and_disabled_key_colors() -> void:
 
 func test_keyboard_key_dimensions_and_typography() -> void:
 	var key_a: Node = keyboard.get_key("A")
-	assert_eq(KeyboardKeyScript.KEY_MIN_HEIGHT, 104.0, "Key minimum height constant should be 104px")
-	assert_eq(key_a.custom_minimum_size.y, 104.0, "Key minimum height should be 104px")
+	assert_eq(KeyboardKeyScript.KEY_MIN_HEIGHT, 99.0, "Key minimum height constant should be 99px")
+	assert_eq(key_a.custom_minimum_size.y, 99.0, "Key minimum height should be 99px")
 	assert_true(key_a.get_theme_font_size("font_size") >= 42, "Standard letter key font size should be enlarged (~44px)")
 
 	var key_enter: Button = null
@@ -171,9 +171,9 @@ func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
 	assert_eq(scene_keyboard.anchor_top, 0.0, "Keyboard scene should start at the top of its parent instead of using bottom anchoring")
 	assert_eq(scene_keyboard.anchor_bottom, 1.0, "Keyboard scene should fill to the bottom of its parent")
 	assert_eq(scene_keyboard.offset_top, 0.0, "Keyboard scene should not use absolute top offsets")
-	assert_eq(scene_keyboard.size_flags_vertical, Control.SIZE_EXPAND_FILL, "Keyboard scene should expand/fill its flow-layout slot")
+	assert_eq(scene_keyboard.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "Keyboard scene should use shrink begin for flow-layout slot")
 	scene_keyboard._ready()
-	assert_eq(scene_keyboard.custom_minimum_size.y, GameKeyboardScript.KEYBOARD_CONTAINER_MIN_HEIGHT, "Keyboard scene should set an intrinsic minimum height when initialized")
+	assert_eq(scene_keyboard.custom_minimum_size.y, 0.0, "Keyboard scene should no longer enforce a rigid minimum height")
 	scene_keyboard.free()
 
 func test_main_game_uses_flow_based_keyboard_wrapper() -> void:

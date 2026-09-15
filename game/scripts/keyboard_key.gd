@@ -16,7 +16,7 @@ const COLOR_TEXT_DEFAULT: Color = Color("ffffff")
 const COLOR_TEXT_ABSENT: Color = Color("ffffff")
 const COLOR_TEXT_DISABLED: Color = Color("505050")
 
-const KEY_MIN_HEIGHT: float = 104.0
+const KEY_MIN_HEIGHT: float = 99.0
 const FONT_SIZE_LETTER: int = 44
 const FONT_SIZE_DELETE: int = 44
 const FONT_SIZE_ENTER: int = 20

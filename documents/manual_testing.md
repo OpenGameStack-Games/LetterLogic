@@ -472,18 +472,18 @@ This document outlines the manual test cases used to verify the requirements out
 - **Requirement(s):** REQ-8.7
 - **Steps:**
   1. Launch the game in either Continuous Play or Daily Challenge mode on an Android device or emulator in portrait orientation.
-  2. Set or emulate a Samsung Galaxy S22 / 1080x2340 notch profile and verify the top header remains fully visible without being obscured by the cutout.
-  3. Verify the board fills the middle of the screen and the keyboard stays anchored at the bottom with breathing room, with no board/keyboard overlap.
-  4. Repeat the layout check on a smaller phone profile to confirm the board and keyboard still remain separated.
-  5. Repeat the layout check on a tablet or 4:3 portrait profile to confirm the board expands to absorb the extra vertical space while the keyboard retains its bottom buffer.
+  2. On a physical Android device (specifically a Samsung Galaxy S22 or other compact portrait phone) or matching display cutout profile (1080x2340), verify the top header remains fully visible without being obscured by the camera cutout.
+  3. Inspect the game board and keyboard layout: confirm that the board fills the middle of the screen and the keyboard stays anchored at the bottom with 70px bottom breathing room padding (`margin_bottom = 70`). Verify there is **strictly zero overlap** between the game board tiles and the keyboard under any circumstance.
+  4. Repeat the layout check across varied screen aspect ratios (16:9, 19.5:9, 20:9, and tablet 4:3 / 16:10 profiles) to confirm the board and keyboard maintain clean separation without collision.
+  5. On tablets or wider portrait profiles, confirm the board expands to absorb the extra vertical space while the keyboard retains its bottom buffer and compact footprint.
   6. Observe the on-screen virtual keyboard at the bottom of the screen.
-  7. Verify the vertical height of the keys is enlarged (~104px), providing a taller, more comfortable tap target compared to the default Godot button height.
-  8. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the taller key while maintaining clean margin padding.
+  7. Verify the vertical height of the keys is calibrated to 99px (`KEY_MIN_HEIGHT = 99.0`), providing a comfortable tap target while preventing container overflow on shorter mobile screens.
+  8. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
   9. Verify the Delete key ("⌫") icon is scaled up to match the enlarged font size of standard letter keys.
   10. Verify the Enter key ("ENTER") text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
   11. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
   12. Verify that the enlarged and constrained font sizes are preserved across all visual key states and interaction feedback (hover, pressed).
-- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a keyboard that remains separated at the bottom without overlap on Samsung Galaxy S22 / smaller phone / tablet profiles. Keyboard keys provide enlarged (~104px) vertical tap targets. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping.
+- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. Keyboard keys provide calibrated 99px vertical tap targets. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
 
 ### Test 5.12: Main Menu Typography, Navigation Button Dimensions & Responsive Touch Targets
 - **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.12
