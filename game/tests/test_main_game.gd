@@ -6,7 +6,7 @@ extends "res://tests/test_base.gd"
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const SAFE_AREA_LAYOUT_SCRIPT = preload("res://scripts/safe_area_layout.gd")
 
-const MAIN_GAME_BASE_MARGIN_TOP: float = 16.0
+const MAIN_GAME_BASE_MARGIN_TOP: float = 70.0
 
 
 func test_toast_overlay_position() -> void:
@@ -16,16 +16,18 @@ func test_toast_overlay_position() -> void:
 	var main_game: Node = main_scn.instantiate()
 	assert_true(main_game != null, "main_game must instantiate successfully")
 	
-	var vbox: VBoxContainer = main_game.get_node_or_null("VBoxContainer") as VBoxContainer
-	assert_true(vbox != null, "VBoxContainer should exist in MainGame")
+	var content_margin: MarginContainer = main_game.get_node_or_null("ContentMargin") as MarginContainer
+	assert_true(content_margin != null, "ContentMargin should exist in MainGame")
+	var vbox: VBoxContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
+	assert_true(vbox != null, "VBoxContainer should exist inside ContentMargin")
 	
 	var toast_overlay: Control = vbox.get_node_or_null("ToastOverlay") as Control
-	assert_true(toast_overlay != null, "ToastOverlay should be a native child of VBoxContainer")
+	assert_true(toast_overlay != null, "ToastOverlay should be a native child of the content VBoxContainer")
 	
 	var header: Control = vbox.get_node_or_null("Header") as Control
 	var board_area: Control = vbox.get_node_or_null("BoardArea") as Control
-	assert_true(header != null, "Header should exist in VBoxContainer")
-	assert_true(board_area != null, "BoardArea should exist in VBoxContainer")
+	assert_true(header != null, "Header should exist in the content VBoxContainer")
+	assert_true(board_area != null, "BoardArea should exist in the content VBoxContainer")
 	
 	# Verify that ToastOverlay is mathematically constrained between Header and BoardArea
 	assert_true(toast_overlay.get_index() > header.get_index(), "ToastOverlay must be positioned after Header")
@@ -69,45 +71,82 @@ func test_safe_area_top_offset_applied_on_startup() -> void:
 	var main_game: Node = main_scn.instantiate()
 	assert_true(main_game != null, "main_game must instantiate successfully")
 
-	var vbox: VBoxContainer = main_game.get_node_or_null("VBoxContainer") as VBoxContainer
-	assert_true(vbox != null, "VBoxContainer should exist in MainGame")
+	var content_margin: MarginContainer = main_game.get_node_or_null("ContentMargin") as MarginContainer
+	assert_true(content_margin != null, "ContentMargin should exist in MainGame")
+	var vbox: VBoxContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
+	assert_true(vbox != null, "VBoxContainer should exist inside ContentMargin")
 
+	main_game.set("content_margin", content_margin)
 	main_game.set("content_container", vbox)
 	main_game.call("_apply_safe_area_insets")
 
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
 	var expected_top_offset: float = SAFE_AREA_LAYOUT_SCRIPT.get_display_safe_top_margin(MAIN_GAME_BASE_MARGIN_TOP)
-	assert_true(vbox.offset_top >= float(safe_area.position.y), "VBoxContainer top offset must include at least the display safe area top inset")
-	assert_eq(vbox.offset_top, expected_top_offset, "VBoxContainer top offset should equal the base design margin plus runtime safe area top inset")
+	assert_true(float(content_margin.get_theme_constant("margin_top")) >= float(safe_area.position.y), "ContentMargin top padding must include at least the display safe area top inset")
+	assert_eq(float(content_margin.get_theme_constant("margin_top")), expected_top_offset, "ContentMargin top padding should equal the header breathing room plus runtime safe area top inset")
 
 	main_game.free()
 
 func test_safe_area_top_offset_uses_dynamic_cutout_inset() -> void:
 	var simulated_safe_area: Rect2i = Rect2i(Vector2i(0, 72), Vector2i(1080, 2200))
 	var safe_top_margin: float = SAFE_AREA_LAYOUT_SCRIPT.get_safe_top_margin(MAIN_GAME_BASE_MARGIN_TOP, simulated_safe_area)
-	assert_eq(safe_top_margin, 88.0, "Safe area helper should add a simulated punch-hole top inset to the base design margin")
+	assert_eq(safe_top_margin, 142.0, "Safe area helper should add a simulated punch-hole top inset to the 70px header breathing room")
+
+func test_unified_responsive_flow_layout_structure() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(main_scn != null, "main_game.tscn must be loadable")
+
+	var main_game: Node = main_scn.instantiate()
+	assert_true(main_game != null, "main_game must instantiate successfully")
+
+	var content_margin: MarginContainer = main_game.get_node_or_null("ContentMargin") as MarginContainer
+	var vbox: VBoxContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
+	assert_true(content_margin != null, "ContentMargin should provide top safe-area padding")
+	assert_true(vbox != null, "A single VBoxContainer should own the main vertical flow")
+	if content_margin != null:
+		assert_eq(content_margin.get_theme_constant("margin_top"), 70, "Scene top padding should match the keyboard bottom breathing room before safe-area adjustment")
+	if vbox != null:
+		var header: Control = vbox.get_node_or_null("Header") as Control
+		var toast_overlay: Control = vbox.get_node_or_null("ToastOverlay") as Control
+		var board_area: Control = vbox.get_node_or_null("BoardArea") as Control
+		var keyboard_wrapper: MarginContainer = vbox.get_node_or_null("KeyboardWrapper") as MarginContainer
+		assert_true(header != null, "Header should be in the shared VBox flow")
+		assert_true(toast_overlay != null, "ToastOverlay should be in the shared VBox flow")
+		assert_true(board_area != null, "BoardArea should be in the shared VBox flow")
+		assert_true(keyboard_wrapper != null, "KeyboardWrapper should be in the shared VBox flow")
+		if header != null and toast_overlay != null and board_area != null and keyboard_wrapper != null:
+			assert_true(header.get_index() < toast_overlay.get_index(), "Header should precede ToastOverlay")
+			assert_true(toast_overlay.get_index() < board_area.get_index(), "ToastOverlay should precede BoardArea")
+			assert_true(board_area.get_index() < keyboard_wrapper.get_index(), "BoardArea should precede KeyboardWrapper")
+			assert_eq(header.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "Header should only claim its intrinsic height")
+			assert_eq(toast_overlay.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "ToastOverlay should only claim its intrinsic height")
+			assert_eq(board_area.size_flags_vertical, Control.SIZE_EXPAND_FILL, "BoardArea should expand to fill the middle of the screen")
+			assert_eq(keyboard_wrapper.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "KeyboardWrapper should only claim the keyboard's intrinsic height")
+			assert_eq(keyboard_wrapper.custom_minimum_size.y, 0.0, "KeyboardWrapper should not use a hardcoded fixed height")
+
+	main_game.free()
 
 func test_header_and_toast_typography() -> void:
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	var main_game: Node = main_scn.instantiate()
 	
-	var title_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/TitleLabel") as Label
+	var title_label: Label = main_game.get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/TitleLabel") as Label
 	assert_true(title_label != null, "TitleLabel should exist")
 	assert_eq(title_label.get_theme_font_size("font_size"), 48, "TitleLabel font size override should be 48")
 	
-	var mode_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	var mode_label: Label = main_game.get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel") as Label
 	assert_true(mode_label != null, "ModeLabel should exist")
 	assert_eq(mode_label.get_theme_font_size("font_size"), 28, "ModeLabel font size override should be 28")
 	
-	var timer_label: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel") as Label
+	var timer_label: Label = main_game.get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/TimerLabel") as Label
 	assert_true(timer_label != null, "TimerLabel should exist")
 	assert_eq(timer_label.get_theme_font_size("font_size"), 32, "TimerLabel font size override should be 32")
 	
-	var toast_label: Label = main_game.get_node_or_null("VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel") as Label
+	var toast_label: Label = main_game.get_node_or_null("ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel") as Label
 	assert_true(toast_label != null, "ToastLabel should exist")
 	assert_eq(toast_label.get_theme_font_size("font_size"), 36, "ToastLabel font size override should be 36")
 	
-	var margin_container: MarginContainer = main_game.get_node_or_null("VBoxContainer/ToastOverlay/ToastPanel/MarginContainer") as MarginContainer
+	var margin_container: MarginContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer") as MarginContainer
 	assert_true(margin_container != null, "Toast MarginContainer should exist")
 	var margin_left: int = margin_container.get_theme_constant("margin_left")
 	var margin_right: int = margin_container.get_theme_constant("margin_right")
@@ -253,8 +292,8 @@ func test_completed_daily_board_and_keyboard_restoration() -> void:
 	
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	var main_game: Node = main_scn.instantiate()
-	main_game.game_board = main_game.get_node("VBoxContainer/BoardArea/GameBoard")
-	main_game.game_keyboard = main_game.get_node("VBoxContainer/KeyboardArea/Keyboard")
+	main_game.game_board = main_game.get_node("ContentMargin/VBoxContainer/BoardArea/GameBoard")
+	main_game.game_keyboard = main_game.get_node("ContentMargin/VBoxContainer/KeyboardWrapper/Keyboard")
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")
@@ -311,8 +350,8 @@ func test_in_progress_board_and_keyboard_restoration() -> void:
 	
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	var main_game: Node = main_scn.instantiate()
-	main_game.game_board = main_game.get_node("VBoxContainer/BoardArea/GameBoard")
-	main_game.game_keyboard = main_game.get_node("VBoxContainer/KeyboardArea/Keyboard")
+	main_game.game_board = main_game.get_node("ContentMargin/VBoxContainer/BoardArea/GameBoard")
+	main_game.game_keyboard = main_game.get_node("ContentMargin/VBoxContainer/KeyboardWrapper/Keyboard")
 	main_game.game_over_modal = main_game.get_node("GameOverModal")
 	main_game.game_over_title = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/TitleLabel")
 	main_game.game_over_message = main_game.get_node("GameOverModal/MarginContainer/Panel/VBox/MessageLabel")

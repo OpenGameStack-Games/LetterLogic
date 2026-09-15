@@ -147,7 +147,7 @@ func test_main_game_header_mode_display() -> void:
 	var main_game: Node = game_scn.instantiate()
 	assert_true(main_game != null, "main_game must instantiate")
 	
-	var mode_lbl: Label = main_game.get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	var mode_lbl: Label = main_game.get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel") as Label
 	assert_true(mode_lbl != null, "ModeLabel must exist under TitleBox")
 	
 	var gm_script: GDScript = load("res://autoloads/game_manager.gd") as GDScript
@@ -260,7 +260,7 @@ func test_main_game_stats_button_properties() -> void:
 	if back_btn != null and stats_btn != null:
 		assert_eq(back_btn.custom_minimum_size, stats_btn.custom_minimum_size, "BackButton and StatsButton must have symmetrical minimum size")
 	
-	var header: Control = main_game.get_node_or_null("VBoxContainer/Header") as Control
+	var header: Control = main_game.get_node_or_null("ContentMargin/VBoxContainer/Header") as Control
 	assert_true(header != null, "Header should exist in MainGame")
 	if header != null:
 		assert_true(header.custom_minimum_size.y >= 56.0, "Header custom_minimum_size.y must accommodate 56px buttons")
