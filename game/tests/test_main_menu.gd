@@ -113,7 +113,7 @@ func test_how_to_play_modal_dimensions_and_rules() -> void:
 		assert_true(content.contains("🟥 RED"), "RulesText must contain 🟥 RED indicator")
 		assert_false(content.contains("⬛"), "RulesText must not contain black/gray square emoji ⬛")
 		assert_false(content.contains("GRAY"), "RulesText must not contain GRAY")
-		assert_true(rules_label.scroll_active, "RulesText scroll_active must remain true for fallback scrolling")
+		assert_false(rules_label.scroll_active, "RulesText scroll_active must be false (shrink-to-fit scaling replaces scrolling)")
 	
 	var close_btn: Button = modal.find_child("CloseButton", true, false) as Button
 	assert_true(close_btn != null, "CloseButton should exist")
