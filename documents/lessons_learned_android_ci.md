@@ -40,9 +40,14 @@ If the Android build template is extracted and committed to Git from a Windows m
 
 
 ## 8. Android 16 KB Memory Page Size Support
-Google Play requires apps targeting Android 15+ to support 16 KB memory page sizes. Apps that are not recompiled to support this will fail to load or crash on 16 KB page-size devices.
-**Fix:** Godot 4.3 natively compiles its shared libraries with 16 KB alignment. However, older Android Gradle Plugin (AGP) versions (like 8.2) package uncompressed native libraries with a 4 KB zip alignment, causing Google Play to reject the build. Upgrading the Android Gradle Plugin to `8.5.2` (and Gradle to `8.7`) forces AGP to 16 KB zip-align uncompressed shared libraries correctly.
+Google Play requires apps targeting Android 15+ to support 16 KB memory page sizes. There are two distinct alignment considerations that must both be satisfied:
 
+1. ZIP data alignment: APKs produced from an App Bundle must store native libraries on 16 KiB data boundaries (this is controlled by the packaging step and can be verified with `zipalign -c -P 16`).
+2. ELF PT_LOAD alignment: The native shared libraries themselves (the ELF files inside AARs/APKs) must have PT_LOAD program-segment alignment of 16 KiB. This alignment is a property of how the native library was built and cannot be rewritten by AGP/Gradle packaging.
+
+**Root cause observed:** In this incident the critical failure was not solely ZIP local-header offsets — the committed Godot 4.3 template AARs included 64-bit libraries whose ELF PT_LOAD alignments were 4096 bytes. Upgrading AGP/Gradle alone did not change those ELF headers. The correct remediation was to update the Godot Android templates to a version whose 64-bit libraries expose PT_LOAD alignment of 16384 (16 KiB) and to add CI-side validation.
+
+**Fix / Mitigation:** Replace or rebuild Android template AARs so 64-bit libraries (arm64-v8a, x86_64) have PT_LOAD alignment 16 KiB (the PR updates use Godot 4.7.2 templates). In CI, validate both the ELF PT_LOAD alignment and the APK/ZIP data alignment (for example using `scripts/validate_android_16kb.py` plus Bundletool and `zipalign -c -P 16`). This distinction is important: ZIP local-header offsets, AAB bundle internals, and ELF PT_LOAD alignment are related but separate checks — failing to validate the ELF headers can silently allow an AAB to be uploaded that Play will reject.
 ## 9. Native Debug Symbols and Obfuscation Mapping
 Google Play Console flags warnings if native symbols and obfuscation mapping files are not uploaded with the Android App Bundle.
 **Fix:** In `game/export_presets.cfg`, enable `gradle_build/export_debug_symbols=true`. When exporting with Gradle, Godot outputs `*-native-debug-symbols.zip` in the root export directory and Gradle produces `mapping.txt` at `game/android/build/outputs/mapping/release/mapping.txt`. Include these paths in the artifact upload step in `.github/workflows/android_release.yml`.
