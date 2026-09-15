@@ -106,7 +106,10 @@ func _on_daily_button_pressed(dm_override: Node = null, gm_override: Node = null
 			# Restore in-progress daily save if present
 			if sm != null and sm.has_saved_game(GameManagerScript.GameMode.DAILY):
 				var data: Dictionary = sm.load_game_state(GameManagerScript.GameMode.DAILY)
-				sm.deserialize_to_game_manager(data, gm)
+				if data.get("secret_word", "") == daily_word:
+					sm.deserialize_to_game_manager(data, gm)
+				else:
+					sm.clear_game_state(GameManagerScript.GameMode.DAILY)
 	
 	if is_inside_tree() and get_tree() != null:
 		get_tree().change_scene_to_file("res://scenes/main_game.tscn")
