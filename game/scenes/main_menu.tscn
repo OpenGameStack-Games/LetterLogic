@@ -134,17 +134,22 @@ theme_override_constants/margin_bottom = 48
 [node name="Panel" type="PanelContainer" parent="HowToPlayModal/MarginContainer"]
 layout_mode = 2
 
-[node name="VBox" type="VBoxContainer" parent="HowToPlayModal/MarginContainer/Panel"]
+[node name="ContentMargin" type="MarginContainer" parent="HowToPlayModal/MarginContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_right = 24
+
+[node name="VBox" type="VBoxContainer" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="ModalTitle" type="Label" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
+[node name="ModalTitle" type="Label" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 84
 text = "HOW TO PLAY"
 horizontal_alignment = 1
 
-[node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
+[node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 32
@@ -165,7 +170,7 @@ text = "[b]Guess the secret word in 6 attempts.[/b]
 • [b]Continuous Play:[/b] Play as many words as you like!"
 scroll_active = true
 
-[node name="CloseButton" type="Button" parent="HowToPlayModal/MarginContainer/Panel/VBox"]
+[node name="CloseButton" type="Button" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
@@ -320,5 +325,5 @@ layout_mode = 1
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/StatsButton" to="." method="_on_stats_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/HowToPlayButton" to="." method="_on_how_to_play_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBox/MenuButtons/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="HowToPlayModal/MarginContainer/Panel/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]
+[connection signal="pressed" from="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox/CloseButton" to="." method="_on_close_how_to_play_pressed"]
 [connection signal="pressed" from="CreditsModal/MarginContainer/Panel/VBox/CloseButton" to="." method="_on_close_credits_pressed"]
