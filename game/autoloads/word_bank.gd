@@ -38,8 +38,12 @@ func load_words(path: String = WORD_LIST_PATH) -> bool:
 				_word_list.append(line)
 
 	file.close()
+	if _word_list.is_empty():
+		push_error("WordBank: Word list file '%s' contained no valid %d-letter isogram words." % [path, WORD_LENGTH])
+		return false
+
 	print_debug("WordBank: Loaded %d unique 5-letter isograms." % _word_list.size())
-	return _word_list.size() > 0
+	return true
 
 ## Checks if the given word contains any repeating characters.
 func has_duplicate_letters(word: String) -> bool:

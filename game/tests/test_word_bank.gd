@@ -20,6 +20,10 @@ func test_word_bank_loads_successfully() -> void:
 	assert_true(word_bank.is_loaded(), "WordBank should report loaded status")
 	assert_true(word_bank.get_word_count() > 1000, "WordBank should have at least 1,000 words loaded")
 
+func test_startup_word_bank_is_loaded_with_words() -> void:
+	assert_true(word_bank.is_loaded() == true, "WordBank should be loaded during startup initialization")
+	assert_true(word_bank.get_word_count() > 0, "WordBank startup initialization must load a non-empty dictionary")
+
 func test_has_duplicate_letters() -> void:
 	assert_true(word_bank.has_duplicate_letters("APPLE"), "APPLE has duplicate P's")
 	assert_true(word_bank.has_duplicate_letters("SHEEP"), "SHEEP has duplicate E's")
@@ -47,6 +51,22 @@ func test_is_valid_word() -> void:
 	assert_true(word_bank.is_valid_word("LOGIC"), "LOGIC should be a valid word")
 	assert_true(word_bank.is_valid_word("PLANT"), "PLANT should be a valid word")
 	assert_true(word_bank.is_valid_word("BRICK"), "BRICK should be a valid word")
+
+func test_android_reference_words_are_valid() -> void:
+	assert_true(word_bank.is_valid_word("ADORE"), "ADORE must be valid after Android word bank load")
+	assert_true(word_bank.is_valid_word("THANK"), "THANK must be valid after Android word bank load")
+
+func test_android_export_includes_plain_text_word_list() -> void:
+	var config: ConfigFile = ConfigFile.new()
+	var err: Error = config.load("res://export_presets.cfg")
+	assert_eq(err, OK, "export_presets.cfg should load for Android export verification")
+	if err == OK:
+		var export_filter: String = String(config.get_value("preset.0", "export_filter", ""))
+		var include_filter: String = String(config.get_value("preset.0", "include_filter", ""))
+		var include_patterns: PackedStringArray = include_filter.split(",", false)
+		var includes_word_text: bool = include_patterns.has("*.txt") or include_patterns.has("assets/words/words.txt") or include_patterns.has("res://assets/words/words.txt")
+		assert_eq(export_filter, "all_resources", "Android export should continue using all_resources mode")
+		assert_true(includes_word_text, "Android export include_filter must explicitly package the plain-text word list")
 
 func test_all_sample_words_are_isograms() -> void:
 	# Test 500 deterministic picks to ensure none contain duplicate letters

@@ -634,4 +634,12 @@ This document outlines the manual test cases used to verify the requirements out
   5. (Optional) Upload the bundle and its corresponding native debug symbols and mapping file to Google Play Console App Bundle Explorer.
 - **Expected Result:** Google Play Console accepts the debug symbols and mapping file without throwing missing native debug symbols or missing obfuscation file warnings.
 
+### Test 6.3: Android Runtime Dictionary Packaging & Startup Validation
+- **Requirement(s):** REQ-9.3
+- **Steps:**
+  1. Export an Android APK or AAB using the configured Android export preset (`game/export_presets.cfg`) with the runtime dictionary include filter enabled.
+  2. Install the build on an Android device or emulator and launch either Continuous Play or Daily Challenge from a cold start.
+  3. Verify the startup log reports a non-empty dictionary load, such as `WordBank: Loaded <n> unique 5-letter isograms.`, and that no `push_error(...)` message reports an empty or missing word list.
+  4. Enter the reference words `ADORE` and `THANK` during gameplay.
+- **Expected Result:** The Android build loads a non-empty runtime dictionary on startup, both reference words are accepted as valid guesses, and the game no longer rejects every guess with a "word not in list" outcome.
 
