@@ -7,6 +7,7 @@ extends RefCounted
 var failed_count: int = 0
 var passed_count: int = 0
 var current_test_name: String = ""
+var test_root_window: Window = null
 
 func cleanup() -> void:
 	pass

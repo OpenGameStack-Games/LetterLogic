@@ -22,8 +22,9 @@ func _init() -> void:
 		var test_instance: Object = script.new()
 		if not (test_instance is TestBaseScript):
 			continue
-		
+
 		var test_obj: Variant = test_instance
+		test_obj.test_root_window = root
 		var script_name: String = file_path.get_file()
 		print("\nSuite: %s" % script_name)
 		
