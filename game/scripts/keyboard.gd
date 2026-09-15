@@ -13,7 +13,7 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const ROW_1: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
 const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const ROW_3: Array[String] = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
-const KEYBOARD_BOTTOM_MARGIN: int = 70
+const KEYBOARD_BOTTOM_MARGIN: int = 24
 const KEYBOARD_ROW_VERTICAL_SEPARATION: int = 8
 const KEYBOARD_CONTAINER_MIN_HEIGHT: float = (KeyboardKeyScript.KEY_MIN_HEIGHT * 3.0) + (float(KEYBOARD_ROW_VERTICAL_SEPARATION) * 2.0) + float(KEYBOARD_BOTTOM_MARGIN)
 
