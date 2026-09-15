@@ -137,6 +137,25 @@ This document outlines the manual test cases used to verify the requirements out
 - **Expected Result:** Upon winning or losing in both Continuous Play and Daily Challenge modes, the game waits ~1.5 seconds for the staggered tile reveal animation to complete across all 5 columns before displaying the Game Over modal. When the modal appears, it plays a coordinated entrance animation (fade in and scale pop with back-ease overshoot from 0.8x to 1.0x over 0.3s) centered around its midpoint.
 
 ### Test 1.10: Main Game Portrait Layout, Board Visibility & Keyboard Containment on Android
+
+### Test 1.10b: Representative Portrait Screenshots — Continuous Play & Daily Challenge
+- **Requirement(s):** REQ-4.1, REQ-4.2, REQ-8.7
+- **Purpose:** Capture visual confirmation that the MainGame portrait-first proportional layout renders correctly across representative phone and tablet portrait sizes for both Continuous Play and Daily Challenge modes.
+- **Representative Viewports:** 360x800 (small phone), 412x915 (typical phone), 1080x2400 (tall phone), 1284x2778 (large phone/phablet), 1536x2048 (tablet portrait)
+- **Steps:**
+  1. Launch the game in the Godot Editor or on a physical device and open the MainGame scene in Continuous Play mode.
+  2. For each representative viewport above:
+     a. If using the Editor, resize the editor play window to the exact resolution and orientation; if on a device/emulator, set device rotation to portrait and select the matching device profile (or take a screenshot and crop to the resolution for documentation).
+     b. Verify the top header (mode label, timer, back/stats buttons) is fully visible and not clipped by cutouts.
+     c. Verify the on-screen keyboard shows all keys (three rows), keys remain readable (letters not truncated), and key touch heights remain comfortably clickable.
+     d. Verify the BoardArea is centered/fills the middle region and remains visually prominent (at least ~30% of viewport height for the board region).
+     e. Verify there is no overlap between BoardArea and KeyboardArea: tiles must never be obscured by keys.
+     f. Verify that the bottom area below the keyboard contains only the explicit bottom breathing buffer (a small spacer) and no large blank gap.
+     g. Capture a screenshot for each viewport showing the full main screen (header → board → keyboard → bottom buffer).
+  3. Repeat steps 1–2 for Daily Challenge mode.
+- **Expected Result:** For every representative viewport, the keyboard is readable and usable (no squashed keys), board and keyboard never overlap, board occupies the middle region, only the bottom breathing buffer remains under the keyboard (no large blank region), and screenshots demonstrate consistent layout across Continuous Play and Daily Challenge.
+
+(Continue with the existing Test 1.10 content below.)
 - **Requirement(s):** REQ-8.7, REQ-8.9, REQ-8.18
 - **Steps:**
   1. Install the APK on a physical Android device or emulator and verify the main game scene in each of these portrait viewports: 360x640 (16:9), 412x915 (19.5:9), 360x800 (20:9), and 768x1024 (4:3).

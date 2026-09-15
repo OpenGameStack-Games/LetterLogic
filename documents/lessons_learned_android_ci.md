@@ -67,3 +67,13 @@ Mixing a flow-managed `VBoxContainer` with a separately anchored keyboard block 
 ## 13. Main Game Portrait Layout Needs Container-Owned Flow, Not Rigid Keyboard Offsets
 The Main Game overlap regression showed that a plain `Control` board wrapper, a rigid keyboard wrapper, and fixed keyboard/tile sizing can trick `VBoxContainer` into under-allocating height on tall portrait devices. When that happens, the keyboard steals space from the board and can bleed below the viewport even if the top safe area is handled correctly.
 **Fix:** Give the board its own `AspectRatioContainer`, let the keyboard own only a flexible minimum height, scale tile and key typography from the actual allocated rect, and apply both top and bottom safe-area margins so portrait Android devices keep all six board rows visible without overlap.
+
+## 14. Deterministic Layout-Plan Tests vs. Frame-Based Integration Tests
+A deterministic layout-region helper that computes the planned rects for header, board, keyboard, and breathing buffers allows unit tests to validate layout math without depending on an asynchronous rendered frame. This approach makes automated CI fast, deterministic, and cross-platform.
+
+**Trade-offs & Recommendation:**
+- Deterministic layout-plan tests are sufficient to catch regressions in the layout calculations (ratios, clamping, ordering, and non-overlap guarantees). They should be the baseline for CI and PR acceptance.
+- However, engine-specific rendering, font metrics, and theme-driven layout adjustments can produce small visual differences at runtime. For pixel-perfect or animation/transition-sensitive validations (e.g., toast fade timings, staggered reveals, or font rendering quirks on certain devices), add frame-based integration tests or manual verification steps in `documents/manual_testing.md`.
+- If additional confidence is required, add a small set of end-to-end integration tests that run inside the Godot test runner and await a frame or two (e.g., using `yield(get_tree(), "idle_frame")`) before reading `get_global_rect()` values to validate actual rendered sizes on a CI agent with the target platform's render environment.
+
+This balances fast, deterministic CI with a path for manual and frame-based validation where device-specific rendering differences matter.

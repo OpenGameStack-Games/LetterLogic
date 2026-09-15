@@ -25,6 +25,7 @@ const KEYBOARD_ROW_STAGGER_MIN: int = 8
 const KEYBOARD_ROW_STAGGER_MAX: int = 16
 const KEY_STANDARD_MIN_WIDTH: float = 24.0
 const KEY_ACTION_MIN_WIDTH: float = 44.0
+const KEY_TOUCH_HEIGHT_VIEWPORT_RATIO: float = 0.066
 
 var keys_by_letter: Dictionary = {} # String (letter) -> KeyboardKey
 var vbox_container: VBoxContainer = null
@@ -112,7 +113,7 @@ func _notification(what: int) -> void:
 func get_responsive_minimum_height() -> float:
 	var row_gap: int = _get_row_separation()
 	var bottom_gap: int = _get_bottom_margin()
-	return (KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT * 3.0) + (float(row_gap) * 2.0) + float(bottom_gap)
+	return (_get_key_touch_height() * 3.0) + (float(row_gap) * 2.0) + float(bottom_gap)
 
 func _refresh_responsive_metrics() -> void:
 	var margin_container: MarginContainer = get_node_or_null("MarginContainer") as MarginContainer
@@ -132,7 +133,7 @@ func _refresh_responsive_metrics() -> void:
 					if child is KeyboardKey:
 						var key: KeyboardKey = child as KeyboardKey
 						var min_width: float = KEY_ACTION_MIN_WIDTH if key.text == "ENTER" or key.text == "⌫" else KEY_STANDARD_MIN_WIDTH
-						key.custom_minimum_size = Vector2(min_width, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
+						key.custom_minimum_size = Vector2(min_width, _get_key_touch_height())
 						key.update_minimum_size()
 						if key.has_method("_refresh_font_size"):
 							key.call("_refresh_font_size")
@@ -163,6 +164,12 @@ func _get_key_separation() -> int:
 	if viewport_size.x <= 0.0:
 		return KEYBOARD_KEY_SEPARATION_MIN
 	return int(round(clampf(viewport_size.x * 0.008, float(KEYBOARD_KEY_SEPARATION_MIN), float(KEYBOARD_KEY_SEPARATION_MAX))))
+
+func _get_key_touch_height() -> float:
+	var viewport_size: Vector2 = _get_viewport_size()
+	if viewport_size.y <= 0.0:
+		return KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT
+	return clampf(viewport_size.y * KEY_TOUCH_HEIGHT_VIEWPORT_RATIO, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT, KeyboardKeyScript.KEY_MAX_TOUCH_HEIGHT)
 
 func _get_side_margin() -> int:
 	var viewport_size: Vector2 = _get_viewport_size()

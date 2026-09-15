@@ -23,15 +23,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 70
+theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_bottom = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 0
+
+[node name="TopBreathingBuffer" type="Control" parent="ContentMargin/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 0
 
 [node name="Header" type="HBoxContainer" parent="ContentMargin/VBoxContainer"]
 custom_minimum_size = Vector2(0, 56)
@@ -78,6 +83,7 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="ToastOverlay" type="CenterContainer" parent="ContentMargin/VBoxContainer"]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 0
@@ -114,13 +120,19 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="KeyboardArea" type="MarginContainer" parent="ContentMargin/VBoxContainer"]
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 3
 
 [node name="Keyboard" parent="ContentMargin/VBoxContainer/KeyboardArea" instance=ExtResource("3_keyboard")]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="BottomBreathingBuffer" type="Control" parent="ContentMargin/VBoxContainer"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_vertical = 0
 
 [node name="GameOverModal" type="ColorRect" parent="."]
 visible = false

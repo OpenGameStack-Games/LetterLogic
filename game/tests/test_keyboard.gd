@@ -124,7 +124,7 @@ func test_absent_and_disabled_key_colors() -> void:
 
 func test_keyboard_key_dimensions_and_typography() -> void:
 	var key_a: Node = keyboard.get_key("A")
-	assert_eq(KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT, 44.0, "Keyboard keys should use a flexible 44px minimum touch height")
+	assert_eq(KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT, 44.0, "Keyboard keys should use a 44px absolute touch target floor")
 	assert_eq(key_a.custom_minimum_size.y, 44.0, "Key minimum height should be the flexible touch target floor")
 	assert_true(key_a.get_theme_font_size("font_size") >= KeyboardKeyScript.FONT_SIZE_LETTER_MIN, "Standard letter key font size should stay readable at minimum height")
 
@@ -197,8 +197,8 @@ func test_main_game_uses_flow_based_keyboard_wrapper() -> void:
 		assert_eq(board_area.get_parent(), keyboard_area.get_parent(), "BoardArea and KeyboardArea should be siblings in one VBoxContainer flow")
 		assert_true(board_area.get_index() < keyboard_area.get_index(), "BoardArea should appear before KeyboardArea in the vertical flow")
 		assert_true(board_area is AspectRatioContainer, "BoardArea should be an AspectRatioContainer")
-		assert_eq(keyboard_area.custom_minimum_size.y, 0.0, "KeyboardArea should not use a hardcoded minimum height")
-		assert_eq(keyboard_area.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "KeyboardArea should claim only its intrinsic keyboard height")
+		assert_true(keyboard_area.custom_minimum_size.y >= 160.0, "KeyboardArea should reserve a proportional usable minimum height")
+		assert_eq(keyboard_area.size_flags_vertical, Control.SIZE_EXPAND_FILL, "KeyboardArea should participate in proportional MainGame vertical flow")
 	
 	main_game.free()
 

@@ -8,15 +8,46 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 
-const BASE_CONTENT_MARGIN_TOP: int = 70
-const BASE_CONTENT_MARGIN_SIDE: int = 16
-const BASE_CONTENT_MARGIN_BOTTOM: int = 16
+const CONTENT_MARGIN_SIDE_MIN: int = 12
+const CONTENT_MARGIN_SIDE_MAX: int = 24
+const CONTENT_MARGIN_SIDE_RATIO: float = 0.04
+
+# Portrait layout allocation targets. Safe-area insets stay on ContentMargin; these
+# explicit flow children provide breathing room so the board and keyboard remain balanced.
+const TOP_BUFFER_HEIGHT_RATIO: float = 0.04
+const TOP_BUFFER_HEIGHT_MIN: int = 24
+const TOP_BUFFER_HEIGHT_MAX: int = 72
+const HEADER_HEIGHT_RATIO: float = 0.11
+const HEADER_HEIGHT_MIN: int = 76
+const HEADER_HEIGHT_MAX: int = 320
+const KEYBOARD_HEIGHT_RATIO: float = 0.22
+const KEYBOARD_HEIGHT_MIN: int = 160
+const KEYBOARD_HEIGHT_MAX: int = 620
+const BOTTOM_BUFFER_HEIGHT_RATIO: float = 0.035
+const BOTTOM_BUFFER_HEIGHT_MIN: int = 20
+const BOTTOM_BUFFER_HEIGHT_MAX: int = 72
+const CONTENT_SEPARATION_RATIO: float = 0.008
+const CONTENT_SEPARATION_MIN: int = 4
+const CONTENT_SEPARATION_MAX: int = 12
+const BOARD_STRETCH_RATIO: float = 2.7
+const KEYBOARD_STRETCH_RATIO: float = 1.0
+const HEADER_BUTTON_SIZE_MIN: int = 48
+const HEADER_BUTTON_SIZE_MAX: int = 64
 
 @onready var content_margin: MarginContainer = $ContentMargin
 @onready var content_container: VBoxContainer = $ContentMargin/VBoxContainer
+@onready var top_breathing_buffer: Control = $ContentMargin/VBoxContainer/TopBreathingBuffer
+@onready var header: Control = $ContentMargin/VBoxContainer/Header
+@onready var board_area: Control = $ContentMargin/VBoxContainer/BoardArea
+@onready var keyboard_area: Control = $ContentMargin/VBoxContainer/KeyboardArea
+@onready var bottom_breathing_buffer: Control = $ContentMargin/VBoxContainer/BottomBreathingBuffer
 @onready var game_board: Control = $ContentMargin/VBoxContainer/BoardArea/GameBoard
 @onready var game_keyboard: Control = $ContentMargin/VBoxContainer/KeyboardArea/Keyboard
 @onready var mode_label: Label = $ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel
+@onready var title_label: Label = $ContentMargin/VBoxContainer/Header/TitleBox/TitleLabel
+@onready var timer_label: Label = $ContentMargin/VBoxContainer/Header/TitleBox/TimerLabel
+@onready var back_button: Button = $ContentMargin/VBoxContainer/Header/BackButton
+@onready var stats_button: Button = $ContentMargin/VBoxContainer/Header/StatsButton
 @onready var toast_label: Label = $ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel
 @onready var toast_overlay: Control = $ContentMargin/VBoxContainer/ToastOverlay
 @onready var game_over_modal: Control = $GameOverModal
@@ -35,6 +66,7 @@ func _ready() -> void:
 	if toast_timer == null and toast_overlay != null:
 		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null:
+		toast_overlay.visible = false
 		toast_overlay.modulate.a = 0.0
 	if game_over_modal != null:
 		game_over_modal.visible = false
@@ -47,11 +79,170 @@ func _apply_safe_area_insets() -> void:
 		content_margin = get_node_or_null("ContentMargin") as MarginContainer
 	if content_container == null:
 		content_container = get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
-	if content_margin != null:
-		content_margin.add_theme_constant_override("margin_left", BASE_CONTENT_MARGIN_SIDE)
-		content_margin.add_theme_constant_override("margin_right", BASE_CONTENT_MARGIN_SIDE)
-		var viewport_height: int = int(round(get_viewport_rect().size.y if is_inside_tree() else size.y))
-		SafeAreaLayout.apply_margin_container_vertical_safe_margins(content_margin, BASE_CONTENT_MARGIN_TOP, BASE_CONTENT_MARGIN_BOTTOM, viewport_height)
+	_apply_proportional_portrait_layout()
+
+func _apply_proportional_portrait_layout() -> void:
+	var viewport_size: Vector2 = size
+	if (viewport_size.x <= 0.0 or viewport_size.y <= 0.0) and is_inside_tree():
+		viewport_size = get_viewport_rect().size
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+		viewport_size = get_rect().size
+	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
+		viewport_size = Vector2(360.0, 800.0)
+
+	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
+	var safe_top: int = maxi(safe_area.position.y, 0)
+	var safe_bottom_edge: int = safe_area.position.y + safe_area.size.y
+	var safe_bottom: int = maxi(int(round(viewport_size.y)) - safe_bottom_edge, 0)
+	if not _is_safe_area_compatible_with_viewport(safe_area, viewport_size):
+		safe_top = 0
+		safe_bottom = 0
+	var available_height: float = maxf(viewport_size.y - float(safe_top + safe_bottom), 1.0)
+
+	_cache_layout_nodes()
+	_apply_content_margin(viewport_size, safe_top, safe_bottom)
+	_apply_content_flow_metrics(available_height)
+	_apply_header_metrics(viewport_size, available_height)
+
+	if board_area != null:
+		board_area.size_flags_vertical = SIZE_EXPAND_FILL
+		board_area.size_flags_stretch_ratio = BOARD_STRETCH_RATIO
+		board_area.custom_minimum_size = Vector2.ZERO
+		board_area.update_minimum_size()
+
+	if keyboard_area != null:
+		keyboard_area.size_flags_vertical = SIZE_EXPAND_FILL
+		keyboard_area.size_flags_stretch_ratio = KEYBOARD_STRETCH_RATIO
+		keyboard_area.custom_minimum_size = Vector2(0.0, _ratio_clamped(available_height, KEYBOARD_HEIGHT_RATIO, float(KEYBOARD_HEIGHT_MIN), float(KEYBOARD_HEIGHT_MAX)))
+		keyboard_area.update_minimum_size()
+
+	if game_keyboard != null:
+		game_keyboard.size_flags_vertical = SIZE_EXPAND_FILL
+		if game_keyboard.has_method("_refresh_responsive_metrics"):
+			game_keyboard.call("_refresh_responsive_metrics")
+	if game_board != null:
+		game_board.size_flags_vertical = SIZE_EXPAND_FILL
+		if game_board.has_method("_refresh_responsive_metrics"):
+			game_board.call("_refresh_responsive_metrics")
+
+	if content_container != null:
+		content_container.queue_sort()
+
+func _cache_layout_nodes() -> void:
+	if top_breathing_buffer == null:
+		top_breathing_buffer = get_node_or_null("ContentMargin/VBoxContainer/TopBreathingBuffer") as Control
+	if header == null:
+		header = get_node_or_null("ContentMargin/VBoxContainer/Header") as Control
+	if board_area == null:
+		board_area = get_node_or_null("ContentMargin/VBoxContainer/BoardArea") as Control
+	if keyboard_area == null:
+		keyboard_area = get_node_or_null("ContentMargin/VBoxContainer/KeyboardArea") as Control
+	if bottom_breathing_buffer == null:
+		bottom_breathing_buffer = get_node_or_null("ContentMargin/VBoxContainer/BottomBreathingBuffer") as Control
+	if game_board == null:
+		game_board = get_node_or_null("ContentMargin/VBoxContainer/BoardArea/GameBoard") as Control
+	if game_keyboard == null:
+		game_keyboard = get_node_or_null("ContentMargin/VBoxContainer/KeyboardArea/Keyboard") as Control
+	if title_label == null:
+		title_label = get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/TitleLabel") as Label
+	if mode_label == null:
+		mode_label = get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel") as Label
+	if timer_label == null:
+		timer_label = get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/TimerLabel") as Label
+	if back_button == null:
+		back_button = get_node_or_null("ContentMargin/VBoxContainer/Header/BackButton") as Button
+	if stats_button == null:
+		stats_button = get_node_or_null("ContentMargin/VBoxContainer/Header/StatsButton") as Button
+
+func _apply_content_margin(viewport_size: Vector2, safe_top: int, safe_bottom: int) -> void:
+	if content_margin == null:
+		return
+	var side_margin: int = int(round(clampf(viewport_size.x * CONTENT_MARGIN_SIDE_RATIO, float(CONTENT_MARGIN_SIDE_MIN), float(CONTENT_MARGIN_SIDE_MAX))))
+	content_margin.add_theme_constant_override("margin_left", side_margin)
+	content_margin.add_theme_constant_override("margin_right", side_margin)
+	content_margin.add_theme_constant_override("margin_top", safe_top)
+	content_margin.add_theme_constant_override("margin_bottom", safe_bottom)
+
+func _apply_content_flow_metrics(available_height: float) -> void:
+	if content_container != null:
+		var separation: int = int(round(clampf(available_height * CONTENT_SEPARATION_RATIO, float(CONTENT_SEPARATION_MIN), float(CONTENT_SEPARATION_MAX))))
+		content_container.add_theme_constant_override("separation", separation)
+
+	if top_breathing_buffer != null:
+		top_breathing_buffer.size_flags_vertical = SIZE_SHRINK_BEGIN
+		top_breathing_buffer.custom_minimum_size = Vector2(0.0, _ratio_clamped(available_height, TOP_BUFFER_HEIGHT_RATIO, float(TOP_BUFFER_HEIGHT_MIN), float(TOP_BUFFER_HEIGHT_MAX)))
+		top_breathing_buffer.update_minimum_size()
+
+	if bottom_breathing_buffer != null:
+		bottom_breathing_buffer.size_flags_vertical = SIZE_SHRINK_BEGIN
+		bottom_breathing_buffer.custom_minimum_size = Vector2(0.0, _ratio_clamped(available_height, BOTTOM_BUFFER_HEIGHT_RATIO, float(BOTTOM_BUFFER_HEIGHT_MIN), float(BOTTOM_BUFFER_HEIGHT_MAX)))
+		bottom_breathing_buffer.update_minimum_size()
+
+func _apply_header_metrics(viewport_size: Vector2, available_height: float) -> void:
+	if header != null:
+		header.size_flags_vertical = SIZE_SHRINK_BEGIN
+		header.custom_minimum_size = Vector2(0.0, _ratio_clamped(available_height, HEADER_HEIGHT_RATIO, float(HEADER_HEIGHT_MIN), float(HEADER_HEIGHT_MAX)))
+		header.update_minimum_size()
+
+	var title_size: int = int(round(clampf(viewport_size.x * 0.10, 34.0, 48.0)))
+	var mode_size: int = int(round(clampf(viewport_size.x * 0.052, 18.0, 28.0)))
+	var timer_size: int = int(round(clampf(viewport_size.x * 0.06, 20.0, 32.0)))
+	var button_size: int = int(round(clampf(available_height * 0.065, float(HEADER_BUTTON_SIZE_MIN), float(HEADER_BUTTON_SIZE_MAX))))
+
+	if title_label != null:
+		title_label.add_theme_font_size_override("font_size", title_size)
+	if mode_label != null:
+		mode_label.add_theme_font_size_override("font_size", mode_size)
+	if timer_label != null:
+		timer_label.add_theme_font_size_override("font_size", timer_size)
+	if back_button != null:
+		back_button.custom_minimum_size = Vector2(button_size, button_size)
+		back_button.add_theme_font_size_override("font_size", int(round(button_size * 0.55)))
+		back_button.update_minimum_size()
+	if stats_button != null:
+		stats_button.custom_minimum_size = Vector2(button_size, button_size)
+		stats_button.update_minimum_size()
+
+func _ratio_clamped(height_basis: float, ratio: float, min_value: float, max_value: float) -> float:
+	return clampf(height_basis * ratio, min_value, max_value)
+
+func _is_safe_area_compatible_with_viewport(safe_area: Rect2i, viewport_size: Vector2) -> bool:
+	if safe_area.size.x <= 0 or safe_area.size.y <= 0:
+		return false
+	var width_ratio: float = float(safe_area.size.x) / maxf(viewport_size.x, 1.0)
+	var height_ratio: float = float(safe_area.size.y) / maxf(viewport_size.y, 1.0)
+	return width_ratio >= 0.75 and width_ratio <= 1.25 and height_ratio >= 0.75 and height_ratio <= 1.25
+
+func get_portrait_layout_region_rects(viewport_size: Vector2) -> Dictionary:
+	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
+	var safe_top: int = maxi(safe_area.position.y, 0)
+	var safe_bottom_edge: int = safe_area.position.y + safe_area.size.y
+	var safe_bottom: int = maxi(int(round(viewport_size.y)) - safe_bottom_edge, 0)
+	if not _is_safe_area_compatible_with_viewport(safe_area, viewport_size):
+		safe_top = 0
+		safe_bottom = 0
+
+	var side_margin: float = clampf(viewport_size.x * CONTENT_MARGIN_SIDE_RATIO, float(CONTENT_MARGIN_SIDE_MIN), float(CONTENT_MARGIN_SIDE_MAX))
+	var available_height: float = maxf(viewport_size.y - float(safe_top + safe_bottom), 1.0)
+	var separation: float = clampf(available_height * CONTENT_SEPARATION_RATIO, float(CONTENT_SEPARATION_MIN), float(CONTENT_SEPARATION_MAX))
+	var top_height: float = _ratio_clamped(available_height, TOP_BUFFER_HEIGHT_RATIO, float(TOP_BUFFER_HEIGHT_MIN), float(TOP_BUFFER_HEIGHT_MAX))
+	var header_height: float = _ratio_clamped(available_height, HEADER_HEIGHT_RATIO, float(HEADER_HEIGHT_MIN), float(HEADER_HEIGHT_MAX))
+	var keyboard_height: float = _ratio_clamped(available_height, KEYBOARD_HEIGHT_RATIO, float(KEYBOARD_HEIGHT_MIN), float(KEYBOARD_HEIGHT_MAX))
+	var bottom_height: float = _ratio_clamped(available_height, BOTTOM_BUFFER_HEIGHT_RATIO, float(BOTTOM_BUFFER_HEIGHT_MIN), float(BOTTOM_BUFFER_HEIGHT_MAX))
+	var content_width: float = maxf(viewport_size.x - (side_margin * 2.0), 1.0)
+	var board_height: float = maxf(available_height - top_height - header_height - keyboard_height - bottom_height - (separation * 4.0), 1.0)
+	var y: float = float(safe_top)
+	var regions: Dictionary = {}
+	regions["top"] = Rect2(Vector2(side_margin, y), Vector2(content_width, top_height))
+	y += top_height + separation
+	regions["header"] = Rect2(Vector2(side_margin, y), Vector2(content_width, header_height))
+	y += header_height + separation
+	regions["board"] = Rect2(Vector2(side_margin, y), Vector2(content_width, board_height))
+	y += board_height + separation
+	regions["keyboard"] = Rect2(Vector2(side_margin, y), Vector2(content_width, keyboard_height))
+	y += keyboard_height + separation
+	regions["bottom"] = Rect2(Vector2(side_margin, y), Vector2(content_width, bottom_height))
+	return regions
 
 func check_and_restore_completed_game(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
@@ -114,6 +305,7 @@ func show_toast(msg: String) -> void:
 	if toast_timer == null and toast_overlay != null:
 		toast_timer = toast_overlay.find_child("ToastTimer", true, false) as Timer
 	if toast_overlay != null and toast_label != null:
+		toast_overlay.visible = true
 		toast_label.text = msg
 		var tween: Tween = create_tween()
 		tween.tween_property(toast_overlay, "modulate:a", 1.0, 0.15)
@@ -126,6 +318,11 @@ func _on_toast_timer_timeout() -> void:
 	if toast_overlay != null:
 		var tween: Tween = create_tween()
 		tween.tween_property(toast_overlay, "modulate:a", 0.0, 0.3)
+		tween.finished.connect(_hide_toast_overlay)
+
+func _hide_toast_overlay() -> void:
+	if toast_overlay != null:
+		toast_overlay.visible = false
 
 func _on_game_won(attempts: int, secret: String, gm_override: Node = null, dm_override: Node = null, sm_override: Node = null) -> void:
 	var titles: Array[String] = ["Genius!", "Magnificent!", "Impressive!", "Splendid!", "Great!", "Phew!"]
