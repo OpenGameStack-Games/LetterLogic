@@ -136,15 +136,15 @@ This document outlines the manual test cases used to verify the requirements out
   6. Confirm that the delay and entrance animation execute identically and reliably in both Continuous Play and Daily Challenge modes.
 - **Expected Result:** Upon winning or losing in both Continuous Play and Daily Challenge modes, the game waits ~1.5 seconds for the staggered tile reveal animation to complete across all 5 columns before displaying the Game Over modal. When the modal appears, it plays a coordinated entrance animation (fade in and scale pop with back-ease overshoot from 0.8x to 1.0x over 0.3s) centered around its midpoint.
 
-### Test 1.10: Virtual Keyboard Key Height & Bottom Padding on Android
+### Test 1.10: Virtual Keyboard Key Height & Bottom Margin Calibration on Android
 - **Requirement(s):** REQ-2.4, REQ-8.7
 - **Steps:**
-  1. Install the APK on a physical tall portrait Android device, such as a 20:9 Samsung S22-class phone.
-   2. Start a game in Continuous Play and observe the on-screen virtual keyboard.
-   3. Confirm the letter keys are visibly taller than the previous build and that the bottom row has comfortable breathing room from the bottom edge of the screen.
-   4. Submit a few guesses and verify the keyboard does not clip, overlap, or crowd the board tiles above it.
-   5. Repeat the same visual check in Daily Challenge.
-- **Expected Result:** The on-screen keyboard keys are approximately 50% taller than the old layout, the keyboard bottom padding leaves roughly half a key height of space between the last row and the device edge, and the taller keyboard remains fully contained without clipping or overlapping the game board in either Continuous Play or Daily Challenge.
+  1. Install the APK on a physical portrait Android device, such as a Samsung Galaxy S22 or simulated 20:9 / 16:9 screen.
+  2. Start a game in Continuous Play and observe the on-screen virtual keyboard.
+  3. Confirm the letter keys maintain comfortable tap targets and the bottom row has a 24px bottom margin (`margin_bottom = 24`) providing clearance from the bottom edge of the display.
+  4. Submit a few guesses and verify the keyboard does not clip, overlap, or crowd the board tiles above it.
+  5. Repeat the same visual check in Daily Challenge.
+- **Expected Result:** The on-screen keyboard keys are comfortably sized, the keyboard bottom margin provides 24px of clearance preventing bottom-row clipping on compact screens, and the keyboard remains fully contained without clipping or overlapping the game board in either Continuous Play or Daily Challenge.
 
 ---
 
@@ -614,6 +614,22 @@ This document outlines the manual test cases used to verify the requirements out
   5. Verify the background layer (`res://assets/icons/icon_background.png`, 432x432) seamlessly fills the outer mask shape with the dark monochrome background color (`#121213`).
   6. (Optional) Touch and drag the icon or trigger launcher parallax motions to verify that the foreground and background layers animate smoothly with native depth.
 - **Expected Result:** The application launcher icon adapts dynamically to the Android system mask shape, presenting the mascot centered with sharp contrast against the solid background with zero distorted borders or clipped art.
+
+### Test 5.18: Game Board Vertical Space Utilization & Full Keyboard Visibility on Android
+- **Requirement(s):** REQ-8.7, REQ-8.9
+- **Steps:**
+  1. Launch the game on a physical Android device (e.g., Samsung Galaxy S22 or compact portrait smartphone) or simulate a short aspect ratio portrait window in the Godot Editor.
+  2. Start a puzzle in Continuous Play or Daily Challenge mode.
+  3. Inspect the vertical layout of the main game screen:
+     - **Game Board:** Verify that the `GameBoard` grid expands to fill the available vertical space in `BoardArea` between the header/toast and keyboard without leaving an empty dark gap above the tiles. Verify the 5:6 aspect ratio is preserved and tiles remain square.
+     - **Keyboard Visibility:** Verify that all three keyboard rows are completely visible on screen without clipping or cutoff at the bottom:
+       - Row 1: `Q W E R T Y U I O P`
+       - Row 2: `A S D F G H J K L`
+       - Row 3: `ENTER  Z X C V B N M  ⌫`
+     - **Bottom Margin:** Confirm the 24px bottom margin provides clean spacing above the system navigation bar or screen bottom without truncating row 3 keys.
+     - **Non-Overlap:** Confirm that the header, board area, and keyboard wrapper remain strictly sequential in the vertical layout hierarchy without overlapping or crowding each other during typing and gameplay.
+  4. Test on a wider portrait tablet screen (4:3 or 16:10) and confirm the board expands proportionally and all three keyboard rows remain fully visible.
+- **Expected Result:** On physical Android devices and simulated portrait aspect ratios, the game board grid fills the vertical space between the header and keyboard without leaving an empty dark gap, all three rows of the virtual keyboard are fully visible without bottom clipping, and the entire layout remains unclipped and non-overlapping.
 
 ---
 
