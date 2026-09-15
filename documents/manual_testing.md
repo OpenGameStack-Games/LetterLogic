@@ -651,6 +651,27 @@ This document outlines the manual test cases used to verify the requirements out
   4. Test on a wider portrait tablet screen (4:3 or 16:10) and confirm the board expands proportionally and all three keyboard rows remain fully visible.
 - **Expected Result:** On physical Android devices and simulated portrait aspect ratios, the game board grid fills the vertical space between the header and keyboard without leaving an empty dark gap, all three rows of the virtual keyboard are fully visible without bottom clipping, and the entire layout remains unclipped and non-overlapping.
 
+### Test 5.19: How to Play Modal Dynamic Shrink-to-Fit Text Scaling & Non-Scrolling Presentation
+- **Requirement(s):** REQ-8.6
+- **Steps:**
+  1. Launch the application to the Main Menu (`res://scenes/main_menu.tscn`).
+  2. Tap the "How to Play" button (`HowToPlayButton`) to open the instructions modal (`HowToPlayModal`).
+  3. Inspect the modal visual presentation on a standard 720x1280 viewport:
+     - Verify the title "HOW TO PLAY" displays at 84px font size.
+     - Verify the body text (`RulesText`) displays at the base 32px font size (`normal_font_size = 32`, `bold_font_size = 32`).
+     - Verify the "Got It!" button displays at 36px font size with 80px minimum height.
+     - Verify all instructional text, color indicators, and bullet points fit cleanly within the modal panel.
+  4. Test scrolling behavior:
+     - Attempt to scroll the text vertically by dragging or using the mouse wheel / touch gestures over `RulesText`.
+     - Confirm that vertical scrolling is completely disabled (`scroll_active = false`) and no scrollbar appears.
+  5. Test dynamic text scaling on a compact portrait display or reduced window height (e.g. Samsung Galaxy S22 or compact Android smartphone, or by resizing the game window vertically in windowed mode):
+     - Resize the window to a shorter height or run on a compact portrait device.
+     - Reopen or observe the How to Play modal.
+     - Verify that `RulesText` dynamically decreases its font size (stepping down both normal and bold sizes proportionally towards the 14px safety floor) so the entire rules text fits within the available vertical container height.
+     - Confirm that no text is clipped, truncated, or pushed behind the "Got It!" button.
+  6. Tap "Got It!" to dismiss the modal and confirm return to the Main Menu.
+- **Expected Result:** The How to Play modal body text dynamically scales its font size down on compact or shorter portrait displays to fit the available vertical budget without text truncation or clipping. Vertical scrolling is completely disabled (`scroll_active = false`), eliminating the need to scroll to read the complete rules, while preserving the fixed title, button sizing, and 24px inner margins.
+
 ---
 
 ## 6. Build, CI/CD & Platform Packaging

@@ -23,13 +23,7 @@ func _scale_text_to_fit() -> void:
 	var current_size: int = BASE_FONT_SIZE
 	_set_font_sizes(current_size)
 	
-	# Force an update so get_content_height() is accurate
-	# But get_content_height() in Godot 4 might need a frame or we can just call it
-	# Actually, get_content_height() updates immediately if we don't wait? 
-	# Wait, RichTextLabel needs to reshape. We might need to wait for idle frame in some cases,
-	# but setting theme override font size should be synchronous enough, or not?
-	# Let's check Godot 4 docs. Usually changing theme overrides requires redrawing.
-	
+	# Dynamically decrement font size until content fits within available vertical space.
 	while current_size > MIN_FONT_SIZE and _get_current_content_height() > size.y:
 		current_size -= 1
 		_set_font_sizes(current_size)
