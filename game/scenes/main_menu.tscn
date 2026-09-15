@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" path="res://assets/icons/AudrainEntertainment.png" id="5_audrain_logo"]
 [ext_resource type="Texture2D" path="res://assets/icons/github_icon.png" id="6_github_logo"]
 [ext_resource type="Texture2D" path="res://assets/icons/web_icon.png" id="7_web_icon"]
+[ext_resource type="Script" path="res://scripts/rules_text_scaler.gd" id="8_rules_scaler"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -150,6 +151,7 @@ text = "HOW TO PLAY"
 horizontal_alignment = 1
 
 [node name="RulesText" type="RichTextLabel" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox"]
+script = ExtResource("8_rules_scaler")
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 32
@@ -168,7 +170,7 @@ text = "[b]Guess the secret word in 6 attempts.[/b]
 [b]Modes:[/b]
 • [b]Daily Challenge:[/b] One synchronized word per day (resets at midnight UTC).
 • [b]Continuous Play:[/b] Play as many words as you like!"
-scroll_active = true
+scroll_active = false
 
 [node name="CloseButton" type="Button" parent="HowToPlayModal/MarginContainer/Panel/ContentMargin/VBox"]
 custom_minimum_size = Vector2(0, 80)
