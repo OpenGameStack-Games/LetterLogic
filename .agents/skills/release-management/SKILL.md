@@ -70,6 +70,7 @@ Follow these steps strictly in order:
 5. **Draft Release Notes:**
    - If the CI run succeeded, generate a markdown file (e.g., `release_notes.md`) containing a summary of the changes since the last release.
    - You can use `gh pr list --state merged --limit 10` to see recently merged PRs to build the changelog.
+   - **CRITICAL:** When saving the file in PowerShell, you MUST explicitly specify `-Encoding UTF8` (e.g., `Set-Content -Path release_notes.md -Value $content -Encoding UTF8`). Otherwise, Windows PowerShell defaults to UTF-16, which corrupts the GitHub release text.
 
 6. **Create GitHub Release:**
    - Create the official release using the GitHub CLI:
