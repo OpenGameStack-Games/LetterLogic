@@ -4,7 +4,7 @@
   <img src="game/assets/icons/icon.png" alt="LetterLogic Mascot" width="160" height="160" />
 </p>
 
-LetterLogic is a Wordle-inspired word-guessing game built with the [Godot Engine](https://godotengine.org/) (4.x). 
+LetterLogic is a Wordle-inspired word-guessing game built with the [Godot Engine](https://godotengine.org/) (v4.7.2). 
 
 What sets LetterLogic apart is its unique constraint: **all valid guesses and secret words must be 5-letter isograms** (words containing no duplicate letters). This introduces a new layer of deduction and strategy to the familiar core gameplay loop.
 
@@ -31,7 +31,7 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## Getting Started
 1. Clone the repository.
-2. Open the Godot Editor (version 4.x recommended based on `stack.json`).
+2. Open the Godot Editor (v4.7.2 — matches `stack.json`).
 3. Import the `game/project.godot` file.
 4. Press `F5` to run the project.
 
