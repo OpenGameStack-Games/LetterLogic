@@ -360,13 +360,13 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps:**
   1. Launch the game to the Main Menu.
   2. Tap the "How to Play" button to open the instructions modal (`HowToPlayModal`).
-  3. Verify the modal panel container is wrapped in a responsive `MarginContainer` (24px horizontal, 48px vertical margins) spanning the viewport rather than hardcoded fixed pixel offsets.
+  3. Verify the modal panel container is wrapped in a responsive `MarginContainer` (24px horizontal, 48px vertical margins) spanning the viewport rather than hardcoded fixed pixel offsets, and confirm the modal content sits inside an inner 24px left/right inset so the title, rules text, and dismiss button do not touch the panel border.
   4. Inspect the modal typography and heading hierarchy:
      - **Modal Title (`ModalTitle`):** Verify `HOW TO PLAY` renders prominently in a tripled 84px font size centered at the top of the panel.
      - **Instructional Body Text (`RulesText`):** Verify the regular instructional copy renders in a calibrated 32px font size (`normal_font_size = 32`), filling the modal interior legibly.
      - **Section Headings:** Verify bold section headings (`[b]Guess the secret word in 6 attempts.[/b]`, `[b]Tile Colors:[/b]`, `[b]Modes:[/b]`) render at 32px bold font size (`bold_font_size = 32`).
   5. Inspect the dismiss button ("Got It!", `CloseButton`):
-     - Verify the button features an enlarged minimum height of at least 80px (`custom_minimum_size.y >= 80px`), providing a comfortable and ergonomic mobile thumb-tap target.
+     - Verify the button features an enlarged minimum height of at least 80px (`custom_minimum_size.y >= 80px`), providing a comfortable and ergonomic mobile thumb-tap target, while still retaining visible horizontal padding from the panel border.
      - Verify the button font size is enlarged to at least 36px (`font_size >= 36px`), matching the Main Menu secondary utility buttons.
   6. Verify layout spacing and vertical breathing room:
      - Confirm 20px vertical separation between the title, rules text, and dismiss button (`separation = 20`).
@@ -379,7 +379,7 @@ This document outlines the manual test cases used to verify the requirements out
   9. Verify game modes (Daily Challenge with UTC midnight reset, Continuous Play unlimited sandbox) are clearly described.
   10. If tested on smaller displays or with enlarged system font scaling, verify the `RichTextLabel` vertical scrollbar engages cleanly (`scroll_active = true`) without content truncation.
   11. Tap "Got It!" and verify the modal dismisses smoothly with standard button interaction feedback and returns focus to the Main Menu.
-- **Expected Result:** The modal opens adaptively within responsive margins displaying prominent header typography (84px title), calibrated 32px body/headings fitting without vertical scrolling on 720x1280 screens, and an enlarged 80px "Got It" button (36px font). All text is crisp and legible, deduction cues display flat red (`🟥 RED` / `#b53b3b`), fallback scrolling functions smoothly if constrained, and the modal dismisses cleanly.
+- **Expected Result:** The modal opens adaptively within responsive margins displaying prominent header typography (84px title), calibrated 32px body/headings fitting without vertical scrolling on 720x1280 screens, and an enlarged 80px "Got It" button (36px font). The title, rules, and dismiss button all preserve visible left/right inset from the panel border, all text is crisp and legible, deduction cues display flat red (`🟥 RED` / `#b53b3b`), fallback scrolling functions smoothly if constrained, and the modal dismisses cleanly.
 
 ### Test 5.6: Responsive UI Scaling Across Android Portrait Aspect Ratios
 - **Requirement(s):** REQ-8.7
