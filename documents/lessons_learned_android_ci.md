@@ -51,3 +51,7 @@ Google Play requires apps targeting Android 15+ to support 16 KB memory page siz
 ## 9. Native Debug Symbols and Obfuscation Mapping
 Google Play Console flags warnings if native symbols and obfuscation mapping files are not uploaded with the Android App Bundle.
 **Fix:** In `game/export_presets.cfg`, enable `gradle_build/export_debug_symbols=true`. When exporting with Gradle, Godot outputs `*-native-debug-symbols.zip` in the root export directory and Gradle produces `mapping.txt` at `game/android/build/outputs/mapping/release/mapping.txt`. Include these paths in the artifact upload step in `.github/workflows/android_release.yml`.
+
+## 10. Plain Text Runtime Assets Need Explicit Export Filters
+When `export_filter="all_resources"` is used, Godot only packages files it recognizes as exportable resources. Plain text runtime assets such as `res://assets/words/words.txt` do not generate `.import` metadata, so they are silently omitted from Android exports unless `include_filter` explicitly matches them (for example, `*.txt`).
+**Fix:** Treat any `FileAccess`-loaded runtime asset as an export dependency and add an explicit `include_filter` entry for the file type or path. For critical data such as dictionaries, also keep a loud `push_error(...)` path in the loader so empty or missing packaged assets fail fast instead of producing a silent empty state.
