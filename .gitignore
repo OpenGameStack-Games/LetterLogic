@@ -55,3 +55,7 @@ blender_debug_output.txt
 game/android/build/build/
 game/android/build/.gradle/
 game/android/build/app/build/
+__pycache__/
+*.py[cod]
+bundletool.jar
+android-16kb-validation/
