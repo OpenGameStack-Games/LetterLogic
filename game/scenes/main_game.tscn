@@ -15,100 +15,108 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_game_script")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ContentMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 70
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="Header" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Header" type="HBoxContainer" parent="ContentMargin/VBoxContainer"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+size_flags_vertical = 0
 
-[node name="BackButton" type="Button" parent="VBoxContainer/Header"]
+[node name="BackButton" type="Button" parent="ContentMargin/VBoxContainer/Header"]
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 text = "<"
 
-[node name="TitleBox" type="VBoxContainer" parent="VBoxContainer/Header"]
+[node name="TitleBox" type="VBoxContainer" parent="ContentMargin/VBoxContainer/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
+[node name="TitleLabel" type="Label" parent="ContentMargin/VBoxContainer/Header/TitleBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "LETTERLOGIC"
 horizontal_alignment = 1
 
-[node name="ModeLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
+[node name="ModeLabel" type="Label" parent="ContentMargin/VBoxContainer/Header/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
 theme_override_font_sizes/font_size = 28
 text = "CONTINUOUS PLAY"
 horizontal_alignment = 1
 
-[node name="TimerLabel" type="Label" parent="VBoxContainer/Header/TitleBox"]
+[node name="TimerLabel" type="Label" parent="ContentMargin/VBoxContainer/Header/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
 theme_override_font_sizes/font_size = 32
 text = "00:00"
 horizontal_alignment = 1
 
-[node name="StatsButton" type="Button" parent="VBoxContainer/Header"]
+[node name="StatsButton" type="Button" parent="ContentMargin/VBoxContainer/Header"]
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 icon = ExtResource("5_stats_icon")
 icon_alignment = 1
 expand_icon = true
 
-[node name="ToastOverlay" type="CenterContainer" parent="VBoxContainer"]
+[node name="ToastOverlay" type="CenterContainer" parent="ContentMargin/VBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
+size_flags_vertical = 0
 
-[node name="ToastPanel" type="PanelContainer" parent="VBoxContainer/ToastOverlay"]
+[node name="ToastPanel" type="PanelContainer" parent="ContentMargin/VBoxContainer/ToastOverlay"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ToastOverlay/ToastPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="ContentMargin/VBoxContainer/ToastOverlay/ToastPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 8
 
-[node name="ToastLabel" type="Label" parent="VBoxContainer/ToastOverlay/ToastPanel/MarginContainer"]
+[node name="ToastLabel" type="Label" parent="ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 36
 text = "Not in word list"
 horizontal_alignment = 1
 
-[node name="ToastTimer" type="Timer" parent="VBoxContainer/ToastOverlay"]
+[node name="ToastTimer" type="Timer" parent="ContentMargin/VBoxContainer/ToastOverlay"]
 one_shot = true
 
-[node name="BoardArea" type="Control" parent="VBoxContainer"]
+[node name="BoardArea" type="Control" parent="ContentMargin/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="GameBoard" parent="VBoxContainer/BoardArea" instance=ExtResource("2_game_board")]
+[node name="GameBoard" parent="ContentMargin/VBoxContainer/BoardArea" instance=ExtResource("2_game_board")]
 layout_mode = 1
 
-[node name="KeyboardArea" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 431)
+[node name="KeyboardWrapper" type="MarginContainer" parent="ContentMargin/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 
-[node name="Keyboard" parent="VBoxContainer/KeyboardArea" instance=ExtResource("3_keyboard")]
-layout_mode = 1
+[node name="Keyboard" parent="ContentMargin/VBoxContainer/KeyboardWrapper" instance=ExtResource("3_keyboard")]
+layout_mode = 2
 
 [node name="GameOverModal" type="ColorRect" parent="."]
 visible = false
@@ -185,9 +193,9 @@ text = "Main Menu"
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
-[connection signal="pressed" from="VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
-[connection signal="timeout" from="VBoxContainer/ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
+[connection signal="pressed" from="ContentMargin/VBoxContainer/Header/BackButton" to="." method="_on_back_to_menu_pressed"]
+[connection signal="pressed" from="ContentMargin/VBoxContainer/Header/StatsButton" to="." method="_on_stats_pressed"]
+[connection signal="timeout" from="ContentMargin/VBoxContainer/ToastOverlay/ToastTimer" to="." method="_on_toast_timer_timeout"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton" to="." method="_on_next_word_pressed"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton" to="." method="_on_share_pressed"]
 [connection signal="pressed" from="GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/MenuButton" to="." method="_on_back_to_menu_pressed"]

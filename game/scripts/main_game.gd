@@ -8,20 +8,23 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 
-const BASE_CONTENT_MARGIN_TOP: float = 16.0
+const BASE_CONTENT_MARGIN_TOP: int = 70
+const BASE_CONTENT_MARGIN_SIDE: int = 16
+const BASE_CONTENT_MARGIN_BOTTOM: int = 16
 
-@onready var content_container: VBoxContainer = $VBoxContainer
-@onready var game_board: Control = $VBoxContainer/BoardArea/GameBoard
-@onready var game_keyboard: Control = $VBoxContainer/KeyboardArea/Keyboard
-@onready var mode_label: Label = $VBoxContainer/Header/TitleBox/ModeLabel
-@onready var toast_label: Label = $VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel
-@onready var toast_overlay: Control = $VBoxContainer/ToastOverlay
+@onready var content_margin: MarginContainer = $ContentMargin
+@onready var content_container: VBoxContainer = $ContentMargin/VBoxContainer
+@onready var game_board: Control = $ContentMargin/VBoxContainer/BoardArea/GameBoard
+@onready var game_keyboard: Control = $ContentMargin/VBoxContainer/KeyboardWrapper/Keyboard
+@onready var mode_label: Label = $ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel
+@onready var toast_label: Label = $ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel
+@onready var toast_overlay: Control = $ContentMargin/VBoxContainer/ToastOverlay
 @onready var game_over_modal: Control = $GameOverModal
 @onready var game_over_title: Label = $GameOverModal/MarginContainer/Panel/VBox/TitleLabel
 @onready var game_over_message: Label = $GameOverModal/MarginContainer/Panel/VBox/MessageLabel
 @onready var next_word_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/NextWordButton
 @onready var share_btn: Button = $GameOverModal/MarginContainer/Panel/VBox/ButtonMargin/ButtonContainer/ShareButton
-@onready var toast_timer: Timer = $VBoxContainer/ToastOverlay/ToastTimer
+@onready var toast_timer: Timer = $ContentMargin/VBoxContainer/ToastOverlay/ToastTimer
 
 func _ready() -> void:
 	_apply_safe_area_insets()
@@ -40,9 +43,15 @@ func _ready() -> void:
 	check_and_restore_completed_game()
 
 func _apply_safe_area_insets() -> void:
+	if content_margin == null:
+		content_margin = get_node_or_null("ContentMargin") as MarginContainer
 	if content_container == null:
-		content_container = get_node_or_null("VBoxContainer") as VBoxContainer
-	SafeAreaLayout.apply_control_top_offset(content_container, BASE_CONTENT_MARGIN_TOP)
+		content_container = get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
+	if content_margin != null:
+		content_margin.add_theme_constant_override("margin_left", BASE_CONTENT_MARGIN_SIDE)
+		content_margin.add_theme_constant_override("margin_right", BASE_CONTENT_MARGIN_SIDE)
+		content_margin.add_theme_constant_override("margin_bottom", BASE_CONTENT_MARGIN_BOTTOM)
+		SafeAreaLayout.apply_margin_container_top_margin(content_margin, BASE_CONTENT_MARGIN_TOP)
 
 func check_and_restore_completed_game(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
@@ -84,7 +93,7 @@ func _connect_signals() -> void:
 
 func _update_header(gm_override: Node = null, dm_override: Node = null) -> void:
 	if mode_label == null:
-		mode_label = get_node_or_null("VBoxContainer/Header/TitleBox/ModeLabel") as Label
+		mode_label = get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel") as Label
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
 	if gm != null and mode_label != null:
 		if gm.current_mode == GameManagerScript.GameMode.DAILY:
@@ -255,7 +264,7 @@ func _is_overlay_blocking() -> bool:
 func _process(_delta: float) -> void:
 	var gm: Node = get_node_or_null("/root/GameManager")
 	if gm != null:
-		var time_lbl: Label = get_node_or_null("VBoxContainer/Header/TitleBox/TimerLabel") as Label
+		var time_lbl: Label = get_node_or_null("ContentMargin/VBoxContainer/Header/TitleBox/TimerLabel") as Label
 		if time_lbl != null:
 			time_lbl.text = gm.format_time(gm.get_active_time())
 

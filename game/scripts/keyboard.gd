@@ -15,20 +15,30 @@ const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const ROW_3: Array[String] = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
 const KEYBOARD_BOTTOM_MARGIN: int = 70
 const KEYBOARD_ROW_VERTICAL_SEPARATION: int = 8
-const KEYBOARD_CONTAINER_MIN_HEIGHT: float = 431.0
+const KEYBOARD_CONTAINER_MIN_HEIGHT: float = (KeyboardKeyScript.KEY_MIN_HEIGHT * 3.0) + (float(KEYBOARD_ROW_VERTICAL_SEPARATION) * 2.0) + float(KEYBOARD_BOTTOM_MARGIN)
 
 var keys_by_letter: Dictionary = {} # String (letter) -> KeyboardKey
 var vbox_container: VBoxContainer = null
 
+func _init() -> void:
+	custom_minimum_size = Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
+
 func _ready() -> void:
+	custom_minimum_size = Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
 	_setup_keyboard()
+	update_minimum_size()
 	_connect_game_manager()
+
+func _get_minimum_size() -> Vector2:
+	return Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
 
 func _setup_keyboard() -> void:
 	if not has_node("MarginContainer/VBoxContainer"):
 		var margin: MarginContainer = MarginContainer.new()
 		margin.name = "MarginContainer"
 		margin.set_anchors_preset(PRESET_FULL_RECT)
+		margin.size_flags_horizontal = SIZE_EXPAND_FILL
+		margin.size_flags_vertical = SIZE_EXPAND_FILL
 		margin.add_theme_constant_override("margin_left", 6)
 		margin.add_theme_constant_override("margin_right", 6)
 		margin.add_theme_constant_override("margin_bottom", KEYBOARD_BOTTOM_MARGIN)
@@ -36,6 +46,8 @@ func _setup_keyboard() -> void:
 		
 		vbox_container = VBoxContainer.new()
 		vbox_container.name = "VBoxContainer"
+		vbox_container.size_flags_horizontal = SIZE_EXPAND_FILL
+		vbox_container.size_flags_vertical = SIZE_EXPAND_FILL
 		vbox_container.add_theme_constant_override("separation", KEYBOARD_ROW_VERTICAL_SEPARATION)
 		margin.add_child(vbox_container)
 	else:
