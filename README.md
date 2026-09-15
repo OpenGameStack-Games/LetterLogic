@@ -8,6 +8,8 @@ LetterLogic is a Wordle-inspired word-guessing game built with the [Godot Engine
 
 What sets LetterLogic apart is its unique constraint: **all valid guesses and secret words must be 5-letter isograms** (words containing no duplicate letters). This introduces a new layer of deduction and strategy to the familiar core gameplay loop.
 
+**[📱 Get LetterLogic on Google Play](https://play.google.com/store/apps/details?id=games.audrain.letterlogic)**
+
 ## Features
 - **Isogram Ruleset:** Every valid 5-letter word in the game's dictionary is an isogram. The on-screen keyboard actively prevents you from typing a letter you've already used in your current guess.
 - **Staggered Reveal Animation & Visual Juice:** Submitting a valid guess reveals tile evaluation states sequentially from left to right with an incremental 0.3s delay per tile. Each tile executes a centered scale pop animation without disrupting parent grid layout calculations, delivering tactile, responsive visual feedback.
