@@ -13,6 +13,9 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const ROW_1: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
 const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
 const ROW_3: Array[String] = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+const KEYBOARD_BOTTOM_MARGIN: int = 70
+const KEYBOARD_ROW_VERTICAL_SEPARATION: int = 8
+const KEYBOARD_CONTAINER_MIN_HEIGHT: float = 431.0
 
 var keys_by_letter: Dictionary = {} # String (letter) -> KeyboardKey
 var vbox_container: VBoxContainer = null
@@ -28,12 +31,12 @@ func _setup_keyboard() -> void:
 		margin.set_anchors_preset(PRESET_FULL_RECT)
 		margin.add_theme_constant_override("margin_left", 6)
 		margin.add_theme_constant_override("margin_right", 6)
-		margin.add_theme_constant_override("margin_bottom", 12)
+		margin.add_theme_constant_override("margin_bottom", KEYBOARD_BOTTOM_MARGIN)
 		add_child(margin)
 		
 		vbox_container = VBoxContainer.new()
 		vbox_container.name = "VBoxContainer"
-		vbox_container.add_theme_constant_override("separation", 8)
+		vbox_container.add_theme_constant_override("separation", KEYBOARD_ROW_VERTICAL_SEPARATION)
 		margin.add_child(vbox_container)
 	else:
 		vbox_container = $MarginContainer/VBoxContainer as VBoxContainer
@@ -199,4 +202,3 @@ func populate_from_manager(gm_override: Node = null) -> void:
 			var key_node: Node = keys_by_letter[letter]
 			if key_node != null and key_node.has_method("set_row_disabled"):
 				key_node.set_row_disabled(active_typed.has(letter))
-

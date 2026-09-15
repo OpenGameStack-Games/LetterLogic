@@ -124,7 +124,8 @@ func test_absent_and_disabled_key_colors() -> void:
 
 func test_keyboard_key_dimensions_and_typography() -> void:
 	var key_a: Node = keyboard.get_key("A")
-	assert_true(key_a.custom_minimum_size.y >= 76.0, "Key minimum height should be approximately 77px")
+	assert_eq(KeyboardKeyScript.KEY_MIN_HEIGHT, 115.0, "Key minimum height constant should be 115px")
+	assert_eq(key_a.custom_minimum_size.y, 115.0, "Key minimum height should be 115px")
 	assert_true(key_a.get_theme_font_size("font_size") >= 42, "Standard letter key font size should be enlarged (~44px)")
 
 	var key_enter: Button = null
@@ -145,6 +146,46 @@ func test_keyboard_key_dimensions_and_typography() -> void:
 	assert_true(key_del != null, "Delete key should exist")
 	if key_del != null:
 		assert_true(key_del.get_theme_font_size("font_size") >= 40, "Delete key font size should be enlarged")
+
+func test_keyboard_runtime_bottom_margin_matches_scene_spec() -> void:
+	var margin_container: MarginContainer = keyboard.get_node_or_null("MarginContainer") as MarginContainer
+	assert_true(margin_container != null, "Runtime keyboard MarginContainer should exist")
+	if margin_container != null:
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN, "Runtime keyboard bottom margin should be 70px")
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), 70, "Runtime keyboard bottom margin should match the Android spacing spec")
+
+func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
+	var keyboard_scene: PackedScene = load("res://scenes/keyboard.tscn") as PackedScene
+	assert_true(keyboard_scene != null, "keyboard.tscn must be loadable")
+	
+	var scene_keyboard: Control = keyboard_scene.instantiate() as Control
+	assert_true(scene_keyboard != null, "Keyboard scene should instantiate as a Control")
+	if scene_keyboard == null:
+		return
+	
+	var margin_container: MarginContainer = scene_keyboard.get_node_or_null("MarginContainer") as MarginContainer
+	assert_true(margin_container != null, "Keyboard scene MarginContainer should exist")
+	if margin_container != null:
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), 70, "Keyboard scene bottom margin should be 70px")
+	
+	assert_eq(scene_keyboard.offset_top, -GameKeyboardScript.KEYBOARD_CONTAINER_MIN_HEIGHT, "Keyboard scene should reserve enough vertical space for three 115px rows plus spacing and bottom padding")
+	scene_keyboard.free()
+
+func test_main_game_reserves_keyboard_area_for_tall_layout() -> void:
+	var main_scene: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(main_scene != null, "main_game.tscn must be loadable")
+	
+	var main_game: Node = main_scene.instantiate()
+	assert_true(main_game != null, "Main game scene should instantiate")
+	if main_game == null:
+		return
+	
+	var keyboard_area: Control = main_game.get_node_or_null("VBoxContainer/KeyboardArea") as Control
+	assert_true(keyboard_area != null, "Main game KeyboardArea should exist")
+	if keyboard_area != null:
+		assert_eq(keyboard_area.custom_minimum_size.y, GameKeyboardScript.KEYBOARD_CONTAINER_MIN_HEIGHT, "Main game should reserve enough height for the taller keyboard")
+	
+	main_game.free()
 
 func test_font_size_retained_after_state_change() -> void:
 	var key_a: Node = keyboard.get_key("A")
