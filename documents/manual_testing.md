@@ -136,6 +136,16 @@ This document outlines the manual test cases used to verify the requirements out
   6. Confirm that the delay and entrance animation execute identically and reliably in both Continuous Play and Daily Challenge modes.
 - **Expected Result:** Upon winning or losing in both Continuous Play and Daily Challenge modes, the game waits ~1.5 seconds for the staggered tile reveal animation to complete across all 5 columns before displaying the Game Over modal. When the modal appears, it plays a coordinated entrance animation (fade in and scale pop with back-ease overshoot from 0.8x to 1.0x over 0.3s) centered around its midpoint.
 
+### Test 1.10: Virtual Keyboard Key Height & Bottom Padding on Android
+- **Requirement(s):** REQ-2.4, REQ-8.7
+- **Steps:**
+  1. Install the APK on a physical tall portrait Android device, such as a 20:9 Samsung S22-class phone.
+   2. Start a game in Continuous Play and observe the on-screen virtual keyboard.
+   3. Confirm the letter keys are visibly taller than the previous build and that the bottom row has comfortable breathing room from the bottom edge of the screen.
+   4. Submit a few guesses and verify the keyboard does not clip, overlap, or crowd the board tiles above it.
+   5. Repeat the same visual check in Daily Challenge.
+- **Expected Result:** The on-screen keyboard keys are approximately 50% taller than the old layout, the keyboard bottom padding leaves roughly half a key height of space between the last row and the device edge, and the taller keyboard remains fully contained without clipping or overlapping the game board in either Continuous Play or Daily Challenge.
+
 ---
 
 
