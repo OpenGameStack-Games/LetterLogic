@@ -419,3 +419,77 @@ func test_credits_modal_content() -> void:
 	assert_true(github_btn.pressed.is_connected(Callable(menu, "_on_github_pressed")), "GitHub button connected")
 	
 	menu.free()
+
+class MockDailyManager extends Node:
+	var word: String = "TODAY"
+	var completed: bool = false
+	func get_daily_word() -> String:
+		return word
+	func is_daily_completed() -> bool:
+		return completed
+	func get_formatted_countdown_to_next_utc() -> String:
+		return "12:00:00"
+
+class MockGameManager extends Node:
+	var started_mode: int = -1
+	var started_word: String = ""
+	func start_game(mode: int, word: String = "") -> void:
+		started_mode = mode
+		started_word = word
+
+class MockSaveManager extends Node:
+	var has_save: bool = true
+	var saved_data: Dictionary = {}
+	var deserialized_data: Dictionary = {}
+	var cleared_mode: int = -1
+	
+	func has_saved_game(mode: int) -> bool:
+		return has_save
+		
+	func load_game_state(mode: int) -> Dictionary:
+		return saved_data
+		
+	func deserialize_to_game_manager(data: Dictionary, gm: Node) -> void:
+		deserialized_data = data
+		
+	func clear_game_state(mode: int) -> void:
+		cleared_mode = mode
+
+func test_daily_challenge_rollover_clears_old_save() -> void:
+	var menu: Node = load("res://scripts/main_menu.gd").new()
+	
+	var dm = MockDailyManager.new()
+	var gm = MockGameManager.new()
+	var sm = MockSaveManager.new()
+	
+	dm.word = "TODAY"
+	dm.completed = false
+	
+	# Scenario 1: Old save (secret_word mismatch)
+	sm.has_save = true
+	sm.saved_data = {"secret_word": "YESTE"}
+	sm.deserialized_data = {}
+	sm.cleared_mode = -1
+	
+	menu._on_daily_button_pressed(dm, gm, sm)
+	
+	assert_eq(sm.cleared_mode, GameManagerScript.GameMode.DAILY, "Should clear DAILY save if word mismatches")
+	assert_eq(sm.deserialized_data.size(), 0, "Should NOT deserialize old save")
+	assert_eq(gm.started_word, "TODAY", "GameManager should start with today's word")
+	
+	# Scenario 2: Current save (secret_word match)
+	gm.started_word = ""
+	sm.cleared_mode = -1
+	sm.saved_data = {"secret_word": "TODAY", "progress": 5}
+	sm.deserialized_data = {}
+	
+	menu._on_daily_button_pressed(dm, gm, sm)
+	
+	assert_eq(sm.cleared_mode, -1, "Should NOT clear DAILY save if word matches")
+	assert_eq(sm.deserialized_data.get("secret_word", ""), "TODAY", "Should deserialize matching save")
+	assert_eq(gm.started_word, "TODAY", "GameManager should start with today's word")
+	
+	dm.free()
+	gm.free()
+	sm.free()
+	menu.free()
