@@ -215,6 +215,25 @@ This document outlines the manual test cases used to verify the requirements out
   4. Observe the header text above the board.
 - **Expected Result:** When entering Daily Challenge, the header displays `DAILY CHALLENGE • YYYY-MM-DD` with today's UTC date. When entering Continuous Play, the header displays `CONTINUOUS PLAY`.
 
+### Test 2.4: Daily Challenge UTC Rollover Discards Previous In-Progress Save
+- **Requirement(s):** REQ-4.2, REQ-7.3
+- **Steps:**
+  1. Launch the game and start today's Daily Challenge from the Main Menu.
+  2. Enter 1–3 valid guesses (leaving the puzzle unfinished).
+  3. Exit to the Main Menu (or close the application).
+  4. Artificially advance the device/system clock by +24 hours past the next UTC midnight rollover (or modify system time to Day X+1).
+  5. Reopen/return to the application.
+  6. Observe the Main Menu Daily Challenge button:
+     - Verify it is unlocked and ready for the new day's puzzle (`Daily Challenge\n[Play Today's Word]`).
+  7. Tap "Daily Challenge".
+  8. Observe the loaded puzzle:
+     - Verify that yesterday's in-progress board, guesses, and secret word are NOT restored.
+     - Verify that a fresh, empty 6x5 grid is initialized.
+     - Verify the header displays the new UTC date (`DAILY CHALLENGE • YYYY-MM-DD`).
+     - Verify the timer starts at `00:00`.
+     - Verify the keyboard is fully reset (no letters colored or disabled from yesterday).
+- **Expected Result:** Upon UTC day rollover, an incomplete Daily Challenge save from a previous day is automatically discarded and cleared. The game initializes a brand-new daily puzzle for the current UTC date with an empty grid, new daily word, and reset timer, rather than restoring yesterday's save state.
+
 ---
 
 
