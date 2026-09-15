@@ -7,7 +7,7 @@ extends Node
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
-const PLAY_STORE_URL: String = "https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic"
+const PLAY_STORE_URL: String = "https://play.google.com/store/apps/details?id=games.audrain.letterlogic"
 
 const EMOJI_CORRECT: String = "🟩"
 const EMOJI_PRESENT: String = "🟨"
