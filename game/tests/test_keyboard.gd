@@ -151,8 +151,8 @@ func test_keyboard_runtime_bottom_margin_matches_scene_spec() -> void:
 	var margin_container: MarginContainer = keyboard.get_node_or_null("MarginContainer") as MarginContainer
 	assert_true(margin_container != null, "Runtime keyboard MarginContainer should exist")
 	if margin_container != null:
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN, "Runtime keyboard bottom margin should be 70px")
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), 70, "Runtime keyboard bottom margin should match the Android spacing spec")
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN, "Runtime keyboard bottom margin should be 24px")
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), 24, "Runtime keyboard bottom margin should match the Android spacing spec")
 
 func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
 	var keyboard_scene: PackedScene = load("res://scenes/keyboard.tscn") as PackedScene
@@ -166,7 +166,7 @@ func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
 	var margin_container: MarginContainer = scene_keyboard.get_node_or_null("MarginContainer") as MarginContainer
 	assert_true(margin_container != null, "Keyboard scene MarginContainer should exist")
 	if margin_container != null:
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), 70, "Keyboard scene bottom margin should be 70px")
+		assert_eq(margin_container.get_theme_constant("margin_bottom"), 24, "Keyboard scene bottom margin should be 24px")
 	
 	assert_eq(scene_keyboard.anchor_top, 0.0, "Keyboard scene should start at the top of its parent instead of using bottom anchoring")
 	assert_eq(scene_keyboard.anchor_bottom, 1.0, "Keyboard scene should fill to the bottom of its parent")
