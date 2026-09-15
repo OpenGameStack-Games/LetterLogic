@@ -104,7 +104,7 @@ size_flags_vertical = 3
 layout_mode = 1
 
 [node name="KeyboardArea" type="Control" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 260)
+custom_minimum_size = Vector2(0, 431)
 layout_mode = 2
 
 [node name="Keyboard" parent="VBoxContainer/KeyboardArea" instance=ExtResource("3_keyboard")]
