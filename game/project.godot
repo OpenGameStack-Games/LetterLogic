@@ -39,6 +39,10 @@ window/stretch/aspect="expand"
 window/handheld/orientation=1
 window/touchscreen/emulate_touch_from_mouse=true
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/GMPShared/menu/plugin.cfg", "res://addons/SharePlugin/plugin.cfg")
+
 [gui]
 
 theme/custom="res://assets/theme/letter_logic_theme.tres"
@@ -47,7 +51,3 @@ theme/custom="res://assets/theme/letter_logic_theme.tres"
 
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.0705882, 0.0705882, 0.0705882, 1)
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/GMPShared/menu/plugin.cfg", "res://addons/SharePlugin/plugin.cfg")

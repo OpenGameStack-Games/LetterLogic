@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 env:
   GODOT_VERSION: 4.7.2-stable
   GODOT_TEMPLATES_VERSION: 4.7.2.stable
