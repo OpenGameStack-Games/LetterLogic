@@ -60,7 +60,10 @@ Every feature or bug fix touching game logic, autoloads, or calculations must in
 * Test scripts inherit from `res://tests/test_base.gd`.
 * Run the headless test suite locally:
   ```powershell
-  godot --headless --path game -s res://tests/test_runner.gd
+  # Note: Do not rely on 'godot' being in the system PATH.
+  # Instead, check LetterLogic.code-workspace for `settings."letterlogic.godotExecutable"`
+  # and use that absolute path.
+  <GODOT_PATH> --headless --path game -s res://tests/test_runner.gd
   ```
 * All tests must pass (`Test Results: X Passed, 0 Failed`, exit code 0) before submitting changes.
 

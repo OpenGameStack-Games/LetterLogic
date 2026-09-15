@@ -126,8 +126,12 @@ Every feature or bug fix touching game logic or autoloads must be backed by auto
 ### Running Automated Tests
 Run the headless Godot test suite. First, force an asset import pass to cache any newly added binary files (like PNG icons):
 ```powershell
-godot --headless --editor --quit --path game
-godot --headless --path game -s res://tests/test_runner.gd
+# CRITICAL: Do not download Godot or use the raw 'godot' command.
+# Read LetterLogic.code-workspace and find `settings."letterlogic.godotExecutable"`
+# Use that absolute path to run these commands:
+
+<GODOT_PATH> --headless --editor --quit --path game
+<GODOT_PATH> --headless --path game -s res://tests/test_runner.gd
 ```
 *(Note: Replace `godot` with the path to your local Godot 4.x console binary if it is not in your system PATH).*
 

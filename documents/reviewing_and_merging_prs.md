@@ -66,8 +66,12 @@ Determine whether a local worktree for this feature branch already exists:
 ### 3. Run Automated Tests Locally
 Inside the feature worktree, run the headless Godot test suite to independently verify zero regressions. Always force an asset import pass first to cache any newly added binary files:
 ```powershell
-godot --headless --editor --quit --path game
-godot --headless --path game -s res://tests/test_runner.gd
+# CRITICAL: Do not download Godot or use the raw 'godot' command.
+# Read LetterLogic.code-workspace and find `settings."letterlogic.godotExecutable"`
+# Use that absolute path to run these commands:
+
+<GODOT_PATH> --headless --editor --quit --path game
+<GODOT_PATH> --headless --path game -s res://tests/test_runner.gd
 ```
 *(Note: Replace `godot` with the local Godot 4.x console binary on your system, or run the default test task in your IDE).*
 
