@@ -4,6 +4,9 @@ extends "res://tests/test_base.gd"
 ## Automated unit tests for MainGame scene.
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
+const SAFE_AREA_LAYOUT_SCRIPT = preload("res://scripts/safe_area_layout.gd")
+
+const MAIN_GAME_BASE_MARGIN_TOP: float = 16.0
 
 
 func test_toast_overlay_position() -> void:
@@ -58,6 +61,31 @@ func test_toast_overlay_position() -> void:
 	assert_true(toast_overlay.visible, "ToastOverlay should still remain visible after timeout")
 	
 	main_game.free()
+
+func test_safe_area_top_offset_applied_on_startup() -> void:
+	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
+	assert_true(main_scn != null, "main_game.tscn must be loadable")
+
+	var main_game: Node = main_scn.instantiate()
+	assert_true(main_game != null, "main_game must instantiate successfully")
+
+	var vbox: VBoxContainer = main_game.get_node_or_null("VBoxContainer") as VBoxContainer
+	assert_true(vbox != null, "VBoxContainer should exist in MainGame")
+
+	main_game.set("content_container", vbox)
+	main_game.call("_apply_safe_area_insets")
+
+	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
+	var expected_top_offset: float = SAFE_AREA_LAYOUT_SCRIPT.get_display_safe_top_margin(MAIN_GAME_BASE_MARGIN_TOP)
+	assert_true(vbox.offset_top >= float(safe_area.position.y), "VBoxContainer top offset must include at least the display safe area top inset")
+	assert_eq(vbox.offset_top, expected_top_offset, "VBoxContainer top offset should equal the base design margin plus runtime safe area top inset")
+
+	main_game.free()
+
+func test_safe_area_top_offset_uses_dynamic_cutout_inset() -> void:
+	var simulated_safe_area: Rect2i = Rect2i(Vector2i(0, 72), Vector2i(1080, 2200))
+	var safe_top_margin: float = SAFE_AREA_LAYOUT_SCRIPT.get_safe_top_margin(MAIN_GAME_BASE_MARGIN_TOP, simulated_safe_area)
+	assert_eq(safe_top_margin, 88.0, "Safe area helper should add a simulated punch-hole top inset to the base design margin")
 
 func test_header_and_toast_typography() -> void:
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene

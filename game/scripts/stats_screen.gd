@@ -6,6 +6,9 @@ extends Control
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
 
+const BASE_CONTENT_MARGIN_TOP: int = 48
+
+@onready var content_margin: MarginContainer = $"MarginContainer"
 @onready var mode_tabs: TabContainer = $"MarginContainer/VBox/ModeTabs"
 @onready var content_vbox: VBoxContainer = $"MarginContainer/VBox/ModeTabs/Continuous Play/ContentVBox"
 
@@ -21,10 +24,16 @@ var active_mode: int = 0 # 0 = Continuous, 1 = Daily
 var _stats_manager_ref: Node = null
 
 func _ready() -> void:
+	_apply_safe_area_insets()
 	_update_node_references()
 	if mode_tabs != null and not mode_tabs.tab_changed.is_connected(_on_tab_changed):
 		mode_tabs.tab_changed.connect(_on_tab_changed)
 	refresh_display()
+
+func _apply_safe_area_insets() -> void:
+	if content_margin == null:
+		content_margin = get_node_or_null("MarginContainer") as MarginContainer
+	SafeAreaLayout.apply_margin_container_top_margin(content_margin, BASE_CONTENT_MARGIN_TOP)
 
 func _update_node_references() -> void:
 	if mode_tabs == null:
@@ -177,3 +186,7 @@ func _update_distribution(dist: Dictionary) -> void:
 
 func _on_close_pressed() -> void:
 	visible = false
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_apply_safe_area_insets()

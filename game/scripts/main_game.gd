@@ -8,6 +8,9 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 
+const BASE_CONTENT_MARGIN_TOP: float = 16.0
+
+@onready var content_container: VBoxContainer = $VBoxContainer
 @onready var game_board: Control = $VBoxContainer/BoardArea/GameBoard
 @onready var game_keyboard: Control = $VBoxContainer/KeyboardArea/Keyboard
 @onready var mode_label: Label = $VBoxContainer/Header/TitleBox/ModeLabel
@@ -21,6 +24,7 @@ const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 @onready var toast_timer: Timer = $VBoxContainer/ToastOverlay/ToastTimer
 
 func _ready() -> void:
+	_apply_safe_area_insets()
 	if toast_overlay == null:
 		toast_overlay = find_child("ToastOverlay", true, false) as Control
 	if toast_label == null and toast_overlay != null:
@@ -34,6 +38,11 @@ func _ready() -> void:
 	_connect_signals()
 	_update_header()
 	check_and_restore_completed_game()
+
+func _apply_safe_area_insets() -> void:
+	if content_container == null:
+		content_container = get_node_or_null("VBoxContainer") as VBoxContainer
+	SafeAreaLayout.apply_control_top_offset(content_container, BASE_CONTENT_MARGIN_TOP)
 
 func check_and_restore_completed_game(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
@@ -251,7 +260,9 @@ func _process(_delta: float) -> void:
 			time_lbl.text = gm.format_time(gm.get_active_time())
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+	if what == NOTIFICATION_RESIZED:
+		_apply_safe_area_insets()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		var gm: Node = get_node_or_null("/root/GameManager")
 		if gm != null:
 			if gm.has_method("pause_timer"):
@@ -264,4 +275,3 @@ func _notification(what: int) -> void:
 		if gm != null and gm.has_method("resume_timer"):
 			if not _is_overlay_blocking():
 				gm.resume_timer()
-

@@ -4,6 +4,9 @@ extends "res://tests/test_base.gd"
 ## Automated unit tests for MainMenu and navigation scenes.
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
+const SAFE_AREA_LAYOUT_SCRIPT = preload("res://scripts/safe_area_layout.gd")
+
+const MENU_BASE_MARGIN_TOP: int = 48
 
 func test_main_scene_configuration() -> void:
 	var main_scene: String = String(ProjectSettings.get_setting("application/run/main_scene", ""))
@@ -46,6 +49,26 @@ func test_main_menu_scene_loads() -> void:
 	assert_eq(htp_btn.get_theme_font_size("font_size"), 36, "HowToPlayButton font size should be 36")
 	assert_true(htp_btn.custom_minimum_size.y >= 72.0, "HowToPlayButton minimum height >= 72")
 	
+	menu.free()
+
+func test_main_menu_applies_safe_area_top_margin() -> void:
+	var menu_scn: PackedScene = load("res://scenes/main_menu.tscn") as PackedScene
+	assert_true(menu_scn != null, "main_menu.tscn must be loadable")
+
+	var menu: Node = menu_scn.instantiate()
+	assert_true(menu != null, "main_menu must instantiate successfully")
+
+	var margin_container: MarginContainer = menu.get_node_or_null("MarginContainer") as MarginContainer
+	assert_true(margin_container != null, "MainMenu MarginContainer should exist")
+
+	menu.set("content_margin", margin_container)
+	menu.call("_apply_safe_area_insets")
+
+	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
+	var expected_margin_top: int = int(round(SAFE_AREA_LAYOUT_SCRIPT.get_display_safe_top_margin(float(MENU_BASE_MARGIN_TOP))))
+	assert_true(margin_container.get_theme_constant("margin_top") >= safe_area.position.y, "MainMenu top margin must include at least the display safe area top inset")
+	assert_eq(margin_container.get_theme_constant("margin_top"), expected_margin_top, "MainMenu top margin should equal the base design margin plus runtime safe area top inset")
+
 	menu.free()
 
 func test_how_to_play_modal() -> void:
