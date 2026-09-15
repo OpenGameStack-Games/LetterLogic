@@ -6,8 +6,10 @@ extends "res://tests/test_base.gd"
 const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
 const StatsScreenScript = preload("res://scripts/stats_screen.gd")
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
+const SAFE_AREA_LAYOUT_SCRIPT = preload("res://scripts/safe_area_layout.gd")
 
 const TEST_STATS_PATH: String = "user://test_stats.json"
+const STATS_SCREEN_BASE_MARGIN_TOP: int = 48
 
 var stats_mgr: Node = null
 
@@ -145,6 +147,26 @@ func test_stats_screen_ui() -> void:
 	screen.call("_on_tab_changed", 0)
 	assert_eq(int(screen.get("active_mode")), GameManagerScript.GameMode.CONTINUOUS, "active_mode should update to CONTINUOUS on tab changed")
 	
+	screen.free()
+
+func test_stats_screen_applies_safe_area_top_margin() -> void:
+	var scn: PackedScene = load("res://scenes/stats_screen.tscn") as PackedScene
+	assert_true(scn != null, "stats_screen.tscn should load")
+
+	var screen: Node = scn.instantiate()
+	assert_true(screen != null, "stats_screen should instantiate")
+
+	var margin_container: MarginContainer = screen.get_node_or_null("MarginContainer") as MarginContainer
+	assert_true(margin_container != null, "StatsScreen MarginContainer should exist")
+
+	screen.set("content_margin", margin_container)
+	screen.call("_apply_safe_area_insets")
+
+	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
+	var expected_margin_top: int = int(round(SAFE_AREA_LAYOUT_SCRIPT.get_display_safe_top_margin(float(STATS_SCREEN_BASE_MARGIN_TOP))))
+	assert_true(margin_container.get_theme_constant("margin_top") >= safe_area.position.y, "StatsScreen top margin must include at least the display safe area top inset")
+	assert_eq(margin_container.get_theme_constant("margin_top"), expected_margin_top, "StatsScreen top margin should equal the base design margin plus runtime safe area top inset")
+
 	screen.free()
 
 func test_time_stats() -> void:

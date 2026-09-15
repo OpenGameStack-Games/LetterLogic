@@ -9,6 +9,9 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 
+const BASE_CONTENT_MARGIN_TOP: int = 48
+
+@onready var content_margin: MarginContainer = $MarginContainer
 @onready var daily_button: Button = $MarginContainer/VBox/MenuButtons/DailyButton
 @onready var continuous_button: Button = $MarginContainer/VBox/MenuButtons/ContinuousButton
 @onready var stats_button: Button = $MarginContainer/VBox/MenuButtons/StatsButton
@@ -22,6 +25,7 @@ const SaveManagerScript = preload("res://autoloads/save_manager.gd")
 var _is_daily_locked: bool = false
 
 func _ready() -> void:
+	_apply_safe_area_insets()
 	if how_to_play_modal != null:
 		how_to_play_modal.visible = false
 	if credits_modal != null:
@@ -31,6 +35,11 @@ func _ready() -> void:
 	if countdown_timer != null and is_inside_tree():
 		countdown_timer.timeout.connect(_on_countdown_tick)
 		countdown_timer.start(1.0)
+
+func _apply_safe_area_insets() -> void:
+	if content_margin == null:
+		content_margin = get_node_or_null("MarginContainer") as MarginContainer
+	SafeAreaLayout.apply_margin_container_top_margin(content_margin, BASE_CONTENT_MARGIN_TOP)
 
 func _bind_credits_links() -> void:
 	if credits_modal == null: return
@@ -161,3 +170,7 @@ func _on_close_credits_pressed() -> void:
 	var modal: Control = _get_credits_modal()
 	if modal != null:
 		modal.visible = false
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_apply_safe_area_insets()

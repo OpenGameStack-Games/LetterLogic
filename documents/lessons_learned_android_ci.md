@@ -55,3 +55,7 @@ Google Play Console flags warnings if native symbols and obfuscation mapping fil
 ## 10. Plain Text Runtime Assets Need Explicit Export Filters
 When `export_filter="all_resources"` is used, Godot only packages files it recognizes as exportable resources. Plain text runtime assets such as `res://assets/words/words.txt` do not generate `.import` metadata, so they are silently omitted from Android exports unless `include_filter` explicitly matches them (for example, `*.txt`).
 **Fix:** Treat any `FileAccess`-loaded runtime asset as an export dependency and add an explicit `include_filter` entry for the file type or path. For critical data such as dictionaries, also keep a loud `push_error(...)` path in the loader so empty or missing packaged assets fail fast instead of producing a silent empty state.
+
+## 11. Android Display Cutouts Need Runtime Safe Area Handling
+Android devices with punch-hole cameras or notches can report a non-zero top safe area through Godot 4's `DisplayServer.get_display_safe_area()`. Full-screen layouts should add that runtime inset to their existing base top margin instead of hardcoding a larger offset, or flat-screen devices will end up with unnecessary extra padding.
+**Fix:** Apply the safe-area adjustment during `_ready()` and again on `NOTIFICATION_RESIZED` so the Main Game, Main Menu, and Statistics Screen all keep their top headers visible on cutout devices while preserving the original design spacing when the safe-area top inset is zero.

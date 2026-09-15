@@ -380,6 +380,7 @@ This document outlines the manual test cases used to verify the requirements out
      - **Tall Smartphones (19.5:9 / 20:9):** 1080x2340 or 1080x2400
      - **Extra Tall Display (21:9):** 1080x2520
      - **Portrait Tablets (4:3 / 16:10):** 1536x2048, 768x1024, or 1200x1920
+     - **Punch-Hole / Notch Android Device:** A physical device or emulator that reports a non-zero top safe area inset (for example a Samsung Galaxy S22 or equivalent display cutout profile).
   3. On each aspect ratio, evaluate the Main Menu:
      - Verify the mascot, title box, and navigation buttons scale dynamically within safe margin padding without crowding screen borders or overflowing.
   4. Enter a game (Continuous Play or Daily Challenge):
@@ -388,7 +389,9 @@ This document outlines the manual test cases used to verify the requirements out
      - **Header Bar:** Verify the back button, game mode title, timer label, and statistics button stay neatly aligned across the top row.
   5. Open dialog overlays (How to Play modal, Stats Screen, and Game Over modal):
      - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
-- **Expected Result:** All UI elements dynamically scale and maintain proportional sizing across phones and tablets, avoiding letterbox bars, clipping, or overlapping controls.
+  6. On the punch-hole / notch device, confirm the Main Menu, Continuous Play header, Daily Challenge header, and Statistics Screen title all remain fully visible below the display cutout with no part of the top heading hidden behind camera hardware.
+  7. Repeat the same screens on a flat/no-cutout device or emulator and confirm the original base top spacing remains intact with no extra top padding added.
+- **Expected Result:** All UI elements dynamically scale and maintain proportional sizing across phones and tablets, avoiding letterbox bars, clipping, or overlapping controls. Devices with display cutouts keep all top headers fully visible, while flat-screen devices preserve the original design spacing without unnecessary extra padding.
 
 ### Test 5.7: Header Statistics Button & Solid White Monochrome Bar Graph Icon
 - **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.10
@@ -642,4 +645,3 @@ This document outlines the manual test cases used to verify the requirements out
   3. Verify the startup log reports a non-empty dictionary load, such as `WordBank: Loaded <n> unique 5-letter isograms.`, and that no `push_error(...)` message reports an empty or missing word list.
   4. Enter the reference words `ADORE` and `THANK` during gameplay.
 - **Expected Result:** The Android build loads a non-empty runtime dictionary on startup, both reference words are accepted as valid guesses, and the game no longer rejects every guess with a "word not in list" outcome.
-
