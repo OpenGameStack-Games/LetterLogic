@@ -21,16 +21,11 @@ var keys_by_letter: Dictionary = {} # String (letter) -> KeyboardKey
 var vbox_container: VBoxContainer = null
 
 func _init() -> void:
-	custom_minimum_size = Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
+	pass
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
 	_setup_keyboard()
-	update_minimum_size()
 	_connect_game_manager()
-
-func _get_minimum_size() -> Vector2:
-	return Vector2(0.0, KEYBOARD_CONTAINER_MIN_HEIGHT)
 
 func _setup_keyboard() -> void:
 	if not has_node("MarginContainer/VBoxContainer"):
