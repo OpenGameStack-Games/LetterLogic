@@ -115,10 +115,10 @@ func _refresh_responsive_metrics() -> void:
 					if tile is Control:
 						var tile_control: Control = tile as Control
 						tile_control.custom_minimum_size = Vector2.ZERO
-						tile_control.minimum_size_changed()
+						tile_control.update_minimum_size()
 						if tile_control.has_method("_refresh_font_size"):
 							tile_control.call("_refresh_font_size")
-	minimum_size_changed()
+	update_minimum_size()
 
 func _connect_game_manager() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null

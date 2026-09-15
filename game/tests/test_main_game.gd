@@ -136,7 +136,7 @@ func test_unified_responsive_flow_layout_structure() -> void:
 func test_portrait_viewports_keep_keyboard_below_board_and_tiles_inside_viewport() -> void:
 	var main_scn: PackedScene = load("res://scenes/main_game.tscn") as PackedScene
 	assert_true(main_scn != null, "main_game.tscn must be loadable")
-	var root_window: Window = Engine.get_main_loop().root as Window
+	var root_window: Window = test_root_window
 	assert_true(root_window != null, "Test runner should expose a root Window for layout integration tests")
 	if root_window == null:
 		return
@@ -175,6 +175,10 @@ func test_portrait_viewports_keep_keyboard_below_board_and_tiles_inside_viewport
 
 		if vbox != null:
 			vbox.queue_sort()
+		if game_board != null and game_board.has_method("_setup_grid"):
+			game_board.call("_setup_grid")
+		if keyboard != null and keyboard.has_method("_setup_keyboard"):
+			keyboard.call("_setup_keyboard")
 		if game_board != null and game_board.has_method("_refresh_responsive_metrics"):
 			game_board.call("_refresh_responsive_metrics")
 		if keyboard != null and keyboard.has_method("_refresh_responsive_metrics"):
@@ -189,14 +193,19 @@ func test_portrait_viewports_keep_keyboard_below_board_and_tiles_inside_viewport
 		if game_board != null and keyboard_area != null:
 			var viewport_rect: Rect2 = Rect2(Vector2.ZERO, Vector2(viewport_size))
 			var keyboard_global_rect: Rect2 = keyboard_area.get_global_rect()
-			var tile_nodes: Array[Node] = game_board.find_children("*", "GameTile", true, false)
-			assert_eq(tile_nodes.size(), 30, "GameBoard should expose 30 tile nodes at %s" % str(viewport_size))
-			for tile_node in tile_nodes:
-				if tile_node is Control:
-					var tile_control: Control = tile_node as Control
-					var tile_rect: Rect2 = tile_control.get_global_rect()
-					assert_true(viewport_rect.encloses(tile_rect), "Tile should stay inside viewport at %s" % str(viewport_size))
-					assert_false(tile_rect.intersects(keyboard_global_rect), "Tile should not overlap keyboard at %s" % str(viewport_size))
+			var tile_count: int = 0
+			for row in game_board.tiles:
+				if row is Array:
+					for tile_node in row:
+						tile_count += 1
+						assert_true(tile_node is Control, "Board tile should be a Control at %s" % str(viewport_size))
+						if not tile_node is Control:
+							continue
+						var tile_control: Control = tile_node as Control
+						var tile_rect: Rect2 = tile_control.get_global_rect()
+						assert_true(viewport_rect.encloses(tile_rect), "Tile should stay inside viewport at %s" % str(viewport_size))
+						assert_false(tile_rect.intersects(keyboard_global_rect), "Tile should not overlap keyboard at %s" % str(viewport_size))
+			assert_eq(tile_count, 30, "GameBoard should expose 30 tile nodes at %s" % str(viewport_size))
 
 		root_window.remove_child(main_game)
 		main_game.free()

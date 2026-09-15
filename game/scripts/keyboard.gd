@@ -133,13 +133,13 @@ func _refresh_responsive_metrics() -> void:
 						var key: KeyboardKey = child as KeyboardKey
 						var min_width: float = KEY_ACTION_MIN_WIDTH if key.text == "ENTER" or key.text == "⌫" else KEY_STANDARD_MIN_WIDTH
 						key.custom_minimum_size = Vector2(min_width, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
-						key.minimum_size_changed()
+						key.update_minimum_size()
 						if key.has_method("_refresh_font_size"):
 							key.call("_refresh_font_size")
 					elif child is Control:
 						var spacer: Control = child as Control
 						spacer.custom_minimum_size = Vector2(_get_row_stagger_width(), 0.0)
-	minimum_size_changed()
+	update_minimum_size()
 
 func _get_viewport_size() -> Vector2:
 	if is_inside_tree() and get_viewport() != null:
