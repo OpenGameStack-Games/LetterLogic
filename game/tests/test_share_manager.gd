@@ -63,3 +63,9 @@ func test_share_daily_results_clipboard() -> void:
 	if DisplayServer.has_feature(DisplayServer.FEATURE_CLIPBOARD):
 		var clipboard_content: String = DisplayServer.clipboard_get()
 		assert_eq(clipboard_content, generated, "Clipboard should receive generated share text")
+
+func test_share_native_android_no_crash_on_pc() -> void:
+	# Ensure no crash when calling the Android Share method on non-Android platforms
+	share_mgr._share_native_android("Title", "Text")
+	assert_true(true, "Method executed without crashing")
+

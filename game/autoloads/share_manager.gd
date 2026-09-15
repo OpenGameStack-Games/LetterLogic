@@ -59,13 +59,6 @@ func share_daily_results(date_str: String, guess_results: Array, won: bool, atte
 	return share_text
 
 func _share_native_android(title: String, text: String) -> void:
-	if Engine.has_singleton("GodotAndroidShare"):
-		var android_share: Object = Engine.get_singleton("GodotAndroidShare")
-		if android_share != null and android_share.has_method("shareText"):
-			android_share.call("shareText", title, "LetterLogic Results", text)
-			return
-	
-	# Generic Android Java reflection via Godot OS/JNI if available
-	if ClassDB.class_exists("JavaClassWrapper"):
-		# Java reflection support if needed
-		pass
+	if Engine.has_singleton("Share"):
+		var share: Object = Engine.get_singleton("Share")
+		share.shareText(title, title, text)
