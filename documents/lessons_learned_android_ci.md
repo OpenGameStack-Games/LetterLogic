@@ -59,3 +59,7 @@ When `export_filter="all_resources"` is used, Godot only packages files it recog
 ## 11. Android Display Cutouts Need Runtime Safe Area Handling
 Android devices with punch-hole cameras or notches can report a non-zero top safe area through Godot 4's `DisplayServer.get_display_safe_area()`. Full-screen layouts should add that runtime inset to their existing base top margin instead of hardcoding a larger offset, or flat-screen devices will end up with unnecessary extra padding.
 **Fix:** Apply the safe-area adjustment during `_ready()` and again on `NOTIFICATION_RESIZED` so the Main Game, Main Menu, and Statistics Screen all keep their top headers visible on cutout devices while preserving the original design spacing when the safe-area top inset is zero.
+
+## 12. Keep the Main Game Vertical Flow Under One Layout Authority
+Mixing a flow-managed `VBoxContainer` with a separately anchored keyboard block made the board/keyboard boundary fragile as soon as the keyboard height, key padding, or safe-area inset changed. The fix was to give `ContentMargin/VBoxContainer` full ownership of the Main Game's vertical stack, keep `Header`, `ToastOverlay`, `BoardArea`, and `KeyboardWrapper` as sequential siblings, and let only `BoardArea` expand while the keyboard stays in a full-rect wrapper with its own intrinsic height.
+**Fix:** When refactoring responsive gameplay layouts, keep the board and keyboard inside one shared vertical flow so safe-area padding, bottom breathing room, and viewport resizing are applied consistently without overlap.
