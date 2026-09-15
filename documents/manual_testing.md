@@ -605,17 +605,24 @@ This document outlines the manual test cases used to verify the requirements out
 ### Test 6.1: Android 16 KB Page Alignment & Google Play Release Verification
 - **Requirement(s):** REQ-9.1
 - **Steps:**
-  1. Export an Android App Bundle (`.aab`) using the Godot Android export preset (`game/export_presets.cfg`) or the automated GitHub Actions CI release workflow.
-  2. Confirm that `game/android/build/config.gradle` specifies `androidGradlePlugin` version `8.5.2` or higher and `game/android/build/gradle/wrapper/gradle-wrapper.properties` specifies Gradle `8.7` or higher.
-  3. (Optional) Verify zip-alignment locally using the Android SDK `zipalign` tool:
-     ```bash
-     unzip -q LetterLogic.aab -d aab_extracted
-     zipalign -c -P 16 -v 4 aab_extracted/base/lib/arm64-v8a/*.so
-     ```
-     Verify that all shared libraries report `Verification SUCCESSFUL` with 16 KB page alignment.
-  4. Upload the signed `.aab` package to the Google Play Console (Internal Testing, Closed Testing, or Production track).
-  5. Inspect the Play Console upload validation report and release dashboard.
-- **Expected Result:** The `.aab` uploads successfully without any warnings or error banners stating "Your app does not support 16 KB memory page sizes." Google Play Console accepts the release artifact for Android 15+ target devices.
+  1. Export an Android App Bundle (`.aab`) using the Godot Android export preset (`game/export_presets.cfg`) or trigger the automated GitHub Actions CI release workflow (`.github/workflows/android_release.yml`). Prefer using the CI workflow because it performs post-export validation automatically.
+  2. Confirm the project is using Godot Android templates with an updated `.build_version` (e.g., `game/android/.build_version` contains `4.7.2.stable`) and that the Android Gradle Plugin / Gradle wrapper are compatible with that template (the branch updates use AGP `8.6.1` and Gradle `8.11.1`).
+  3. Locally (or in CI) validate the signed AAB and its generated APKs using the included validator and Bundletool:
+     - Run the ELF/PT_LOAD check on the signed AAB (replace `LetterLogic.aab` with the produced file):
+       ```bash
+       python scripts/validate_android_16kb.py LetterLogic.aab
+       ```
+       This reports ELF PT_LOAD alignments for native libraries inside the AAB. 64-bit ABIs (`arm64-v8a`, `x86_64`) must have PT_LOAD alignments of `16384` (16 KiB).
+     - Build APKs from the signed AAB with Bundletool and validate the generated APK payloads strictly:
+       ```bash
+       java -jar bundletool-all-<version>.jar build-apks --bundle=LetterLogic.aab --output=LetterLogic.apks --mode=universal
+       python scripts/validate_android_16kb.py --strict-zip LetterLogic.apks
+       unzip -q -o LetterLogic.apks -d apks_extracted
+       zipalign -c -P 16 -v 4 apks_extracted/*.apk
+       ```
+       The `--strict-zip` check ensures native libraries are stored (not compressed) and are data-aligned to 16 KiB inside generated APKs; `zipalign -c -P 16` verifies alignment at the APK level.
+  4. Optionally, upload the signed `.aab` to the Google Play Console (Internal Testing or Closed Testing) and inspect the Play Console upload validation report for any 16 KB page-size warnings.
+- **Expected Result:** The local/CI validation reports no ELF or ZIP alignment errors (ELF PT_LOAD alignments for 64-bit ABIs are 16384, and the strict ZIP checks pass). The AAB uploads to the Play Console without any "does not support 16 KB memory page sizes" warnings and is accepted for Android 15+ devices.
 
 ### Test 6.2: Android Native Debug Symbols & Obfuscation Mapping Packaging
 - **Requirement(s):** REQ-9.2

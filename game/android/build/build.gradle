@@ -33,6 +33,7 @@ configurations {
 dependencies {
     implementation "androidx.fragment:fragment:$versions.fragmentVersion"
     implementation "androidx.core:core-splashscreen:$versions.splashscreenVersion"
+    implementation "androidx.documentfile:documentfile:$versions.documentfileVersion"
 
     if (rootProject.findProject(":lib")) {
         implementation project(":lib")
@@ -75,7 +76,7 @@ android {
         jvmTarget = versions.javaVersion
     }
 
-    assetPacks = [":assetPacks:installTime"]
+    assetPacks = [":assetPackInstallTime"]
 
     namespace = 'com.godot.game'
 
@@ -86,6 +87,7 @@ android {
         }
 
         ndk {
+            debugSymbolLevel 'NONE'
             String[] export_abi_list = getExportEnabledABIs()
             abiFilters export_abi_list
         }
@@ -113,9 +115,11 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
 
-        // 'doNotStrip' is enabled for development within Android Studio
+        // Debug symbols are kept for development within Android Studio.
         if (shouldNotStrip()) {
-            doNotStrip '**/*.so'
+            jniLibs {
+                keepDebugSymbols += '**/*.so'
+            }
         }
 
         jniLibs {
@@ -154,6 +158,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
 
         debug {
@@ -188,6 +196,14 @@ android {
             } else {
                 signingConfig null
             }
+        }
+    }
+
+    flavorDimensions 'edition'
+
+    productFlavors {
+        standard {
+            getIsDefault().set(true)
         }
     }
 
@@ -275,6 +291,29 @@ task copyAndRenameReleaseAab(type: Copy) {
     from "$buildDir/outputs/bundle/release/build-release.aab"
     into getExportPath()
     rename "build-release.aab", getExportFilename()
+}
+
+task copyAndRenameBinary(type: Copy) {
+    // The 'doNotTrackState' is added to disable gradle's up-to-date checks for output files
+    // and directories. Otherwise this check may cause permissions access failures on Windows
+    // machines.
+    doNotTrackState("No need for up-to-date checks for the copy-and-rename operation")
+
+    String exportPath = getExportPath()
+    String exportFilename = getExportFilename()
+    String exportEdition = getExportEdition()
+    String exportBuildType = getExportBuildType()
+    String exportBuildTypeCapitalized = exportBuildType.capitalize()
+    String exportFormat = getExportFormat()
+
+    boolean isAab = exportFormat == "aab"
+    String filenameSuffix = isAab ? "${exportEdition}-${exportBuildType}" : exportBuildType
+    String sourceFilename = isAab ? "${project.name}-${filenameSuffix}.aab" : "android_${filenameSuffix}.apk"
+    String sourceFilepath = isAab ? "$buildDir/outputs/bundle/${exportEdition}${exportBuildTypeCapitalized}/$sourceFilename" : "$buildDir/outputs/apk/$exportEdition/$exportBuildType/$sourceFilename"
+
+    from sourceFilepath
+    into exportPath
+    rename sourceFilename, exportFilename
 }
 
 /**
