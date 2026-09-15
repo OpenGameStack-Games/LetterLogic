@@ -19,7 +19,9 @@ const COLOR_BORDER_PRESENT: Color = Color("b59f3b")
 const COLOR_BORDER_ABSENT: Color = Color("b53b3b")
 
 const COLOR_TEXT: Color = Color("ffffff")
-const FONT_SIZE_DEFAULT: int = 72
+const FONT_SIZE_MAX: int = 72
+const FONT_SIZE_MIN: int = 16
+const FONT_SIZE_SCALE: float = 0.62
 
 var label: Label = null
 var current_state: int = 0
@@ -27,7 +29,16 @@ var letter: String = ""
 
 func _ready() -> void:
 	_ensure_label()
+	custom_minimum_size = Vector2.ZERO
 	set_state(GameManagerScript.TileState.EMPTY)
+	_refresh_font_size()
+
+func _get_minimum_size() -> Vector2:
+	return Vector2.ZERO
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_refresh_font_size()
 
 func _ensure_label() -> void:
 	if label == null:
@@ -39,9 +50,26 @@ func _ensure_label() -> void:
 			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			lbl.add_theme_color_override("font_color", COLOR_TEXT)
-			lbl.add_theme_font_size_override("font_size", FONT_SIZE_DEFAULT)
 			add_child(lbl)
 			label = lbl
+	if label != null:
+		label.clip_text = true
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.size_flags_horizontal = SIZE_EXPAND_FILL
+		label.size_flags_vertical = SIZE_EXPAND_FILL
+		label.custom_minimum_size = Vector2.ZERO
+		label.add_theme_color_override("font_color", COLOR_TEXT)
+		_refresh_font_size()
+
+func _refresh_font_size() -> void:
+	if label == null:
+		return
+	var tile_span: float = minf(size.x, size.y)
+	var target_size: int = FONT_SIZE_MAX
+	if tile_span > 0.0:
+		target_size = int(round(clampf(tile_span * FONT_SIZE_SCALE, float(FONT_SIZE_MIN), float(FONT_SIZE_MAX))))
+	label.add_theme_font_size_override("font_size", target_size)
 
 func set_letter(p_letter: String) -> void:
 	_ensure_label()

@@ -15,7 +15,7 @@ const BASE_CONTENT_MARGIN_BOTTOM: int = 16
 @onready var content_margin: MarginContainer = $ContentMargin
 @onready var content_container: VBoxContainer = $ContentMargin/VBoxContainer
 @onready var game_board: Control = $ContentMargin/VBoxContainer/BoardArea/GameBoard
-@onready var game_keyboard: Control = $ContentMargin/VBoxContainer/KeyboardWrapper/Keyboard
+@onready var game_keyboard: Control = $ContentMargin/VBoxContainer/KeyboardArea/Keyboard
 @onready var mode_label: Label = $ContentMargin/VBoxContainer/Header/TitleBox/ModeLabel
 @onready var toast_label: Label = $ContentMargin/VBoxContainer/ToastOverlay/ToastPanel/MarginContainer/ToastLabel
 @onready var toast_overlay: Control = $ContentMargin/VBoxContainer/ToastOverlay
@@ -50,8 +50,8 @@ func _apply_safe_area_insets() -> void:
 	if content_margin != null:
 		content_margin.add_theme_constant_override("margin_left", BASE_CONTENT_MARGIN_SIDE)
 		content_margin.add_theme_constant_override("margin_right", BASE_CONTENT_MARGIN_SIDE)
-		content_margin.add_theme_constant_override("margin_bottom", BASE_CONTENT_MARGIN_BOTTOM)
-		SafeAreaLayout.apply_margin_container_top_margin(content_margin, BASE_CONTENT_MARGIN_TOP)
+		var viewport_height: int = int(round(get_viewport_rect().size.y))
+		SafeAreaLayout.apply_margin_container_vertical_safe_margins(content_margin, BASE_CONTENT_MARGIN_TOP, BASE_CONTENT_MARGIN_BOTTOM, viewport_height)
 
 func check_and_restore_completed_game(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)

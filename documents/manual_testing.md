@@ -136,15 +136,16 @@ This document outlines the manual test cases used to verify the requirements out
   6. Confirm that the delay and entrance animation execute identically and reliably in both Continuous Play and Daily Challenge modes.
 - **Expected Result:** Upon winning or losing in both Continuous Play and Daily Challenge modes, the game waits ~1.5 seconds for the staggered tile reveal animation to complete across all 5 columns before displaying the Game Over modal. When the modal appears, it plays a coordinated entrance animation (fade in and scale pop with back-ease overshoot from 0.8x to 1.0x over 0.3s) centered around its midpoint.
 
-### Test 1.10: Virtual Keyboard Key Height & Bottom Margin Calibration on Android
-- **Requirement(s):** REQ-2.4, REQ-8.7
+### Test 1.10: Main Game Portrait Layout, Board Visibility & Keyboard Containment on Android
+- **Requirement(s):** REQ-8.7, REQ-8.9, REQ-8.18
 - **Steps:**
-  1. Install the APK on a physical portrait Android device, such as a Samsung Galaxy S22 or simulated 20:9 / 16:9 screen.
-  2. Start a game in Continuous Play and observe the on-screen virtual keyboard.
-  3. Confirm the letter keys maintain comfortable tap targets and the bottom row has a 24px bottom margin (`margin_bottom = 24`) providing clearance from the bottom edge of the display.
-  4. Submit a few guesses and verify the keyboard does not clip, overlap, or crowd the board tiles above it.
-  5. Repeat the same visual check in Daily Challenge.
-- **Expected Result:** The on-screen keyboard keys are comfortably sized, the keyboard bottom margin provides 24px of clearance preventing bottom-row clipping on compact screens, and the keyboard remains fully contained without clipping or overlapping the game board in either Continuous Play or Daily Challenge.
+  1. Install the APK on a physical Android device or emulator and verify the main game scene in each of these portrait viewports: 360x640 (16:9), 412x915 (19.5:9), 360x800 (20:9), and 768x1024 (4:3).
+  2. Start a game in Continuous Play and observe the main game header, toast overlay gap, board, and keyboard.
+  3. Confirm the title, mode label, and timer remain stacked above the toast/board/keyboard flow with no overlap or clipping.
+  4. Confirm all 6 board rows remain visible, the keyboard starts below the board, and no key row bleeds below the bottom of the viewport.
+  5. Trigger a toast notification with an invalid guess and verify the board does not shift when the toast appears or dismisses.
+  6. Repeat the same checks in Daily Challenge and verify the layout contract stays identical.
+- **Expected Result:** The main game scene keeps a stable vertical flow in every tested portrait viewport, with safe-area-aware top and bottom margins, a visible 6-row board, and a fully contained keyboard that never overlaps the board or bleeds below the viewport. Toasts reserve their own vertical space, and both Continuous Play and Daily Challenge use the same layout contract.
 
 ---
 

@@ -10,13 +10,22 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
 const ROWS: int = 6
 const COLS: int = 5
+const BOARD_ASPECT_RATIO: float = 5.0 / 6.0
+const BOARD_MARGIN_MIN: int = 2
+const BOARD_MARGIN_MAX: int = 10
+const TILE_SEPARATION_MIN: int = 2
+const TILE_SEPARATION_MAX: int = 8
 
 var grid_container: GridContainer = null
 var tiles: Array = [] # 2D array: tiles[row][col]
 
 func _ready() -> void:
 	_setup_grid()
+	_refresh_responsive_metrics()
 	_connect_game_manager()
+
+func _get_minimum_size() -> Vector2:
+	return Vector2.ZERO
 
 func _setup_grid() -> void:
 	if not has_node("MarginContainer/AspectRatioContainer/GridContainer"):
@@ -29,14 +38,14 @@ func _setup_grid() -> void:
 		margin.add_theme_constant_override("margin_right", 10)
 		margin.add_theme_constant_override("margin_bottom", 10)
 		add_child(margin)
-		
+
 		var aspect: AspectRatioContainer = AspectRatioContainer.new()
 		aspect.name = "AspectRatioContainer"
 		aspect.size_flags_horizontal = SIZE_EXPAND_FILL
 		aspect.size_flags_vertical = SIZE_EXPAND_FILL
-		aspect.ratio = 0.8333
+		aspect.ratio = BOARD_ASPECT_RATIO
 		margin.add_child(aspect)
-		
+
 		grid_container = GridContainer.new()
 		grid_container.name = "GridContainer"
 		grid_container.columns = COLS
@@ -49,12 +58,13 @@ func _setup_grid() -> void:
 		grid_container = $MarginContainer/AspectRatioContainer/GridContainer as GridContainer
 
 	_build_tiles()
+	_refresh_responsive_metrics()
 
 func _build_tiles() -> void:
 	tiles.clear()
 	for child in grid_container.get_children():
 		child.queue_free()
-	
+
 	for r in range(ROWS):
 		var row_tiles: Array = []
 		for c in range(COLS):
@@ -63,15 +73,52 @@ func _build_tiles() -> void:
 				var scn: PackedScene = load("res://scenes/tile.tscn")
 				if scn != null:
 					tile = scn.instantiate()
-			
+
 			if tile == null:
 				tile = TileScript.new()
-			
+
 			tile.size_flags_horizontal = SIZE_EXPAND_FILL
 			tile.size_flags_vertical = SIZE_EXPAND_FILL
 			grid_container.add_child(tile)
 			row_tiles.append(tile)
 		tiles.append(row_tiles)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_refresh_responsive_metrics()
+
+func _refresh_responsive_metrics() -> void:
+	var shortest_side: float = minf(size.x, size.y)
+	var margin_px: int = BOARD_MARGIN_MIN
+	var separation_px: int = TILE_SEPARATION_MIN
+	if shortest_side > 0.0:
+		margin_px = int(round(clampf(shortest_side * 0.025, float(BOARD_MARGIN_MIN), float(BOARD_MARGIN_MAX))))
+		separation_px = int(round(clampf(shortest_side * 0.02, float(TILE_SEPARATION_MIN), float(TILE_SEPARATION_MAX))))
+
+	var margin: MarginContainer = get_node_or_null("MarginContainer") as MarginContainer
+	if margin != null:
+		margin.add_theme_constant_override("margin_left", margin_px)
+		margin.add_theme_constant_override("margin_top", margin_px)
+		margin.add_theme_constant_override("margin_right", margin_px)
+		margin.add_theme_constant_override("margin_bottom", margin_px)
+
+	var aspect: AspectRatioContainer = get_node_or_null("MarginContainer/AspectRatioContainer") as AspectRatioContainer
+	if aspect != null:
+		aspect.ratio = BOARD_ASPECT_RATIO
+
+	if grid_container != null:
+		grid_container.add_theme_constant_override("h_separation", separation_px)
+		grid_container.add_theme_constant_override("v_separation", separation_px)
+		for row in tiles:
+			if row is Array:
+				for tile in row:
+					if tile is Control:
+						var tile_control: Control = tile as Control
+						tile_control.custom_minimum_size = Vector2.ZERO
+						tile_control.minimum_size_changed()
+						if tile_control.has_method("_refresh_font_size"):
+							tile_control.call("_refresh_font_size")
+	minimum_size_changed()
 
 func _connect_game_manager() -> void:
 	var gm: Node = get_node_or_null("/root/GameManager") if is_inside_tree() else null
@@ -136,7 +183,7 @@ func populate_from_manager(gm_override: Node = null) -> void:
 	var gm: Node = gm_override if gm_override != null else (get_node_or_null("/root/GameManager") if is_inside_tree() else null)
 	if gm == null:
 		return
-	
+
 	reset_board()
 	for r in range(mini(gm.guesses.size(), ROWS)):
 		var guess: String = gm.guesses[r]
@@ -146,7 +193,7 @@ func populate_from_manager(gm_override: Node = null) -> void:
 			var results: Array = gm.guess_results[r]
 			for c in range(mini(results.size(), COLS)):
 				set_tile_state(r, c, results[c])
-	
+
 	if gm.current_row < ROWS and gm.current_guess != "":
 		for c in range(mini(gm.current_guess.length(), COLS)):
 			set_tile_letter(gm.current_row, c, gm.current_guess[c])

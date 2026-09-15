@@ -124,9 +124,9 @@ func test_absent_and_disabled_key_colors() -> void:
 
 func test_keyboard_key_dimensions_and_typography() -> void:
 	var key_a: Node = keyboard.get_key("A")
-	assert_eq(KeyboardKeyScript.KEY_MIN_HEIGHT, 99.0, "Key minimum height constant should be 99px")
-	assert_eq(key_a.custom_minimum_size.y, 99.0, "Key minimum height should be 99px")
-	assert_true(key_a.get_theme_font_size("font_size") >= 42, "Standard letter key font size should be enlarged (~44px)")
+	assert_eq(KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT, 44.0, "Keyboard keys should use a flexible 44px minimum touch height")
+	assert_eq(key_a.custom_minimum_size.y, 44.0, "Key minimum height should be the flexible touch target floor")
+	assert_true(key_a.get_theme_font_size("font_size") >= KeyboardKeyScript.FONT_SIZE_LETTER_MIN, "Standard letter key font size should stay readable at minimum height")
 
 	var key_enter: Button = null
 	var key_del: Button = null
@@ -141,20 +141,21 @@ func test_keyboard_key_dimensions_and_typography() -> void:
 
 	assert_true(key_enter != null, "Enter key should exist")
 	if key_enter != null:
-		assert_true(key_enter.get_theme_font_size("font_size") >= 18 and key_enter.get_theme_font_size("font_size") <= 22, "Enter key font size should be constrained")
+		assert_true(key_enter.get_theme_font_size("font_size") >= KeyboardKeyScript.FONT_SIZE_ENTER_MIN and key_enter.get_theme_font_size("font_size") <= KeyboardKeyScript.FONT_SIZE_ENTER_MAX, "Enter key font size should be responsive but constrained")
 	
 	assert_true(key_del != null, "Delete key should exist")
 	if key_del != null:
-		assert_true(key_del.get_theme_font_size("font_size") >= 40, "Delete key font size should be enlarged")
+		assert_true(key_del.get_theme_font_size("font_size") >= KeyboardKeyScript.FONT_SIZE_DELETE_MIN, "Delete key font size should stay readable at minimum height")
 
-func test_keyboard_runtime_bottom_margin_matches_scene_spec() -> void:
+func test_keyboard_runtime_bottom_margin_is_dynamic_and_safe() -> void:
 	var margin_container: MarginContainer = keyboard.get_node_or_null("MarginContainer") as MarginContainer
 	assert_true(margin_container != null, "Runtime keyboard MarginContainer should exist")
 	if margin_container != null:
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN, "Runtime keyboard bottom margin should be 24px")
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), 24, "Runtime keyboard bottom margin should match the Android spacing spec")
+		var bottom_margin: int = margin_container.get_theme_constant("margin_bottom")
+		assert_true(bottom_margin >= GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN_MIN, "Runtime keyboard bottom margin should keep breathing room")
+		assert_true(bottom_margin <= GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN_MAX, "Runtime keyboard bottom margin should not reserve rigid oversized space")
 
-func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
+func test_keyboard_scene_uses_flexible_flow_sizing() -> void:
 	var keyboard_scene: PackedScene = load("res://scenes/keyboard.tscn") as PackedScene
 	assert_true(keyboard_scene != null, "keyboard.tscn must be loadable")
 	
@@ -166,14 +167,15 @@ func test_keyboard_scene_reserves_space_for_tall_keys_and_padding() -> void:
 	var margin_container: MarginContainer = scene_keyboard.get_node_or_null("MarginContainer") as MarginContainer
 	assert_true(margin_container != null, "Keyboard scene MarginContainer should exist")
 	if margin_container != null:
-		assert_eq(margin_container.get_theme_constant("margin_bottom"), 24, "Keyboard scene bottom margin should be 24px")
+		assert_true(margin_container.get_theme_constant("margin_bottom") <= GameKeyboardScript.KEYBOARD_BOTTOM_MARGIN_MAX, "Keyboard scene bottom margin should be capped for constrained screens")
 	
 	assert_eq(scene_keyboard.anchor_top, 0.0, "Keyboard scene should start at the top of its parent instead of using bottom anchoring")
 	assert_eq(scene_keyboard.anchor_bottom, 1.0, "Keyboard scene should fill to the bottom of its parent")
 	assert_eq(scene_keyboard.offset_top, 0.0, "Keyboard scene should not use absolute top offsets")
 	assert_eq(scene_keyboard.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "Keyboard scene should use shrink begin for flow-layout slot")
 	scene_keyboard._ready()
-	assert_eq(scene_keyboard.custom_minimum_size.y, 0.0, "Keyboard scene should no longer enforce a rigid minimum height")
+	assert_eq(scene_keyboard.custom_minimum_size.y, 0.0, "Keyboard scene should not enforce a rigid custom minimum height")
+	assert_true(scene_keyboard.get_combined_minimum_size().y <= 164.0, "Keyboard combined minimum height should be flexible rather than 300px+")
 	scene_keyboard.free()
 
 func test_main_game_uses_flow_based_keyboard_wrapper() -> void:
@@ -188,14 +190,15 @@ func test_main_game_uses_flow_based_keyboard_wrapper() -> void:
 	var vbox: VBoxContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer") as VBoxContainer
 	assert_true(vbox != null, "Main game content VBoxContainer should exist")
 	var board_area: Control = main_game.get_node_or_null("ContentMargin/VBoxContainer/BoardArea") as Control
-	var keyboard_wrapper: MarginContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer/KeyboardWrapper") as MarginContainer
+	var keyboard_area: MarginContainer = main_game.get_node_or_null("ContentMargin/VBoxContainer/KeyboardArea") as MarginContainer
 	assert_true(board_area != null, "Main game BoardArea should exist")
-	assert_true(keyboard_wrapper != null, "Main game KeyboardWrapper should exist")
-	if board_area != null and keyboard_wrapper != null:
-		assert_eq(board_area.get_parent(), keyboard_wrapper.get_parent(), "BoardArea and KeyboardWrapper should be siblings in one VBoxContainer flow")
-		assert_true(board_area.get_index() < keyboard_wrapper.get_index(), "BoardArea should appear before KeyboardWrapper in the vertical flow")
-		assert_eq(keyboard_wrapper.custom_minimum_size.y, 0.0, "KeyboardWrapper should not use a hardcoded minimum height")
-		assert_eq(keyboard_wrapper.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "KeyboardWrapper should claim only its intrinsic keyboard height")
+	assert_true(keyboard_area != null, "Main game KeyboardArea should exist")
+	if board_area != null and keyboard_area != null:
+		assert_eq(board_area.get_parent(), keyboard_area.get_parent(), "BoardArea and KeyboardArea should be siblings in one VBoxContainer flow")
+		assert_true(board_area.get_index() < keyboard_area.get_index(), "BoardArea should appear before KeyboardArea in the vertical flow")
+		assert_true(board_area is AspectRatioContainer, "BoardArea should be an AspectRatioContainer")
+		assert_eq(keyboard_area.custom_minimum_size.y, 0.0, "KeyboardArea should not use a hardcoded minimum height")
+		assert_eq(keyboard_area.size_flags_vertical, Control.SIZE_SHRINK_BEGIN, "KeyboardArea should claim only its intrinsic keyboard height")
 	
 	main_game.free()
 

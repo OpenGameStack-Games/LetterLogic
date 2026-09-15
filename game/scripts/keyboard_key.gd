@@ -16,10 +16,15 @@ const COLOR_TEXT_DEFAULT: Color = Color("ffffff")
 const COLOR_TEXT_ABSENT: Color = Color("ffffff")
 const COLOR_TEXT_DISABLED: Color = Color("505050")
 
-const KEY_MIN_HEIGHT: float = 99.0
-const FONT_SIZE_LETTER: int = 44
-const FONT_SIZE_DELETE: int = 44
-const FONT_SIZE_ENTER: int = 20
+const KEY_MIN_TOUCH_HEIGHT: float = 44.0
+const KEY_MAX_TOUCH_HEIGHT: float = 99.0
+const FONT_SIZE_LETTER_MAX: int = 44
+const FONT_SIZE_LETTER_MIN: int = 20
+const FONT_SIZE_DELETE_MAX: int = 44
+const FONT_SIZE_DELETE_MIN: int = 20
+const FONT_SIZE_ENTER_MAX: int = 20
+const FONT_SIZE_ENTER_MIN: int = 14
+const FONT_SIZE_HEIGHT_RATIO: float = 0.48
 
 var key_name: String = ""
 var key_state: int = 0 # GameManager.TileState
@@ -32,13 +37,17 @@ func _ready() -> void:
 	focus_mode = FOCUS_NONE
 	_update_visuals()
 
-func setup(p_key_name: String, min_w: float = 48.0, min_h: float = KEY_MIN_HEIGHT) -> void:
+func setup(p_key_name: String, min_w: float = 48.0, min_h: float = KEY_MIN_TOUCH_HEIGHT) -> void:
 	key_name = p_key_name
 	text = p_key_name
 	custom_minimum_size = Vector2(min_w, min_h)
 	size_flags_horizontal = SIZE_EXPAND_FILL
 	size_flags_vertical = SIZE_EXPAND_FILL
 	_update_visuals()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_refresh_font_size()
 
 func _on_pressed() -> void:
 	on_key_pressed.emit(key_name)
@@ -60,9 +69,9 @@ func _update_visuals() -> void:
 	style_box.corner_radius_top_right = 6
 	style_box.corner_radius_bottom_left = 6
 	style_box.corner_radius_bottom_right = 6
-	
+
 	var text_color: Color = COLOR_TEXT_DEFAULT
-	
+
 	if is_row_disabled:
 		style_box.bg_color = COLOR_BG_DISABLED
 		text_color = COLOR_TEXT_DISABLED
@@ -80,7 +89,7 @@ func _update_visuals() -> void:
 			_:
 				style_box.bg_color = COLOR_BG_DEFAULT
 				text_color = COLOR_TEXT_DEFAULT
-	
+
 	add_theme_stylebox_override("normal", style_box)
 	add_theme_stylebox_override("hover", style_box)
 	add_theme_stylebox_override("pressed", style_box)
@@ -89,13 +98,29 @@ func _update_visuals() -> void:
 	add_theme_color_override("font_disabled_color", text_color)
 	add_theme_color_override("font_hover_color", text_color)
 	add_theme_color_override("font_pressed_color", text_color)
-	
-	var font_size: int = FONT_SIZE_LETTER
-	if key_name == "ENTER":
-		font_size = FONT_SIZE_ENTER
-	elif key_name == "⌫":
-		font_size = FONT_SIZE_DELETE
+
+	_refresh_font_size()
+
+func _refresh_font_size() -> void:
+	var font_size: int = _get_responsive_font_size()
 	add_theme_font_size_override("font_size", font_size)
+
+func _get_responsive_font_size() -> int:
+	var height_basis: float = size.y
+	if height_basis <= 0.0:
+		height_basis = custom_minimum_size.y
+	if height_basis <= 0.0:
+		height_basis = KEY_MIN_TOUCH_HEIGHT
+
+	var min_font_size: int = FONT_SIZE_LETTER_MIN
+	var max_font_size: int = FONT_SIZE_LETTER_MAX
+	if key_name == "ENTER":
+		min_font_size = FONT_SIZE_ENTER_MIN
+		max_font_size = FONT_SIZE_ENTER_MAX
+	elif key_name == "⌫":
+		min_font_size = FONT_SIZE_DELETE_MIN
+		max_font_size = FONT_SIZE_DELETE_MAX
+	return int(round(clampf(height_basis * FONT_SIZE_HEIGHT_RATIO, float(min_font_size), float(max_font_size))))
 
 func reset() -> void:
 	key_state = GameManagerScript.TileState.EMPTY
