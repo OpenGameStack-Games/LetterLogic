@@ -1,4 +1,4 @@
-﻿---
+---
 name: release-management
 description: >-
   Automates the safe deployment of new versions. Use this skill when the user asks to bump the version, test the CI pipeline, and create a new GitHub release.
@@ -16,7 +16,7 @@ This skill defines the workflow for safely publishing a new release.
 
 ## Pipeline Steps
 
-When the user asks to create a new release (e.g., "Bump to v0.2 and release"):
+When the user asks to create a new release (e.g., "Bump to v0.6.0 and release"):
 
 1. **Invoke the Subagent:** Define and invoke the `release_manager` subagent using the **`pro`** model. The `pro` model is required because this task involves reading configuration files, performing git operations, parsing JSON from the GitHub CLI, and robust error handling when watching workflows.
 2. **Schedule Liveness:** Schedule a 10-minute Liveness timer (`TimerCondition: 'any'`).
@@ -47,7 +47,7 @@ Follow these steps strictly in order:
    - Read `game/export_presets.cfg`.
    - Locate the `version/code` (integer) and `version/name` (string) properties under the `[preset.0.options]` section.
    - Increment `version/code` by 1.
-   - Update `version/name` to the user-requested target version (e.g., "0.2").
+   - Update `version/name` to the user-requested target version. **CRITICAL:** Ensure the version uses strict 3-digit semantic versioning (e.g., "0.6.0").
    - Save the file.
    
 2. **Commit & Push:**
