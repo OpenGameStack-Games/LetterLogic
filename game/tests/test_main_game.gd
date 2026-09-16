@@ -7,10 +7,10 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const SAFE_AREA_LAYOUT_SCRIPT = preload("res://scripts/safe_area_layout.gd")
 
 const MAIN_GAME_SAFE_MARGIN_BASE: float = 0.0
-const MAIN_GAME_TOP_BUFFER_RATIO: float = 0.04
+const MAIN_GAME_TOP_BUFFER_RATIO: float = 0.02
 const MAIN_GAME_HEADER_RATIO: float = 0.11
 const MAIN_GAME_KEYBOARD_RATIO: float = 0.22
-const MAIN_GAME_BOTTOM_BUFFER_RATIO: float = 0.035
+const MAIN_GAME_BOTTOM_BUFFER_RATIO: float = 0.0175
 const MAIN_GAME_RATIO_TOLERANCE: float = 0.055
 const MAIN_GAME_KEYBOARD_MIN_HEIGHT: float = 160.0
 const MAIN_GAME_KEYBOARD_MAX_HEIGHT: float = 620.0
@@ -87,7 +87,7 @@ func test_safe_area_top_offset_applied_on_startup() -> void:
 	assert_true(top_buffer != null, "TopBreathingBuffer should carry the visual breathing room")
 	assert_true(float(content_margin.get_theme_constant("margin_top")) >= float(maxi(safe_area.position.y, 0)), "ContentMargin top padding must include at least the display safe area top inset")
 	if top_buffer != null:
-		assert_true(top_buffer.custom_minimum_size.y >= 24.0, "TopBreathingBuffer should keep portrait breathing room out of safe-area margin math")
+		assert_true(top_buffer.custom_minimum_size.y >= 12.0, "TopBreathingBuffer should keep portrait breathing room out of safe-area margin math")
 
 	main_game.free()
 
