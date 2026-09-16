@@ -141,6 +141,8 @@ func test_keyboard_key_dimensions_and_typography() -> void:
 
 	assert_true(key_enter != null, "Enter key should exist")
 	if key_enter != null:
+		assert_eq(KeyboardKeyScript.FONT_SIZE_ENTER_MIN, 28, "Enter key minimum font size should be 28px")
+		assert_eq(KeyboardKeyScript.FONT_SIZE_ENTER_MAX, 40, "Enter key maximum font size should be 40px")
 		assert_true(key_enter.get_theme_font_size("font_size") >= KeyboardKeyScript.FONT_SIZE_ENTER_MIN and key_enter.get_theme_font_size("font_size") <= KeyboardKeyScript.FONT_SIZE_ENTER_MAX, "Enter key font size should be responsive but constrained")
 	
 	assert_true(key_del != null, "Delete key should exist")
