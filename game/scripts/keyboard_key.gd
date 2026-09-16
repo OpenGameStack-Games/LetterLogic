@@ -22,8 +22,8 @@ const FONT_SIZE_LETTER_MAX: int = 44
 const FONT_SIZE_LETTER_MIN: int = 20
 const FONT_SIZE_DELETE_MAX: int = 44
 const FONT_SIZE_DELETE_MIN: int = 20
-const FONT_SIZE_ENTER_MAX: int = 20
-const FONT_SIZE_ENTER_MIN: int = 14
+const FONT_SIZE_ENTER_MAX: int = 40
+const FONT_SIZE_ENTER_MIN: int = 28
 const FONT_SIZE_HEIGHT_RATIO: float = 0.48
 
 var key_name: String = ""
