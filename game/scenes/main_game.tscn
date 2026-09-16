@@ -34,7 +34,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="TopBreathingBuffer" type="Control" parent="ContentMargin/VBoxContainer"]
-custom_minimum_size = Vector2(0, 32)
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_vertical = 0
 
@@ -130,7 +130,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="BottomBreathingBuffer" type="Control" parent="ContentMargin/VBoxContainer"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 size_flags_vertical = 0
 
