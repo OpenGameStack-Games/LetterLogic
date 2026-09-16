@@ -1,4 +1,4 @@
----
+﻿---
 name: issue-orchestration
 description: >-
   Use this skill when the user asks to run the issue resolution pipeline, report a bug, or request a feature. It defines how to orchestrate the issue creator, resolver, and PR reviewer subagents.
@@ -29,7 +29,7 @@ When the user asks to log a bug or feature request:
 5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?" **You must ask this question EVERY TIME you log a new issue, even if the user previously gave you authorization to continuously resolve issues during a past batch. Past authorization does not carry over to newly created issues.**
 
 **Phase 2: Resolution & Review (Dynamic Queueing)**
-**CRITICAL AUTHORIZATION GATE**: You must NEVER autonomously invoke the `issue_resolver` simply because an issue exists or was just discussed. You must ALWAYS stop and wait for explicit user instruction (e.g., "go ahead and resolve those", "resolve issue X", "start the resolver") before beginning this phase.
+**CRITICAL AUTHORIZATION GATE**: You must NEVER autonomously invoke the `issue_resolver` simply because an issue exists or was just discussed. You must ALWAYS stop and wait for explicit user instruction (e.g., "go ahead and resolve those", "resolve issue X", "start the resolver") before beginning this phase. **Past authorizations DO NOT carry over to newly created issues. Every time you create a new issue, you MUST stop and ask for authorization again before resolving it.**
 
 When the user explicitly authorizes you to begin resolving issues:
 1. **Queue Assessment:** Use the terminal (`gh issue list --state open`) to fetch all open issues. Analyze the list and determine the optimal resolution order based on dependencies (e.g., global UI refactors should happen before localized UI tweaks to avoid conflicts), priority, and complexity.
@@ -88,9 +88,9 @@ You are the Issue Resolver Agent for the LetterLogic project. Your responsibilit
 2. **Worktree Isolation**: Create an isolated worktree for your work. Example: `git worktree add .worktrees/issue-<number> -b feature/issue-<number>-<short-description>`. Work inside this directory.
 3. **Implementation & Strict Compliance**: Modify codebase ensuring GDScript static typing, project naming conventions, and logging standards. You MUST explicitly cross-reference your work against every single item in the issue's Acceptance Criteria checklist. Do not skip exact dimensional requirements or requested unit tests.
 4. **Automated Testing**: 
-   - **CRITICAL: Godot Executable Path**: Do NOT download the Godot executable. Read the `LetterLogic.code-workspace` file to find the local absolute path to the Godot executable under `settings."letterlogic.godotExecutable"`. Use this absolute path instead of just `godot` when running commands.
-   - First, run `<GODOT_PATH> --headless --editor --quit --path game` to ensure all new assets are imported. 
-   - Then run the headless test suite using: `<GODOT_PATH> --headless --path game -s res://tests/test_runner.gd`. You must ensure 0 failures and explicitly add any new unit tests mandated by the issue criteria (even for UI layout requirements).
+   - **CRITICAL: Godot Executable Path**: Do NOT download the Godot executable. The system is configured to use the global `godot` command from the PATH.
+   - First, run `godot --headless --editor --quit --path game` to ensure all new assets are imported. 
+   - Then run the headless test suite using: `godot --headless --path game -s res://tests/test_runner.gd`. You must ensure 0 failures and explicitly add any new unit tests mandated by the issue criteria (even for UI layout requirements).
    - For Android release issues involving 16 KB page-size support, validate native ELF `PT_LOAD` alignment and validate APKs generated from the AAB with Bundletool and `zipalign -P 16`; ZIP header offsets in the AAB alone are insufficient.
 5. **Pull Request**: Push your branch and open a PR using `gh pr create`. Use the structure defined in `.github/pull_request_template.md`. 
 6. **Handoff**: Include a detailed 'Handoff for PR Reviewer & Documentation Agent' section so the reviewer knows what docs to update.
@@ -115,11 +115,12 @@ You are the PR Reviewer & Documentation Agent for the LetterLogic project. Your 
 
 1. **Review & Inspect**: Use `gh pr view` and `gh pr diff` to review a PR. Ensure the issue resolver met all acceptance criteria and provided handoff notes.
 2. **Local Testing**: Enter an existing review worktree or create one (`git worktree add .worktrees/review-pr-<pr_number> feature/<branch>`). 
-   - **CRITICAL: Godot Executable Path**: Do NOT download the Godot executable. Read the `LetterLogic.code-workspace` file to find the local absolute path to the Godot executable under `settings."letterlogic.godotExecutable"`. Use this absolute path instead of just `godot` when running commands.
-   - First, run `<GODOT_PATH> --headless --editor --quit --path game` to ensure all new assets are imported. 
-   - Then run `<GODOT_PATH> --headless --path game -s res://tests/test_runner.gd` locally to confirm 0 test failures.
+   - **CRITICAL: Godot Executable Path**: Do NOT download the Godot executable. The system is configured to use the global `godot` command from the PATH.
+   - First, run `godot --headless --editor --quit --path game` to ensure all new assets are imported. 
+   - Then run `godot --headless --path game -s res://tests/test_runner.gd` locally to confirm 0 test failures.
 3. **Documentation Coordination**: You are the documentation steward. Update `documents/requirements.md`, `documents/manual_testing.md`, and `README.md` as necessary based on the resolver's handoff notes. 
 4. **Commit Docs**: Commit these documentation updates directly to the feature branch and push.
 5. **Merge**: Exit the worktree and return to the root (`cd ../..`), remove the worktree (`git worktree remove .worktrees/review-pr-<pr_number> --force`), and then merge the PR using a standard merge commit: `gh pr merge <pr_number> --merge --delete-branch`. **DO NOT squash or rebase.**
 6. **Cleanup**: Checkout `main` and pull the latest changes. Close the issue if GitHub didn't automatically do so.
 ```
+
