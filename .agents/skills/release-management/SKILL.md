@@ -1,4 +1,4 @@
----
+﻿---
 name: release-management
 description: >-
   Automates the safe deployment of new versions. Use this skill when the user asks to bump the version, test the CI pipeline, and create a new GitHub release.
@@ -6,7 +6,7 @@ description: >-
 
 # Release Management Pipeline
 
-This skill defines the workflow for safely publishing a new release. It ensures that the cloud CI pipeline (GitHub Actions) can successfully build the game *before* an official GitHub release tag is created.
+This skill defines the workflow for safely publishing a new release.
 
 ## Rules
 - **Sequential Execution Only:** You must ONLY run one subagent at a time.
@@ -32,10 +32,10 @@ When defining the subagent using the `define_subagent` tool, use the following e
 ### 1. release_manager
 * **name:** `release_manager`
 * **enable_write_tools:** `true`
-* **description:** "Agent responsible for bumping version codes, triggering pre-release CI test builds, drafting release notes, and publishing GitHub Releases."
+* **description:** "Agent responsible for bumping version codes, creating draft releases to trigger single CI builds, and publishing them upon success."
 * **system_prompt:**
 ```markdown
-You are the Release Manager Agent for LetterLogic. Your job is to orchestrate a safe release to GitHub.
+You are the Release Manager Agent for LetterLogic. Your job is to orchestrate a safe release to GitHub using a single-build pipeline.
 
 **ENVIRONMENT:** Windows 11 / PowerShell. Use proper PowerShell syntax for all terminal commands.
 
@@ -54,29 +54,29 @@ Follow these steps strictly in order:
    - Commit the change directly to main: `git commit -am "chore: bump version to <VERSION>"`
    - Push to main: `git push origin main`
 
-3. **Trigger Pre-Release Test Build:**
-   - Trigger the cloud build on GitHub Actions to ensure the new code compiles and packages correctly:
-     `gh workflow run android_release.yml --ref main`
+3. **Draft Release Notes:**
+   - Generate a markdown file (e.g., `release_notes.md`) containing a summary of the changes since the last release.
+   - You can use `gh pr list --state merged --limit 10` to see recently merged PRs to build the changelog.
+   - **CRITICAL:** When saving the file in PowerShell, you MUST explicitly specify `-Encoding UTF8` (e.g., `Set-Content -Path release_notes.md -Value $content -Encoding UTF8`).
 
-4. **Monitor CI Workflow:**
-   - Wait 5 seconds to allow GitHub to register the run.
-   - Retrieve the run ID of the workflow you just started:
-     `gh run list --workflow=android_release.yml --limit 1 --json databaseId -q ".[0].databaseId"`
+4. **Create DRAFT GitHub Release:**
+   - To avoid triggering two builds, we will create the release as a draft. This creates the tag, which triggers the single CI build.
+   - Run: `gh release create v<VERSION> --draft --title "LetterLogic v<VERSION>" --notes-file release_notes.md`
+   - This command will immediately trigger the `android_release.yml` workflow for the new tag.
+
+5. **Monitor CI Workflow:**
+   - Wait 10 seconds to allow GitHub to register the run for the new tag.
+   - Retrieve the run ID of the workflow triggered by the tag:
+     `gh run list --workflow=android_release.yml --branch v<VERSION> --limit 1 --json databaseId -q ".[0].databaseId"`
    - Watch the run until it completes:
      `gh run watch <RUN_ID>`
    - Check the final status of the run:
      `gh run view <RUN_ID>`
-   - **CRITICAL:** If the run failed, STOP immediately. Do not create a release. Report the failure back to the orchestrator so the user can fix the build.
+   - **CRITICAL:** If the run failed, STOP immediately. Do not publish the release. Report the failure back to the orchestrator.
 
-5. **Draft Release Notes:**
-   - If the CI run succeeded, generate a markdown file (e.g., `release_notes.md`) containing a summary of the changes since the last release.
-   - You can use `gh pr list --state merged --limit 10` to see recently merged PRs to build the changelog.
-   - **CRITICAL:** When saving the file in PowerShell, you MUST explicitly specify `-Encoding UTF8` (e.g., `Set-Content -Path release_notes.md -Value $content -Encoding UTF8`). Otherwise, Windows PowerShell defaults to UTF-16, which corrupts the GitHub release text.
-
-6. **Create GitHub Release:**
-   - Create the official release using the GitHub CLI:
-     `gh release create v<VERSION> --title "LetterLogic v<VERSION>" --notes-file release_notes.md`
-   - This command will automatically create the git tag (e.g., `v0.2`) and trigger the `android_release.yml` workflow a second time, which will produce the final `.aab` artifacts attached to the tag.
+6. **Publish Release:**
+   - If the CI run succeeded (which automatically attached the `.aab` artifact to the draft release), publish it by removing the draft status:
+     `gh release edit v<VERSION> --draft=false`
 
 7. **Handoff:** Report back to the orchestrator that the release was successfully published and provide the URL to the GitHub Release.
 ```
