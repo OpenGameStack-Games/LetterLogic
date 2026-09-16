@@ -326,19 +326,19 @@ This document outlines the manual test cases used to verify the requirements out
 ### Test 4.1: Native Share Sheet Plugin Integration (Android)
 - **Requirement(s):** REQ-6.1, REQ-6.2, REQ-9.4
 - **Steps (Android device required):**
-  1. Build and install the Android export (`.apk` or `.aab`) with `SharePlugin` enabled on a physical Android device.
+  1. Build and install the Android export (`.apk` or `.aab`) with `SharePlugin` enabled on a physical Android device or emulator.
   2. Complete today's Daily Challenge (or re-enter a completed daily challenge from the Main Menu).
   3. On the Game Over modal, tap the "Share" button.
   4. Observe the system response:
-     - Verify that the native Android system Share Sheet immediately opens (displaying target sharing apps such as Messages, WhatsApp, Gmail, Discord, etc.).
+     - Verify that the native Android system Share Sheet immediately opens (displaying target sharing apps such as Messages, WhatsApp, Gmail, Discord, etc.) via dynamic instantiation of `Share.gd`.
      - Select an application (such as Messages or WhatsApp).
      - Verify the shared text content contains the complete formatted summary:
        - Header with game name, UTC date, and attempt score (e.g., `LetterLogic 2026-09-15 3/6` or `X/6`).
        - Formatted active solve timer line with emoji (e.g., `⏱️ 01:45`).
        - Correct emoji representation grid for all submitted guesses (🟩🟨🟥).
-       - Direct Google Play Store link (`https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic`).
+       - Direct Google Play Store link (`Play now: audrain.games/letterlogic/android`).
      - Verify that the device clipboard also receives the shared text as a convenience copy.
-- **Expected Result:** Tapping the "Share" button on Android activates the native Android Share Sheet via the `SharePlugin` without freezing or crashing, allowing seamless sharing to any installed messaging or social application (Messages, WhatsApp, etc.), while also copying the formatted results to the device clipboard.
+- **Expected Result:** Tapping the "Share" button on Android activates the native Android Share Sheet via the dynamically instantiated `Share.gd` wrapper node without freezing or crashing, allowing seamless sharing to any installed messaging or social application (Messages, WhatsApp, etc.), safely cleaning up the temporary node on a short timer delay while also copying the formatted results to the device clipboard.
 
 ### Test 4.2: Clipboard Fallback (Godot PC)
 - **Requirement(s):** REQ-6.1, REQ-6.2
@@ -352,7 +352,7 @@ This document outlines the manual test cases used to verify the requirements out
   ⏱️ 01:45
 
   🟩🟨🟥...
-  Play now: https://play.google.com/store/apps/details?id=com.opengamestack.letterlogic
+  Play now: audrain.games/letterlogic/android
   ```
 
 ---
