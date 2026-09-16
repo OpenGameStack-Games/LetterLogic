@@ -84,16 +84,20 @@ func _build_keys() -> void:
 		if r_idx == 1:
 			var spacer_left: Control = Control.new()
 			spacer_left.name = "LeftStaggerSpacer"
-			spacer_left.custom_minimum_size = Vector2(KEYBOARD_ROW_STAGGER_MIN, 0)
+			spacer_left.size_flags_horizontal = SIZE_EXPAND_FILL
+			spacer_left.size_flags_stretch_ratio = 0.5
+			spacer_left.custom_minimum_size = Vector2(0, 0)
 			hbox.add_child(spacer_left)
 
 		for key_str in row_keys:
 			var key_btn: Node = KeyboardKeyScript.new()
-			var min_w: float = KEY_STANDARD_MIN_WIDTH
+			key_btn.setup(key_str, 0.0, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
+			key_btn.size_flags_horizontal = SIZE_EXPAND_FILL
 			if key_str == "ENTER" or key_str == "⌫":
-				min_w = KEY_ACTION_MIN_WIDTH
+				key_btn.size_flags_stretch_ratio = 1.5
+			else:
+				key_btn.size_flags_stretch_ratio = 1.0
 
-			key_btn.setup(key_str, min_w, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
 			key_btn.on_key_pressed.connect(_on_key_clicked)
 			hbox.add_child(key_btn)
 
@@ -103,7 +107,9 @@ func _build_keys() -> void:
 		if r_idx == 1:
 			var spacer_right: Control = Control.new()
 			spacer_right.name = "RightStaggerSpacer"
-			spacer_right.custom_minimum_size = Vector2(KEYBOARD_ROW_STAGGER_MIN, 0)
+			spacer_right.size_flags_horizontal = SIZE_EXPAND_FILL
+			spacer_right.size_flags_stretch_ratio = 0.5
+			spacer_right.custom_minimum_size = Vector2(0, 0)
 			hbox.add_child(spacer_right)
 
 func _notification(what: int) -> void:
@@ -132,14 +138,13 @@ func _refresh_responsive_metrics() -> void:
 				for child in hbox.get_children():
 					if child is KeyboardKey:
 						var key: KeyboardKey = child as KeyboardKey
-						var min_width: float = KEY_ACTION_MIN_WIDTH if key.text == "ENTER" or key.text == "⌫" else KEY_STANDARD_MIN_WIDTH
-						key.custom_minimum_size = Vector2(min_width, _get_key_touch_height())
+						key.custom_minimum_size = Vector2(0.0, _get_key_touch_height())
 						key.update_minimum_size()
 						if key.has_method("_refresh_font_size"):
 							key.call("_refresh_font_size")
 					elif child is Control:
 						var spacer: Control = child as Control
-						spacer.custom_minimum_size = Vector2(_get_row_stagger_width(), 0.0)
+						spacer.custom_minimum_size = Vector2(0.0, 0.0)
 	update_minimum_size()
 
 func _get_viewport_size() -> Vector2:
