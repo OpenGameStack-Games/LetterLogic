@@ -10,6 +10,7 @@ This skill defines the workflow for safely publishing a new release. It ensures 
 
 ## Rules
 - **Sequential Execution Only:** You must ONLY run one subagent at a time.
+- **Strict Authorization Gate:** You must NEVER autonomously invoke the `release_manager` simply because a set of issues was just resolved. You must ALWAYS stop and wait for explicit user instruction (e.g., "bump the version and release") before running this pipeline. This gives the user time to manually test merged changes on their devices before an official release is cut.
 - **Liveness Monitoring:** When waiting for the release manager to finish its pipeline, you must ALWAYS set a 10-minute (600s) one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`).
 - **No Direct Deployment:** The pipeline creates the GitHub release and triggers the final `.aab` artifact build on GitHub, but it does *not* upload to Google Play directly. The user handles Google Play Console uploads and manual device testing.
 

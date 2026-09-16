@@ -29,11 +29,13 @@ When the user asks to log a bug or feature request:
 5. **CRITICAL:** Do NOT automatically proceed to resolve the issue. Instead, STOP and ask the user: "Would you like to log another issue, or should we begin resolving the open issues?" **You must ask this question EVERY TIME you log a new issue, even if the user previously gave you authorization to continuously resolve issues during a past batch. Past authorization does not carry over to newly created issues.**
 
 **Phase 2: Resolution & Review (Dynamic Queueing)**
+**CRITICAL AUTHORIZATION GATE**: You must NEVER autonomously invoke the `issue_resolver` simply because an issue exists or was just discussed. You must ALWAYS stop and wait for explicit user instruction (e.g., "go ahead and resolve those", "resolve issue X", "start the resolver") before beginning this phase.
+
 When the user explicitly authorizes you to begin resolving issues:
 1. **Queue Assessment:** Use the terminal (`gh issue list --state open`) to fetch all open issues. Analyze the list and determine the optimal resolution order based on dependencies (e.g., global UI refactors should happen before localized UI tweaks to avoid conflicts), priority, and complexity.
 2. **Issue Resolution:** Define and invoke the `issue_resolver` subagent (Model: `pro`), instructing it to resolve the TOP priority issue identified in Step 1. Schedule a 10-minute (600s) Liveness timer. Wait for it to push the branch and open a PR. Kill the `issue_resolver` when done.
 3. **PR Review & Merge:** Immediately define and invoke the `pr_reviewer` subagent (Model: `flash`), instructing it to review and merge the PR. Schedule a 10-minute (600s) Liveness timer. Wait for it to complete the merge. Kill the `pr_reviewer` when done.
-4. **Re-evaluate:** After the PR is merged, return to Step 1. Re-fetch the open issues from GitHub and perform a fresh assessment before starting the next issue. Repeat this cycle until the queue is completely empty.
+4. **Re-evaluate:** After the PR is merged, return to Step 1. Re-fetch the open issues from GitHub and perform a fresh assessment before starting the next issue. Repeat this cycle until the queue is completely empty or the user asks you to pause.
 
 ---
 
