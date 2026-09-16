@@ -59,6 +59,19 @@ func share_daily_results(date_str: String, guess_results: Array, won: bool, atte
 	return share_text
 
 func _share_native_android(title: String, text: String) -> void:
-	if Engine.has_singleton("Share"):
-		var share: Object = Engine.get_singleton("Share")
-		share.shareText(title, title, text)
+	const SHARE_SCRIPT_PATH: String = "res://addons/SharePlugin/Share.gd"
+	if ResourceLoader.exists(SHARE_SCRIPT_PATH):
+		var share_script: Script = load(SHARE_SCRIPT_PATH) as Script
+		if share_script and share_script.can_instantiate():
+			var share_node: Node = share_script.new() as Node
+			add_child(share_node)
+			if share_node.has_method("share_text"):
+				share_node.share_text(title, title, text)
+			if is_inside_tree():
+				var tree: SceneTree = get_tree()
+				if tree:
+					tree.create_timer(2.0).timeout.connect(share_node.queue_free)
+				else:
+					share_node.queue_free()
+			else:
+				share_node.queue_free()
