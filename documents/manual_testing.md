@@ -701,6 +701,21 @@ This document outlines the manual test cases used to verify the requirements out
   6. Tap "Got It!" to dismiss the modal and confirm return to the Main Menu.
 - **Expected Result:** The How to Play modal body text dynamically scales its font size down on compact or shorter portrait displays to fit the available vertical budget without text truncation or clipping. Vertical scrolling is completely disabled (`scroll_active = false`), eliminating the need to scroll to read the complete rules, while preserving the fixed title, button sizing, and 24px inner margins.
 
+### Test 5.20: Android Non-Immersive Mode & Display Cutout / Safe Area Verification
+- **Requirement(s):** REQ-8.18
+- **Steps:**
+  1. Export an Android APK or AAB using the configured Android export preset (`game/export_presets.cfg`) where Immersive Mode is disabled (`screen/immersive_mode=false`).
+  2. Install and launch the build on a physical Android device or emulator featuring a camera notch or punch-hole display cutout (e.g., Google Pixel or Samsung Galaxy device) and system navigation bar / gesture navigation.
+  3. Verify that Android Immersive Mode is disabled:
+     - The Android system status bar (clock, battery, notification icons) remains visible at the top of the screen.
+     - The Android system navigation bar (or 3-button / gesture bar) remains visible at the bottom of the screen.
+     - The system bars are not hidden or overlaid in full-screen mode.
+  4. Inspect the visual layout across all screens (Main Menu, Continuous Play, Daily Challenge, Statistics modal, How to Play modal, and Credits modal):
+     - Confirm that the top UI elements (header, title, mascot, navigation back button, statistics button) start cleanly below the system status bar and any hardware cutout or notch area without clipping or collision.
+     - Confirm that bottom UI elements (virtual keyboard, action buttons, modal dismiss buttons) remain comfortably positioned above the navigation bar or gesture insets.
+     - Confirm that all screens compress smoothly to the reduced vertical viewport height without overlapping or clipping elements.
+- **Expected Result:** The Android status bar and navigation bar remain visible at all times during application usage (Immersive Mode off). Safe area insets are properly recognized by Godot, ensuring the UI starts below hardware display cutouts and above system navigation bars with zero element collision or overlap across all screens.
+
 ---
 
 ## 6. Build, CI/CD & Platform Packaging
