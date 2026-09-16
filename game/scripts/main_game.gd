@@ -14,18 +14,18 @@ const CONTENT_MARGIN_SIDE_RATIO: float = 0.04
 
 # Portrait layout allocation targets. Safe-area insets stay on ContentMargin; these
 # explicit flow children provide breathing room so the board and keyboard remain balanced.
-const TOP_BUFFER_HEIGHT_RATIO: float = 0.04
-const TOP_BUFFER_HEIGHT_MIN: int = 24
-const TOP_BUFFER_HEIGHT_MAX: int = 72
+const TOP_BUFFER_HEIGHT_RATIO: float = 0.02
+const TOP_BUFFER_HEIGHT_MIN: int = 12
+const TOP_BUFFER_HEIGHT_MAX: int = 36
 const HEADER_HEIGHT_RATIO: float = 0.11
 const HEADER_HEIGHT_MIN: int = 76
 const HEADER_HEIGHT_MAX: int = 320
 const KEYBOARD_HEIGHT_RATIO: float = 0.22
 const KEYBOARD_HEIGHT_MIN: int = 160
 const KEYBOARD_HEIGHT_MAX: int = 620
-const BOTTOM_BUFFER_HEIGHT_RATIO: float = 0.035
-const BOTTOM_BUFFER_HEIGHT_MIN: int = 20
-const BOTTOM_BUFFER_HEIGHT_MAX: int = 72
+const BOTTOM_BUFFER_HEIGHT_RATIO: float = 0.0175
+const BOTTOM_BUFFER_HEIGHT_MIN: int = 10
+const BOTTOM_BUFFER_HEIGHT_MAX: int = 36
 const CONTENT_SEPARATION_RATIO: float = 0.008
 const CONTENT_SEPARATION_MIN: int = 4
 const CONTENT_SEPARATION_MAX: int = 12

@@ -87,10 +87,10 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
     Portrait-first proportional layout contract (used by runtime and tests):
     - safe-area-only root margins (ContentMargin keeps device cutouts/gestures out of content flow)
     - side margins: 4% of viewport width, clamped to 12–24 px
-    - top breathing buffer: 4% of available height, clamped to 24–72 px
+    - top breathing buffer: 2% of available height, clamped to 12–36 px
     - header: 11% of available height, clamped to 76–320 px
     - keyboard: 22% of available height, clamped to 160–620 px
-    - bottom breathing buffer: 3.5% of available height, clamped to 20–72 px
+    - bottom breathing buffer: 1.75% of available height, clamped to 10–36 px
     - content separation: 0.8% of available height, clamped to 4–12 px
     - board and keyboard participate in proportional expansion with stretch ratio ~2.7 : 1.0 so the board fills the middle while the keyboard retains a readable region
 
