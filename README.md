@@ -42,4 +42,5 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 - For manual testing guidelines and core requirement mapping, please refer to the documentation in the `/documents` folder.
 
 ## License
-This project is open-source and available under the [MIT License](LICENSE).
+The source code for LetterLogic is licensed under the [GNU GPLv3](LICENSE). 
+All artistic assets (audio, textures, icons) in the `assets/` directory are licensed under [Creative Commons Attribution-ShareAlike 4.0 International](LICENSE-ASSETS.txt) (CC BY-SA 4.0).
