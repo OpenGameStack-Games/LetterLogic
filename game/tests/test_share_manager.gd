@@ -36,7 +36,7 @@ func test_generate_share_text_win() -> void:
 	assert_true(text.contains("🟥🟥🟨🟥🟩"), "Row 1 emojis should match")
 	assert_true(text.contains("🟥🟩🟥🟥🟩"), "Row 2 emojis should match")
 	assert_true(text.contains("🟩🟩🟩🟩🟩"), "Row 3 emojis should match")
-	assert_true(text.contains("https://play.google.com/store/apps/details?id=games.audrain.letterlogic"), "Footer should contain Google Play link")
+	assert_true(text.contains("audrain.games/letterlogic/android"), "Footer should contain Google Play link")
 
 func test_generate_share_text_loss() -> void:
 	var date_str: String = "2026-08-26"
