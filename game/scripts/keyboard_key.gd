@@ -22,8 +22,8 @@ const FONT_SIZE_LETTER_MAX: int = 44
 const FONT_SIZE_LETTER_MIN: int = 20
 const FONT_SIZE_DELETE_MAX: int = 44
 const FONT_SIZE_DELETE_MIN: int = 20
-const FONT_SIZE_ENTER_MAX: int = 40
-const FONT_SIZE_ENTER_MIN: int = 28
+const FONT_SIZE_ENTER_MAX: int = 32
+const FONT_SIZE_ENTER_MIN: int = 22
 const FONT_SIZE_HEIGHT_RATIO: float = 0.48
 
 var key_name: String = ""
@@ -69,6 +69,8 @@ func _update_visuals() -> void:
 	style_box.corner_radius_top_right = 6
 	style_box.corner_radius_bottom_left = 6
 	style_box.corner_radius_bottom_right = 6
+	style_box.content_margin_left = 4
+	style_box.content_margin_right = 4
 
 	var text_color: Color = COLOR_TEXT_DEFAULT
 
