@@ -12,7 +12,7 @@ const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
 const ROW_1: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
 const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
-const ROW_3: Array[String] = ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"]
+const ROW_3: Array[String] = ["⌫", "Z", "X", "C", "V", "B", "N", "M", "ENTER"]
 const KEYBOARD_BOTTOM_MARGIN_MIN: int = 8
 const KEYBOARD_BOTTOM_MARGIN_MAX: int = 24
 const KEYBOARD_ROW_VERTICAL_SEPARATION_MIN: int = 4

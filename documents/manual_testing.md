@@ -444,7 +444,7 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify the mascot, title box, and navigation buttons scale dynamically within safe margin padding without crowding screen borders or overflowing.
   4. Enter a game (Continuous Play or Daily Challenge):
      - **Game Board:** Confirm the 5-column by 6-row grid preserves its 5:6 aspect ratio and square tiles via `AspectRatioContainer`, dynamically expanding across the available width while observing safe margins.
-     - **Virtual Keyboard:** Confirm letter keys stretch dynamically across the display width (`SIZE_EXPAND_FILL`), and control keys (`ENTER` and `⌫`) maintain weighted proportion (~1.4x-1.5x) without text clipping or overlapping adjacent keys.
+     - **Virtual Keyboard:** Confirm letter keys stretch dynamically across the display width (`SIZE_EXPAND_FILL`), and control keys (`⌫` on the bottom left and `ENTER` on the bottom right) maintain weighted proportion (~1.4x-1.5x) without text clipping or overlapping adjacent keys.
      - **Header Bar:** Verify the back button, game mode title, timer label, and statistics button stay neatly aligned across the top row.
   5. Open dialog overlays (How to Play modal, Stats Screen, and Game Over modal):
      - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
@@ -528,11 +528,11 @@ This document outlines the manual test cases used to verify the requirements out
   6. Observe the on-screen virtual keyboard at the bottom of the screen.
   7. Verify the vertical height of the keys is calibrated to 99px (`KEY_MIN_HEIGHT = 99.0`), providing a comfortable tap target while preventing container overflow on shorter mobile screens.
   8. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
-  9. Verify the Delete key ("⌫") icon is scaled up to match the enlarged font size of standard letter keys.
-  10. Verify the Enter key ("ENTER") text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
+  9. Verify the Delete key ("⌫") is positioned on the bottom left and its icon is scaled up to match the enlarged font size of standard letter keys.
+  10. Verify the Enter key ("ENTER") is positioned on the bottom right and its text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
   11. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
   12. Verify that the enlarged and constrained font sizes are preserved across all visual key states and interaction feedback (hover, pressed).
-- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. Keyboard keys provide calibrated 99px vertical tap targets. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
+- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. Keyboard keys provide calibrated 99px vertical tap targets. Delete is positioned on the bottom left and Enter on the bottom right. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
 
 ### Test 5.12: Main Menu Typography, Navigation Button Dimensions & Responsive Touch Targets
 - **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.12
@@ -672,9 +672,9 @@ This document outlines the manual test cases used to verify the requirements out
   3. Inspect the vertical layout of the main game screen:
      - **Game Board:** Verify that the `GameBoard` grid expands to fill the available vertical space in `BoardArea` between the header/toast and keyboard without leaving an empty dark gap above the tiles. Verify the 5:6 aspect ratio is preserved and tiles remain square.
      - **Keyboard Visibility:** Verify that all three keyboard rows are completely visible on screen without clipping or cutoff at the bottom:
-       - Row 1: `Q W E R T Y U I O P`
-       - Row 2: `A S D F G H J K L`
-       - Row 3: `ENTER  Z X C V B N M  ⌫`
+        - Row 1: `Q W E R T Y U I O P`
+        - Row 2: `A S D F G H J K L`
+        - Row 3: `⌫  Z X C V B N M  ENTER`
      - **Bottom Margin:** Confirm the 24px bottom margin provides clean spacing above the system navigation bar or screen bottom without truncating row 3 keys.
      - **Non-Overlap:** Confirm that the header, board area, and keyboard wrapper remain strictly sequential in the vertical layout hierarchy without overlapping or crowding each other during typing and gameplay.
   4. Test on a wider portrait tablet screen (4:3 or 16:10) and confirm the board expands proportionally and all three keyboard rows remain fully visible.
