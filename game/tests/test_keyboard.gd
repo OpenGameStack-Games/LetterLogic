@@ -211,3 +211,17 @@ func test_font_size_retained_after_state_change() -> void:
 	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after row disabled")
 	key_a.reset()
 	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after reset")
+
+func test_keyboard_row_3_key_order() -> void:
+	var row_3: HBoxContainer = keyboard.vbox_container.get_node_or_null("Row3") as HBoxContainer
+	assert_true(row_3 != null, "Row3 should exist on keyboard")
+	if row_3 != null:
+		var buttons: Array = []
+		for child: Node in row_3.get_children():
+			if child is Button:
+				buttons.append(child)
+		assert_eq(buttons.size(), 9, "Row3 should contain 9 keys (Delete, 7 letters, Enter)")
+		if buttons.size() >= 2:
+			assert_eq(buttons[0].text, "⌫", "First key on bottom row should be Delete/Backspace (left)")
+			assert_eq(buttons[-1].text, "ENTER", "Last key on bottom row should be Enter (right)")
+
