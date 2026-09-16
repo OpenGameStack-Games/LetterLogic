@@ -444,7 +444,7 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify the mascot, title box, and navigation buttons scale dynamically within safe margin padding without crowding screen borders or overflowing.
   4. Enter a game (Continuous Play or Daily Challenge):
      - **Game Board:** Confirm the 5-column by 6-row grid preserves its 5:6 aspect ratio and square tiles via `AspectRatioContainer`, dynamically expanding across the available width while observing safe margins.
-     - **Virtual Keyboard:** Confirm letter keys stretch dynamically across the display width (`SIZE_EXPAND_FILL`), and control keys (`⌫` on the bottom left and `ENTER` on the bottom right) maintain weighted proportion (~1.4x-1.5x) without text clipping or overlapping adjacent keys.
+      - **Virtual Keyboard:** Confirm that the keyboard grid strictly uses proportional sizing (`size_flags_stretch_ratio`), where all standard letter keys have identical uniform widths (stretch ratio 1.0), action keys (`⌫` on bottom left and `ENTER` on bottom right) are exactly 50% wider (stretch ratio 1.5), and Row 2 side stagger spacers are exactly half a key width (stretch ratio 0.5), scaling seamlessly across display widths without horizontal clipping or pushing adjacent keys off-screen.
      - **Header Bar:** Verify the back button, game mode title, timer label, and statistics button stay neatly aligned across the top row.
   5. Open dialog overlays (How to Play modal, Stats Screen, and Game Over modal):
      - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
@@ -527,12 +527,13 @@ This document outlines the manual test cases used to verify the requirements out
   5. On tablets or wider portrait profiles, confirm the board expands to absorb the extra vertical space while the keyboard retains its bottom buffer and compact footprint.
   6. Observe the on-screen virtual keyboard at the bottom of the screen.
   7. Verify the vertical height of the keys is calibrated to 99px (`KEY_MIN_HEIGHT = 99.0`), providing a comfortable tap target while preventing container overflow on shorter mobile screens.
-  8. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
-  9. Verify the Delete key ("⌫") is positioned on the bottom left and its icon is scaled up to match the enlarged font size of standard letter keys.
-  10. Verify the Enter key ("ENTER") is positioned on the bottom right and its text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
-  11. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
-  12. Verify that the enlarged and constrained font sizes are preserved across all visual key states and interaction feedback (hover, pressed).
-- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. Keyboard keys provide calibrated 99px vertical tap targets. Delete is positioned on the bottom left and Enter on the bottom right. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
+  8. Verify the keyboard grid strictly enforces proportional key widths via `size_flags_stretch_ratio`: all standard letter keys have uniform width with ratio 1.0, action keys (`ENTER` and `⌫`) have ratio 1.5, and Row 2 side stagger spacers have ratio 0.5 without hardcoded X pixel minimums.
+  9. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
+  10. Verify the Delete key ("⌫") is positioned on the bottom left and its icon is scaled up to match the enlarged font size of standard letter keys.
+  11. Verify the Enter key ("ENTER") is positioned on the bottom right and its text is constrained to an optimal size (~20px) so the full word fits neatly inside the key boundary without horizontal clipping or pushing adjacent keys off-screen.
+  12. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
+  13. Verify that the enlarged and constrained font sizes and proportional key width ratios are preserved across all visual key states and interaction feedback (hover, pressed).
+- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. The virtual keyboard uses proportional sizing (`size_flags_stretch_ratio`: 1.0 letters, 1.5 action keys, 0.5 Row 2 spacers) providing mathematically uniform letter widths. Keyboard keys provide calibrated 99px vertical tap targets. Delete is positioned on the bottom left and Enter on the bottom right. Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly (~20px font size), and all typography sizing is strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
 
 ### Test 5.12: Main Menu Typography, Navigation Button Dimensions & Responsive Touch Targets
 - **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.12
@@ -715,6 +716,22 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm that bottom UI elements (virtual keyboard, action buttons, modal dismiss buttons) remain comfortably positioned above the navigation bar or gesture insets.
      - Confirm that all screens compress smoothly to the reduced vertical viewport height without overlapping or clipping elements.
 - **Expected Result:** The Android status bar and navigation bar remain visible at all times during application usage (Immersive Mode off). Safe area insets are properly recognized by Godot, ensuring the UI starts below hardware display cutouts and above system navigation bars with zero element collision or overlap across all screens.
+
+### Test 5.21: Proportional Virtual Keyboard Grid Layout & Stretch Ratio Verification
+- **Requirement(s):** REQ-8.7
+- **Steps:**
+  1. Launch a game in Continuous Play or Daily Challenge mode.
+  2. Inspect the virtual keyboard layout at the bottom of the screen:
+     - **Uniform Letter Widths:** Verify that all standard letter keys across Row 1 (Q–P), Row 2 (A–L), and Row 3 (Z–M) have mathematically uniform widths (`size_flags_stretch_ratio = 1.0`), so characters like 'W' and 'I' occupy the exact same key width.
+     - **Action Key Widths:** Verify that the `⌫` (Delete/Backspace) and `ENTER` keys on Row 3 are exactly 50% wider than standard letter keys (`size_flags_stretch_ratio = 1.5`).
+     - **Row 2 Centering & Stagger:** Verify that Row 2 is centered under Row 1, with the `LeftStaggerSpacer` and `RightStaggerSpacer` creating an inset of exactly half a standard key width (`size_flags_stretch_ratio = 0.5`).
+     - **Vertical Column Alignment:** Verify that keys in Row 3 align properly with Row 2 (e.g., Z directly under S, X directly under D).
+     - **X-Axis Flexibility:** Verify keys and spacers do not enforce rigid X-axis minimum pixel constraints (`custom_minimum_size.x = 0.0`), allowing Godot's proportional flex container to govern key sizing.
+  3. Test across various viewport aspect ratios:
+     - **Extremely Narrow Display (e.g. 9:21 / 1080x2520):** Confirm key widths scale down uniformly without overlapping, label clipping, or container overflow.
+     - **Standard Portrait Display (9:16 / 720x1280):** Confirm clean Wordle-style proportion and comfortable touch targets.
+     - **Ultra-Wide / Tablet Portrait Display (4:3 or 16:10):** Confirm key widths expand proportionally and uniform letter widths and 1.5x action key proportions are preserved.
+- **Expected Result:** The virtual keyboard strictly utilizes proportional sizing (`size_flags_stretch_ratio`) without hardcoded X-axis pixel minimums. All standard letter keys are uniformly sized (1.0), action keys are 1.5x standard width (1.5), Row 2 is centered with 0.5x spacers on each side, and the grid adapts cleanly across extremely narrow and wide viewport aspect ratios without distortion or clipping.
 
 ---
 
