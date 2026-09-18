@@ -11,8 +11,8 @@ const KeyboardKeyScript = preload("res://scripts/keyboard_key.gd")
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
 const ROW_1: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"]
-const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L"]
-const ROW_3: Array[String] = ["⌫", "Z", "X", "C", "V", "B", "N", "M", "ENTER"]
+const ROW_2: Array[String] = ["A", "S", "D", "F", "G", "H", "J", "K", "L", "⌫"]
+const ROW_3: Array[String] = ["Z", "X", "C", "V", "B", "N", "M", "ENTER"]
 const KEYBOARD_BOTTOM_MARGIN_MIN: int = 8
 const KEYBOARD_BOTTOM_MARGIN_MAX: int = 24
 const KEYBOARD_ROW_VERTICAL_SEPARATION_MIN: int = 4
@@ -80,21 +80,20 @@ func _build_keys() -> void:
 		hbox.add_theme_constant_override("separation", KEYBOARD_KEY_SEPARATION_MIN)
 		vbox_container.add_child(hbox)
 
-		# Add slight left/right spacing for row 2 to give standard staggered look
-		if r_idx == 1:
-			var spacer_left: Control = Control.new()
-			spacer_left.name = "LeftStaggerSpacer"
-			spacer_left.size_flags_horizontal = SIZE_EXPAND_FILL
-			spacer_left.size_flags_stretch_ratio = 0.5
-			spacer_left.custom_minimum_size = Vector2(0, 0)
-			hbox.add_child(spacer_left)
-
 		for key_str in row_keys:
+			if r_idx == 2 and key_str == "ENTER":
+				var spacer: Control = Control.new()
+				spacer.name = "Row3Spacer"
+				spacer.size_flags_horizontal = SIZE_EXPAND_FILL
+				spacer.size_flags_stretch_ratio = 1.0
+				spacer.custom_minimum_size = Vector2(0, 0)
+				hbox.add_child(spacer)
+
 			var key_btn: Node = KeyboardKeyScript.new()
 			key_btn.setup(key_str, 0.0, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
 			key_btn.size_flags_horizontal = SIZE_EXPAND_FILL
-			if key_str == "ENTER" or key_str == "⌫":
-				key_btn.size_flags_stretch_ratio = 1.5
+			if key_str == "ENTER":
+				key_btn.size_flags_stretch_ratio = 2.0
 			else:
 				key_btn.size_flags_stretch_ratio = 1.0
 
@@ -103,14 +102,6 @@ func _build_keys() -> void:
 
 			if key_str.length() == 1 and key_str != "⌫":
 				keys_by_letter[key_str] = key_btn
-
-		if r_idx == 1:
-			var spacer_right: Control = Control.new()
-			spacer_right.name = "RightStaggerSpacer"
-			spacer_right.size_flags_horizontal = SIZE_EXPAND_FILL
-			spacer_right.size_flags_stretch_ratio = 0.5
-			spacer_right.custom_minimum_size = Vector2(0, 0)
-			hbox.add_child(spacer_right)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
