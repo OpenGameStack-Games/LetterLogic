@@ -777,3 +777,23 @@ This document outlines the manual test cases used to verify the requirements out
   3. Verify the startup log reports a non-empty dictionary load, such as `WordBank: Loaded <n> unique 5-letter isograms.`, and that no `push_error(...)` message reports an empty or missing word list.
   4. Enter the reference words `ADORE` and `THANK` during gameplay.
 - **Expected Result:** The Android build loads a non-empty runtime dictionary on startup, both reference words are accepted as valid guesses, and the game no longer rejects every guess with a "word not in list" outcome.
+
+### Test 6.4: Web Export Preset & Itch.io CI/CD Deployment Verification
+- **Requirement(s):** REQ-9.5, REQ-9.6, REQ-9.7
+- **Steps:**
+  1. Verify the GitHub repository secrets are properly configured in the repository settings:
+     - `BUTLER_API_KEY`: Butler API key generated from itch.io developer settings.
+     - `ITCH_USERNAME`: Account name on itch.io.
+     - `ITCH_GAME`: Project identifier/slug on itch.io (e.g., `letterlogic`).
+  2. Navigate to GitHub Actions and trigger the **Web Export & Itch.io Deploy** workflow (`web_release.yml`) via manual workflow dispatch (`workflow_dispatch`), or push a release tag matching `v*`.
+  3. Monitor the workflow execution:
+     - Confirm that source checkout, Godot installation, asset import, and headless test suite execution pass with zero errors.
+     - Confirm that Godot exports the Web build headlessly to `game/export/web/index.html`.
+     - Confirm that the `LetterLogic-Web` workflow artifact is uploaded and downloadable.
+     - Confirm that Butler publishes the package to itch.io under channel `html`.
+  4. Once deployment succeeds, open the game URL on itch.io or test an embedded `iframe` (e.g., on GitHub Pages `audrain.games/letterlogic`).
+  5. Inspect browser developer tools (Console and Network tabs):
+     - Confirm that the web game loads and initializes smoothly.
+     - Confirm that no `SharedArrayBuffer` or Cross-Origin Isolation (COOP/COEP) header errors are thrown.
+     - Confirm the game can be played in both Continuous Play and Daily Challenge modes in the browser.
+- **Expected Result:** The GitHub Actions workflow successfully compiles the single-threaded HTML5/WebAssembly build, uploads the artifact, and publishes the package to itch.io via Butler. The web build loads and runs cleanly in standard desktop and mobile browsers and within embedded iframes without requiring Cross-Origin Isolation headers.
