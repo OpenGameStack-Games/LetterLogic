@@ -214,6 +214,19 @@ func test_font_size_retained_after_state_change() -> void:
 	key_a.reset()
 	assert_eq(key_a.get_theme_font_size("font_size"), initial_font_size, "Font size should be retained after reset")
 
+func test_keyboard_row_2_key_order() -> void:
+	var row_2: HBoxContainer = keyboard.vbox_container.get_node_or_null("Row2") as HBoxContainer
+	assert_true(row_2 != null, "Row2 should exist on keyboard")
+	if row_2 != null:
+		var buttons: Array = []
+		for child: Node in row_2.get_children():
+			if child is Button:
+				buttons.append(child)
+		assert_eq(buttons.size(), 10, "Row2 should contain 10 keys (9 letters, Delete)")
+		if buttons.size() == 10:
+			assert_eq(buttons[0].text, "A", "First key on middle row should be A")
+			assert_eq(buttons[-1].text, "⌫", "Last key on middle row should be Delete/Backspace")
+
 func test_keyboard_row_3_key_order() -> void:
 	var row_3: HBoxContainer = keyboard.vbox_container.get_node_or_null("Row3") as HBoxContainer
 	assert_true(row_3 != null, "Row3 should exist on keyboard")
@@ -243,9 +256,17 @@ func test_keyboard_uses_proportional_sizing() -> void:
 	assert_true(key_enter != null, "ENTER key should exist")
 	if key_enter != null:
 		assert_eq(key_enter.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "ENTER key should expand fill")
-		assert_eq(key_enter.size_flags_stretch_ratio, 3.0, "ENTER key should have stretch ratio 3.0")
+		assert_eq(key_enter.size_flags_stretch_ratio, 2.0, "ENTER key should have stretch ratio 2.0")
 		assert_eq(key_enter.custom_minimum_size.x, 0.0, "ENTER key should not have X custom minimum size")
 
 	var row2: HBoxContainer = keyboard.vbox_container.get_node("Row2") as HBoxContainer
 	var left_spacer: Control = row2.get_node_or_null("LeftStaggerSpacer") as Control
 	assert_true(left_spacer == null, "Left spacer should not exist for left-aligned grid")
+
+	var row3: HBoxContainer = keyboard.vbox_container.get_node("Row3") as HBoxContainer
+	var row3_spacer: Control = row3.get_node_or_null("Row3Spacer") as Control
+	assert_true(row3_spacer != null, "Row 3 spacer should exist between M and ENTER")
+	if row3_spacer != null:
+		assert_eq(row3_spacer.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "Row 3 spacer should expand fill")
+		assert_eq(row3_spacer.size_flags_stretch_ratio, 1.0, "Row 3 spacer should have stretch ratio 1.0")
+		assert_eq(row3_spacer.custom_minimum_size.x, 0.0, "Row 3 spacer should not have X custom minimum size")

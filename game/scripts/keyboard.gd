@@ -81,11 +81,19 @@ func _build_keys() -> void:
 		vbox_container.add_child(hbox)
 
 		for key_str in row_keys:
+			if r_idx == 2 and key_str == "ENTER":
+				var spacer: Control = Control.new()
+				spacer.name = "Row3Spacer"
+				spacer.size_flags_horizontal = SIZE_EXPAND_FILL
+				spacer.size_flags_stretch_ratio = 1.0
+				spacer.custom_minimum_size = Vector2(0, 0)
+				hbox.add_child(spacer)
+
 			var key_btn: Node = KeyboardKeyScript.new()
 			key_btn.setup(key_str, 0.0, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
 			key_btn.size_flags_horizontal = SIZE_EXPAND_FILL
 			if key_str == "ENTER":
-				key_btn.size_flags_stretch_ratio = 3.0
+				key_btn.size_flags_stretch_ratio = 2.0
 			else:
 				key_btn.size_flags_stretch_ratio = 1.0
 
