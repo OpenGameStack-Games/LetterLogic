@@ -41,6 +41,13 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 - Automated tests are located in the `game/tests` folder and can be run from the editor using your preferred Godot testing framework.
 - For manual testing guidelines and core requirement mapping, please refer to the documentation in the `/documents` folder.
 
+## CI/CD & Deployment
+- **Android Release:** Automated build pipeline in `.github/workflows/android_release.yml` produces 16 KB page-aligned Android App Bundles (`.aab`) with native debug symbols and obfuscation mappings.
+- **Web Export & Itch.io Deploy:** Automated pipeline in `.github/workflows/web_release.yml` builds a single-threaded HTML5/WebAssembly export on release tags (`v*`) or manual dispatch, uploads the `LetterLogic-Web` artifact, and deploys to itch.io using Butler. Requires repository secrets:
+  - `BUTLER_API_KEY`: itch.io API key.
+  - `ITCH_USERNAME`: itch.io account username.
+  - `ITCH_GAME`: itch.io game slug/project identifier (e.g., `letterlogic`).
+
 ## License
 The source code for LetterLogic is licensed under the [GNU GPLv3](LICENSE). 
 All artistic assets (audio, textures, icons) in the `assets/` directory are licensed under [Creative Commons Attribution-ShareAlike 4.0 International](LICENSE-ASSETS.txt) (CC BY-SA 4.0).

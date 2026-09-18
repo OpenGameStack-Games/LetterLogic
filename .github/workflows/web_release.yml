@@ -13,7 +13,7 @@ env:
   GODOT_VERSION: 4.7.2-stable
   GODOT_TEMPLATES_VERSION: 4.7.2.stable
   ITCH_USERNAME: ${{ secrets.ITCH_USERNAME }}
-  ITCH_GAME_ID: ${{ secrets.ITCH_GAME_ID }}
+  ITCH_GAME: ${{ secrets.ITCH_GAME || secrets.ITCH_GAME_ID }}
   BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
 
 jobs:
@@ -56,11 +56,11 @@ jobs:
           path: ./game/export/web/
 
       - name: Deploy to Itch.io
-        if: startsWith(github.ref, 'refs/tags/v') && env.BUTLER_API_KEY != '' && env.ITCH_USERNAME != '' && env.ITCH_GAME_ID != ''
+        if: startsWith(github.ref, 'refs/tags/v') && env.BUTLER_API_KEY != '' && env.ITCH_USERNAME != '' && env.ITCH_GAME != ''
         uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: html
-          ITCH_GAME: ${{ secrets.ITCH_GAME_ID }}
-          ITCH_USER: ${{ secrets.ITCH_USERNAME }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USERNAME }}
           PACKAGE: ./game/export/web
