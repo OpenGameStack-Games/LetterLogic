@@ -222,9 +222,9 @@ func test_keyboard_row_3_key_order() -> void:
 		for child: Node in row_3.get_children():
 			if child is Button:
 				buttons.append(child)
-		assert_eq(buttons.size(), 9, "Row3 should contain 9 keys (Delete, 7 letters, Enter)")
+		assert_eq(buttons.size(), 8, "Row3 should contain 8 keys (7 letters, Enter)")
 		if buttons.size() >= 2:
-			assert_eq(buttons[0].text, "⌫", "First key on bottom row should be Delete/Backspace (left)")
+			assert_eq(buttons[0].text, "Z", "First key on bottom row should be Z")
 			assert_eq(buttons[-1].text, "ENTER", "Last key on bottom row should be Enter (right)")
 
 func test_keyboard_uses_proportional_sizing() -> void:
@@ -243,13 +243,9 @@ func test_keyboard_uses_proportional_sizing() -> void:
 	assert_true(key_enter != null, "ENTER key should exist")
 	if key_enter != null:
 		assert_eq(key_enter.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "ENTER key should expand fill")
-		assert_eq(key_enter.size_flags_stretch_ratio, 1.5, "ENTER key should have stretch ratio 1.5")
+		assert_eq(key_enter.size_flags_stretch_ratio, 3.0, "ENTER key should have stretch ratio 3.0")
 		assert_eq(key_enter.custom_minimum_size.x, 0.0, "ENTER key should not have X custom minimum size")
 
 	var row2: HBoxContainer = keyboard.vbox_container.get_node("Row2") as HBoxContainer
-	var left_spacer: Control = row2.get_node("LeftStaggerSpacer") as Control
-	assert_true(left_spacer != null, "Left spacer should exist")
-	if left_spacer != null:
-		assert_eq(left_spacer.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "Left spacer should expand fill")
-		assert_eq(left_spacer.size_flags_stretch_ratio, 0.5, "Left spacer should have stretch ratio 0.5")
-		assert_eq(left_spacer.custom_minimum_size.x, 0.0, "Left spacer should not have X custom minimum size")
+	var left_spacer: Control = row2.get_node_or_null("LeftStaggerSpacer") as Control
+	assert_true(left_spacer == null, "Left spacer should not exist for left-aligned grid")
