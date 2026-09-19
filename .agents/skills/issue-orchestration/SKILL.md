@@ -1,4 +1,4 @@
-﻿---
+---
 name: issue-orchestration
 description: >-
   Use this skill when the user asks to run the issue resolution pipeline, report a bug, or request a feature. It defines how to orchestrate the issue creator, resolver, and PR reviewer subagents.
@@ -15,6 +15,7 @@ This skill defines the orchestrator workflow for taking a bug or feature request
 - **Liveness Monitoring:** When waiting for a subagent to finish a task, you must ALWAYS set a 10-minute (600 seconds) one-shot timer using the `schedule` tool (with `TimerCondition: 'any'`). If the subagent sends an update, the timer cancels automatically. If the timer expires, it means the subagent has been silent for 10 minutes. You must then use the `manage_subagents` tool to check its status or use `send_message` to ping it and ask if it is stuck.
 - **Continuous Improvement Loop:** When a subagent reports back its completion, it will include a "Self-Reflection & Recommendations" section. You MUST evaluate its recommendations. If a recommendation makes sense and would improve the pipeline, you must use your file editing tools to update this `SKILL.md` file or the relevant project documentation before invoking the next subagent in the sequence.
 - **Automatic Cleanup:** Because this pipeline spawns a fresh instance for every task, a subagent is permanently obsolete the moment it completes its assignment. After receiving and evaluating a subagent's final report, you MUST immediately use the `manage_subagents` tool to `kill` that specific subagent's conversation ID to free up resources.
+- **Strict Subagent Enforcement (Anti-Bypass Rule):** As the orchestrator, you are strictly FORBIDDEN from manually creating issues yourself using the terminal (`gh issue create`). If a new bug or feature needs to be logged, you MUST spawn the `issue_creator` subagent to do it. This prevents you from accidentally bypassing the Phase 1 Authorization Gate and autonomously resolving issues without user consent.
 - **Agent Definitions:** If the subagents are not already defined in the current conversation, you must define them using the `define_subagent` tool before starting the pipeline.
 - **Model Overrides:** When invoking these agents using the `invoke_subagent` tool, you must explicitly assign the models as defined below to ensure cost efficiency.
 
