@@ -831,3 +831,22 @@ This document outlines the manual test cases used to verify the requirements out
   5. Type a valid 5-letter isogram (e.g., `ADORE`, `PLANT`, or `THANK`) and submit the guess.
 - **Expected Result:** The Web build packages `words.txt` into the web payload. On startup, `WordBank` successfully loads the word list without error. The submitted guess is accepted and evaluated into color cues without displaying a "Not in word list" rejection toast.
 
+### Test 6.7: Web Export Emoji & UI Symbol Rendering (Font Fallbacks)
+- **Requirement(s):** REQ-8.19
+- **Steps:**
+  1. Export a Web build using the configured Web export preset (`game/export_presets.cfg`), or serve an existing exported web build via a local HTTP server (`python -m http.server 8000` from `game/export/web`), or access the deployed Web build on itch.io.
+  2. Open the web game in a modern desktop or mobile browser.
+  3. Inspect the Main Menu:
+     - Click **"How to Play"** and inspect the rules modal text.
+     - Verify that the deduction evaluation colored square emojis (`🟩`, `🟨`, `⬛`) render crisply in color without missing glyph "tofu" boxes or unicode hex placeholders.
+     - Verify that the close modal button (`✕`) renders cleanly as a multiplication/cross glyph.
+  4. Start a game in either Continuous Play or Daily Challenge mode:
+     - Inspect the on-screen virtual keyboard at the bottom of the screen.
+     - Verify that the Delete key displays the backspace symbol (`⌫`) clearly and centered within the key.
+     - Inspect the Back button (`←`) and Header icons.
+  5. Play a game to completion (win or lose):
+     - If playing Daily Challenge, click **"Share Results"** and paste the copied results into a text editor or chat app.
+     - Verify that the colored square grid emojis (`🟩`, `🟨`, `⬛`) and stopwatch emoji (`⏱️`) render properly.
+- **Expected Result:** All in-game UI buttons (`⌫`, `✕`) and emoji tiles/symbols (`🟩`, `🟨`, `⬛`) render cleanly and legibly across all screens on the Web export via the embedded font fallback stack (`NotoColorEmoji.ttf` and `NotoSansSymbols-Regular.ttf`), with zero missing glyph boxes or font loading errors.
+
+
