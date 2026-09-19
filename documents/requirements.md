@@ -193,3 +193,13 @@ LetterLogic is a word-guessing game inspired by Wordle, built using the Godot En
 - **REQ-9.9 - Google Play Deployment Authentication & Repository Secret:** Automated deployment to the Google Play Console requires the following configured GitHub repository secret:
   - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: Service account JSON key generated from Google Cloud Console / Google Play Console with permissions to manage and publish internal test releases.
 - **REQ-9.10 - Web Native Share Sheet Integration:** When running in a Web export environment (`OS.has_feature("web")`), `ShareManager` invokes `JavaScriptBridge.eval()` to trigger `navigator.share({title, text})`. If `navigator.share` is supported by the client browser (e.g., mobile Safari on iOS or Chrome on Android), the device's native share sheet is launched. If `navigator.share` is unsupported or rejected, the operation logs gracefully without error and falls back to clipboard copying (`DisplayServer.clipboard_set`).
+
+## 10. Version Control & Semantic Versioning
+
+The project adheres strictly to **Semantic Versioning (SemVer) 2.0.0** standards. Version numbers use the `MAJOR.MINOR.PATCH` format.
+
+*   **MAJOR (`1.x.x`):** Incremented for massive, foundational changes, backwards-incompatible API changes, or major project milestones (e.g., leaving Beta for official 1.0.0 launch).
+*   **MINOR (`x.1.x`):** Incremented when introducing new features, enhancements, or platform support (e.g., adding a Web export or a Share button) in a backwards-compatible manner.
+*   **PATCH (`x.x.1`):** Incremented for backwards-compatible bug fixes, minor layout adjustments, or quick hotfixes for a broken build.
+
+**Note:** Any version starting with `0.x.x` indicates the software is in initial development phase.
