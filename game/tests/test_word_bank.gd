@@ -68,6 +68,18 @@ func test_android_export_includes_plain_text_word_list() -> void:
 		assert_eq(export_filter, "all_resources", "Android export should continue using all_resources mode")
 		assert_true(includes_word_text, "Android export include_filter must explicitly package the plain-text word list")
 
+func test_web_export_includes_plain_text_word_list() -> void:
+	var config: ConfigFile = ConfigFile.new()
+	var err: Error = config.load("res://export_presets.cfg")
+	assert_eq(err, OK, "export_presets.cfg should load for Web export verification")
+	if err == OK:
+		var export_filter: String = String(config.get_value("preset.1", "export_filter", ""))
+		var include_filter: String = String(config.get_value("preset.1", "include_filter", ""))
+		var include_patterns: PackedStringArray = include_filter.split(",", false)
+		var includes_word_text: bool = include_patterns.has("*.txt") or include_patterns.has("assets/words/words.txt") or include_patterns.has("res://assets/words/words.txt")
+		assert_eq(export_filter, "all_resources", "Web export should continue using all_resources mode")
+		assert_true(includes_word_text, "Web export include_filter must explicitly package the plain-text word list")
+
 func test_all_sample_words_are_isograms() -> void:
 	# Test 500 deterministic picks to ensure none contain duplicate letters
 	for i in range(500):
