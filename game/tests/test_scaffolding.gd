@@ -45,3 +45,23 @@ func test_adaptive_icon_settings() -> void:
 	if err == OK:
 		assert_eq(String(config.get_value("preset.0.options", "launcher_icons/adaptive_foreground_432x432", "")), "res://assets/icons/icon_foreground.png", "Adaptive foreground icon must be configured")
 		assert_eq(String(config.get_value("preset.0.options", "launcher_icons/adaptive_background_432x432", "")), "res://assets/icons/icon_background.png", "Adaptive background icon must be configured")
+
+func test_font_fallback_configuration() -> void:
+	assert_true(ResourceLoader.exists("res://assets/fonts/NotoColorEmoji.ttf"), "NotoColorEmoji font asset must exist")
+	assert_true(ResourceLoader.exists("res://assets/fonts/NotoSansSymbols-Regular.ttf"), "NotoSansSymbols font asset must exist")
+	
+	var emoji_font: Font = load("res://assets/fonts/NotoColorEmoji.ttf") as Font
+	assert_true(emoji_font != null, "NotoColorEmoji font should load successfully")
+	assert_true(emoji_font.has_char(0x1F7E9), "NotoColorEmoji should include green square emoji")
+	
+	var symbols_font: Font = load("res://assets/fonts/NotoSansSymbols-Regular.ttf") as Font
+	assert_true(symbols_font != null, "NotoSansSymbols font should load successfully")
+	assert_true(symbols_font.has_char(0x232B), "NotoSansSymbols should include backspace symbol")
+	assert_true(symbols_font.has_char(0x2715), "NotoSansSymbols should include cross symbol")
+
+	var theme_res: Theme = load("res://assets/theme/letter_logic_theme.tres") as Theme
+	assert_true(theme_res != null, "Custom project theme should load successfully")
+	assert_true(theme_res.default_font != null, "Default font should be configured in theme")
+	assert_true(theme_res.default_font.fallbacks.size() > 0, "Default font should have fallback fonts configured")
+
+
