@@ -84,6 +84,6 @@ func _share_native_web(title: String, text: String) -> void:
 	
 	# Escape text to be safely evaluated in JS.
 	# We use backticks to allow newlines, but we escape any backticks and backslashes.
-	var safe_text = text.replace("\\", "\\\\").replace("`", "\\`")
+	var safe_text: String = text.replace("\\", "\\\\").replace("`", "\\`")
 	var js_code: String = "if (navigator.share) { navigator.share({title: '" + title + "', text: `" + safe_text + "`}).catch(console.error); } else { console.log('Web Share API not supported'); }"
 	JavaScriptBridge.eval(js_code)
