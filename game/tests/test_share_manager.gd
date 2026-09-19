@@ -36,7 +36,7 @@ func test_generate_share_text_win() -> void:
 	assert_true(text.contains("🟥🟥🟨🟥🟩"), "Row 1 emojis should match")
 	assert_true(text.contains("🟥🟩🟥🟥🟩"), "Row 2 emojis should match")
 	assert_true(text.contains("🟩🟩🟩🟩🟩"), "Row 3 emojis should match")
-	assert_true(text.contains("audrain.games/letterlogic/android"), "Footer should contain Google Play link")
+	assert_true(text.contains("audrain.games/letterlogic"), "Footer should contain game link")
 
 func test_generate_share_text_loss() -> void:
 	var date_str: String = "2026-08-26"
@@ -69,3 +69,7 @@ func test_share_native_android_no_crash_on_pc() -> void:
 	share_mgr._share_native_android("Title", "Text")
 	assert_true(true, "Method executed without crashing")
 
+func test_share_native_web_no_crash_on_pc() -> void:
+	# Ensure no crash when calling the Web Share method on non-Web platforms
+	share_mgr._share_native_web("Title", "Text")
+	assert_true(true, "Method executed without crashing")

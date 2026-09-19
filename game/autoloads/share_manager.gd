@@ -7,7 +7,7 @@ extends Node
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
-const PLAY_STORE_URL: String = "audrain.games/letterlogic/android"
+const GAME_URL: String = "audrain.games/letterlogic"
 
 const EMOJI_CORRECT: String = "🟩"
 const EMOJI_PRESENT: String = "🟨"
@@ -40,7 +40,7 @@ func generate_share_text(date_str: String, guess_results: Array, won: bool, atte
 		grid_lines.append(line_emojis)
 	
 	var body_grid: String = "\n".join(grid_lines)
-	var footer: String = "Play now: %s" % PLAY_STORE_URL
+	var footer: String = "Play now: %s" % GAME_URL
 	
 	return "%s\n%s\n\n%s\n\n%s" % [header, time_str, body_grid, footer]
 
@@ -54,6 +54,8 @@ func share_daily_results(date_str: String, guess_results: Array, won: bool, atte
 	
 	if OS.get_name() == "Android":
 		_share_native_android("LetterLogic Daily Results", share_text)
+	elif OS.has_feature("web"):
+		_share_native_web("LetterLogic Daily Results", share_text)
 	
 	print_debug("ShareManager: Generated and copied share text to clipboard.")
 	return share_text
@@ -75,3 +77,13 @@ func _share_native_android(title: String, text: String) -> void:
 					share_node.queue_free()
 			else:
 				share_node.queue_free()
+
+func _share_native_web(title: String, text: String) -> void:
+	if not OS.has_feature("web"):
+		return
+	
+	# Escape text to be safely evaluated in JS.
+	# We use backticks to allow newlines, but we escape any backticks and backslashes.
+	var safe_text = text.replace("\\", "\\\\").replace("`", "\\`")
+	var js_code: String = "if (navigator.share) { navigator.share({title: '" + title + "', text: `" + safe_text + "`}).catch(console.error); } else { console.log('Web Share API not supported'); }"
+	JavaScriptBridge.eval(js_code)
