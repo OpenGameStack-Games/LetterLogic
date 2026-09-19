@@ -61,7 +61,10 @@ func test_font_fallback_configuration() -> void:
 
 	var theme_res: Theme = load("res://assets/theme/letter_logic_theme.tres") as Theme
 	assert_true(theme_res != null, "Custom project theme should load successfully")
-	assert_true(theme_res.default_font != null, "Default font should be configured in theme")
-	assert_true(theme_res.default_font.fallbacks.size() > 0, "Default font should have fallback fonts configured")
+	assert_true(theme_res.default_font == null, "Default font should NOT be configured globally to prevent metric breakages")
+	
+	var fallback_res: SystemFont = load("res://assets/theme/fallback_font.tres") as SystemFont
+	assert_true(fallback_res != null, "Fallback font resource should load successfully")
+	assert_true(fallback_res.fallbacks.size() > 0, "Fallback font should have fallback fonts configured")
 
 

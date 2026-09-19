@@ -1,0 +1,8 @@
+[gd_resource type="SystemFont" load_steps=3 format=3 uid="uid://b4x3fallbackfnt"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/NotoColorEmoji.ttf" id="1_rayjs"]
+[ext_resource type="FontFile" path="res://assets/fonts/NotoSansSymbols-Regular.ttf" id="2_cuxsi"]
+
+[resource]
+fallbacks = Array[Font]([ExtResource("1_rayjs"), ExtResource("2_cuxsi")])
+font_names = PackedStringArray("sans-serif", "Arial")

@@ -5,6 +5,7 @@ extends Control
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const StatsManagerScript = preload("res://autoloads/stats_manager.gd")
+const FALLBACK_FONT = preload("res://assets/theme/fallback_font.tres")
 
 const BASE_CONTENT_MARGIN_TOP: int = 48
 
@@ -26,6 +27,11 @@ var _stats_manager_ref: Node = null
 func _ready() -> void:
 	_apply_safe_area_insets()
 	_update_node_references()
+	
+	var close_btn: Button = get_node_or_null("MarginContainer/VBox/Header/CloseButton") as Button
+	if close_btn != null:
+		close_btn.add_theme_font_override("font", FALLBACK_FONT)
+		
 	if mode_tabs != null and not mode_tabs.tab_changed.is_connected(_on_tab_changed):
 		mode_tabs.tab_changed.connect(_on_tab_changed)
 	refresh_display()

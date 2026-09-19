@@ -5,6 +5,7 @@ extends Button
 ## Represents a single touch/mouse key on the LetterLogic virtual keyboard.
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
+const FALLBACK_FONT = preload("res://assets/theme/fallback_font.tres")
 
 const COLOR_BG_DEFAULT: Color = Color("818384")
 const COLOR_BG_CORRECT: Color = Color("538d4e")
@@ -100,6 +101,11 @@ func _update_visuals() -> void:
 	add_theme_color_override("font_disabled_color", text_color)
 	add_theme_color_override("font_hover_color", text_color)
 	add_theme_color_override("font_pressed_color", text_color)
+
+	if key_name == "⌫":
+		add_theme_font_override("font", FALLBACK_FONT)
+	else:
+		remove_theme_font_override("font")
 
 	_refresh_font_size()
 

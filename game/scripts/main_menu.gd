@@ -8,6 +8,7 @@ extends Control
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 const DailyManagerScript = preload("res://autoloads/daily_manager.gd")
 const SaveManagerScript = preload("res://autoloads/save_manager.gd")
+const FALLBACK_FONT = preload("res://assets/theme/fallback_font.tres")
 
 const BASE_CONTENT_MARGIN_TOP: int = 48
 
@@ -28,9 +29,15 @@ func _ready() -> void:
 	_apply_safe_area_insets()
 	if how_to_play_modal != null:
 		how_to_play_modal.visible = false
+		var rules: RichTextLabel = how_to_play_modal.get_node_or_null("MarginContainer/Panel/ContentMargin/VBox/RulesText") as RichTextLabel
+		if rules:
+			rules.add_theme_font_override("normal_font", FALLBACK_FONT)
+			rules.add_theme_font_override("bold_font", FALLBACK_FONT)
+			
 	if credits_modal != null:
 		credits_modal.visible = false
 		_bind_credits_links()
+			
 	_update_daily_button_state()
 	if countdown_timer != null and is_inside_tree():
 		countdown_timer.timeout.connect(_on_countdown_tick)

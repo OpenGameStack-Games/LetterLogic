@@ -101,6 +101,9 @@ git worktree add .worktrees/issue-21 -b feature/issue-21-absent-color-red
    * Do not write redundant comments stating the obvious.
    * Document the *intent*, *assumptions*, or mathematical/algorithmic logic.
    * Every autoload and major script must contain a header docstring explaining its domain responsibility.
+4. **Font Fallbacks & Typography:**
+   * Do not apply `SystemFont` fallbacks globally to `default_font` in the main theme (`letter_logic_theme.tres`). Doing so disrupts Godot's default standard letter metrics across the entire UI.
+   * Instead, apply a dedicated fallback font resource (`res://assets/theme/fallback_font.tres`) locally via script overrides (`add_theme_font_override`) only to specific nodes that require emoji/symbol fallbacks (e.g., Keyboard Delete key, Close buttons, instructional emojis).
 
 ---
 

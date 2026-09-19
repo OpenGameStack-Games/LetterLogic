@@ -865,6 +865,6 @@ This document outlines the manual test cases used to verify the requirements out
   5. Play a game to completion (win or lose):
      - If playing Daily Challenge, click **"Share Results"** and paste the copied results into a text editor or chat app.
      - Verify that the colored square grid emojis (`🟩`, `🟨`, `⬛`) and stopwatch emoji (`⏱️`) render properly.
-- **Expected Result:** All in-game UI buttons (`⌫`, `✕`) and emoji tiles/symbols (`🟩`, `🟨`, `⬛`) render cleanly and legibly across all screens on the Web export via the embedded font fallback stack (`NotoColorEmoji.ttf` and `NotoSansSymbols-Regular.ttf`), with zero missing glyph boxes or font loading errors.
+- **Expected Result:** All in-game UI buttons (`⌫`, `✕`) and emoji tiles/symbols (`🟩`, `🟨`, `⬛`) render cleanly and legibly across all screens on the Web export via the embedded font fallback stack (`NotoColorEmoji.ttf` and `NotoSansSymbols-Regular.ttf`) configured in `fallback_font.tres`, with zero missing glyph boxes or font loading errors. Standard UI text retains engine default metrics without vertical layout distortion or off-center letters in the grid.
 
 
