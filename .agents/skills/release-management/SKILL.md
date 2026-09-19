@@ -1,4 +1,4 @@
----
+﻿---
 name: release-management
 description: >-
   Automates the safe deployment of new versions. Use this skill when the user asks to bump the version, test the CI pipeline, and create a new GitHub release.
@@ -20,7 +20,7 @@ When the user asks to create a new release (e.g., "Bump to v0.6.0 and release"):
 
 1. **Invoke the Subagent:** Define and invoke the `release_manager` subagent using the **`pro`** model. The `pro` model is required because this task involves reading configuration files, performing git operations, parsing JSON from the GitHub CLI, and robust error handling when watching workflows.
 2. **Schedule Liveness:** Schedule a 10-minute Liveness timer (`TimerCondition: 'any'`).
-3. **Wait & Report:** Wait for the `release_manager` to report back. If it reports a CI failure, present the failure logs to the user. If it reports success, inform the user that the release is published and they can download the artifacts from GitHub to upload to Google Play.
+3. **Wait & Report:** Wait for the `release_manager` to report back. If it reports a CI failure, present the failure logs to the user. If it reports success, inform the user that the release is published and GitHub Actions is automatically deploying the builds to itch.io and Google Play.
 4. **Cleanup:** Kill the `release_manager` subagent when finished.
 
 ---
@@ -80,3 +80,4 @@ Follow these steps strictly in order:
 
 7. **Handoff:** Report back to the orchestrator that the release was successfully published and provide the URL to the GitHub Release.
 ```
+
