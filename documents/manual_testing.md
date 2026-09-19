@@ -831,11 +831,11 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm that automated GDScript test suites (`res://tests/test_runner.gd`) and Python unit tests run with zero failures.
      - Confirm that Godot exports `LetterLogic.aab` headlessly.
      - Confirm that the bundle is signed via `r0adkll/sign-android-release`.
-     - Confirm that `r0adkll/upload-google-play` successfully uploads the signed AAB to Google Play Console's `internal` track for package `games.audrain.letterlogic`.
-  4. Log in to Google Play Console and navigate to **Testing > Internal testing**:
-     - Confirm that the new release appears on the internal track matching the tag version name and version code.
+     - Confirm that `r0adkll/upload-google-play` successfully uploads the signed AAB to Google Play Console's `production` track for package `games.audrain.letterlogic`.
+  4. Log in to Google Play Console and navigate to **Release > Production**:
+     - Confirm that the new release appears on the production track matching the tag version name and version code.
      - Verify that Google Play Console reports 0 errors or blocking validation issues for the newly uploaded App Bundle.
-- **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console internal testing track automatically upon pushing a `v*` tag without manual intervention.
+- **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console Production track automatically upon pushing a `v*` tag without manual intervention.
 
 ### Test 6.6: Web Runtime Dictionary Packaging & Startup Validation
 - **Requirement(s):** REQ-9.3, REQ-9.5
