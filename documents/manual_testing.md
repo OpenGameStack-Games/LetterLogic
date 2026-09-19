@@ -819,3 +819,15 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify that Google Play Console reports 0 errors or blocking validation issues for the newly uploaded App Bundle.
 - **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console internal testing track automatically upon pushing a `v*` tag without manual intervention.
 
+### Test 6.6: Web Runtime Dictionary Packaging & Startup Validation
+- **Requirement(s):** REQ-9.3, REQ-9.5
+- **Steps:**
+  1. Export a Web build using the configured Web export preset (`game/export_presets.cfg`) with `include_filter="*.txt"` enabled, or run a local HTTP server serving the exported web directory (`python -m http.server 8000` from `game/export/web`).
+  2. Open the web game in a browser (or navigate to the deployed build on itch.io).
+  3. Open browser developer console (`F12`) and observe startup logs:
+     - Verify that `WordBank: Loaded <n> unique 5-letter isograms.` is printed.
+     - Verify that no `push_error(...)` occurs regarding dictionary loading or missing `words.txt`.
+  4. Start a game in either Continuous Play or Daily Challenge mode.
+  5. Type a valid 5-letter isogram (e.g., `ADORE`, `PLANT`, or `THANK`) and submit the guess.
+- **Expected Result:** The Web build packages `words.txt` into the web payload. On startup, `WordBank` successfully loads the word list without error. The submitted guess is accepted and evaluated into color cues without displaying a "Not in word list" rejection toast.
+
