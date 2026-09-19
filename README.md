@@ -43,6 +43,8 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## CI/CD & Deployment
 - **Android Release:** Automated build pipeline in `.github/workflows/android_release.yml` produces 16 KB page-aligned Android App Bundles (`.aab`) with native debug symbols and obfuscation mappings.
+- **Google Play Deployment:** Automated deployment pipeline in `.github/workflows/play_release.yml` builds, signs, and deploys the Android App Bundle (`.aab`) to the Google Play Console's Internal Testing track (`games.audrain.letterlogic`) upon pushing release tags (`v*`). Requires repository secret:
+  - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: Service account JSON key with permissions to publish releases on Google Play Console.
 - **Web Export & Itch.io Deploy:** Automated pipeline in `.github/workflows/web_release.yml` builds a single-threaded HTML5/WebAssembly export on release tags (`v*`) or manual dispatch, uploads the `LetterLogic-Web` artifact, and deploys to itch.io using Butler. Requires repository secrets:
   - `BUTLER_API_KEY`: itch.io API key.
   - `ITCH_USERNAME`: itch.io account username.

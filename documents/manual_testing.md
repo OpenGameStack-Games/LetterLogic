@@ -797,3 +797,25 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm that no `SharedArrayBuffer` or Cross-Origin Isolation (COOP/COEP) header errors are thrown.
      - Confirm the game can be played in both Continuous Play and Daily Challenge modes in the browser.
 - **Expected Result:** The GitHub Actions workflow successfully compiles the single-threaded HTML5/WebAssembly build, uploads the artifact, and publishes the package to itch.io via Butler. The web build loads and runs cleanly in standard desktop and mobile browsers and within embedded iframes without requiring Cross-Origin Isolation headers.
+
+### Test 6.5: Google Play Console Automated Deployment Pipeline Verification
+- **Requirement(s):** REQ-9.8, REQ-9.9
+- **Steps:**
+  1. Verify the required GitHub repository secrets are configured in repository settings:
+     - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: Service account JSON key generated from Google Cloud Console with Google Play Console API access.
+     - `KEYSTORE_BASE64`: Base64-encoded release keystore file.
+     - `KEY_ALIAS`: Release key alias.
+     - `KEYSTORE_PASSWORD`: Keystore and key password.
+  2. Push a release tag matching `v*` (e.g., `v0.6.0`).
+  3. Monitor the execution of the **Play Console Release** workflow (`.github/workflows/play_release.yml`):
+     - Confirm that Android SDK components, Godot binary, and export templates are installed.
+     - Confirm that asset import (`godot --headless --path ./game --editor --quit`) runs successfully.
+     - Confirm that automated GDScript test suites (`res://tests/test_runner.gd`) and Python unit tests run with zero failures.
+     - Confirm that Godot exports `LetterLogic.aab` headlessly.
+     - Confirm that the bundle is signed via `r0adkll/sign-android-release`.
+     - Confirm that `r0adkll/upload-google-play` successfully uploads the signed AAB to Google Play Console's `internal` track for package `games.audrain.letterlogic`.
+  4. Log in to Google Play Console and navigate to **Testing > Internal testing**:
+     - Confirm that the new release appears on the internal track matching the tag version name and version code.
+     - Verify that Google Play Console reports 0 errors or blocking validation issues for the newly uploaded App Bundle.
+- **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console internal testing track automatically upon pushing a `v*` tag without manual intervention.
+
