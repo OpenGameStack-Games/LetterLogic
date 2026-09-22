@@ -92,10 +92,9 @@ func _build_keys() -> void:
 			var key_btn: Node = KeyboardKeyScript.new()
 			key_btn.setup(key_str, 0.0, KeyboardKeyScript.KEY_MIN_TOUCH_HEIGHT)
 			key_btn.size_flags_horizontal = SIZE_EXPAND_FILL
-			if key_str == "ENTER":
-				key_btn.size_flags_stretch_ratio = 2.0
-			else:
-				key_btn.size_flags_stretch_ratio = 1.0
+			# ENTER key sizing is now handled dynamically in _refresh_responsive_metrics
+			# to perfectly account for column gaps (resolves alignment issue).
+			key_btn.size_flags_stretch_ratio = 1.0
 
 			key_btn.on_key_pressed.connect(_on_key_clicked)
 			hbox.add_child(key_btn)
@@ -113,23 +112,35 @@ func get_responsive_minimum_height() -> float:
 	return (_get_key_touch_height() * 3.0) + (float(row_gap) * 2.0) + float(bottom_gap)
 
 func _refresh_responsive_metrics() -> void:
+	var side_margin: int = _get_side_margin()
 	var margin_container: MarginContainer = get_node_or_null("MarginContainer") as MarginContainer
 	if margin_container != null:
-		var side_margin: int = _get_side_margin()
 		margin_container.add_theme_constant_override("margin_left", side_margin)
 		margin_container.add_theme_constant_override("margin_right", side_margin)
 		margin_container.add_theme_constant_override("margin_bottom", _get_bottom_margin())
 
 	if vbox_container != null:
+		var key_sep: int = _get_key_separation()
+		var available_w: float = size.x - float(side_margin * 2)
+		var col_w: float = (available_w - (9.0 * float(key_sep))) / 10.0
+		
 		vbox_container.add_theme_constant_override("separation", _get_row_separation())
 		for row_node in vbox_container.get_children():
 			if row_node is HBoxContainer:
 				var hbox: HBoxContainer = row_node as HBoxContainer
-				hbox.add_theme_constant_override("separation", _get_key_separation())
+				hbox.add_theme_constant_override("separation", key_sep)
 				for child in hbox.get_children():
 					if child is KeyboardKey:
 						var key: KeyboardKey = child as KeyboardKey
-						key.custom_minimum_size = Vector2(0.0, _get_key_touch_height())
+						
+						# Dynamically calculate ENTER key width to perfectly span 2 columns + gap
+						if key.text == "ENTER" or key.name == "EnterKey":
+							key.size_flags_horizontal = 0 # No expand
+							key.custom_minimum_size = Vector2((col_w * 2.0) + float(key_sep), _get_key_touch_height())
+						else:
+							key.size_flags_horizontal = SIZE_EXPAND_FILL
+							key.custom_minimum_size = Vector2(0.0, _get_key_touch_height())
+							
 						key.update_minimum_size()
 						if key.has_method("_refresh_font_size"):
 							key.call("_refresh_font_size")

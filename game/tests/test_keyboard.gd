@@ -255,9 +255,8 @@ func test_keyboard_uses_proportional_sizing() -> void:
 
 	assert_true(key_enter != null, "ENTER key should exist")
 	if key_enter != null:
-		assert_eq(key_enter.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "ENTER key should expand fill")
-		assert_eq(key_enter.size_flags_stretch_ratio, 2.0, "ENTER key should have stretch ratio 2.0")
-		assert_eq(key_enter.custom_minimum_size.x, 0.0, "ENTER key should not have X custom minimum size")
+		assert_eq(key_enter.size_flags_horizontal, 0, "ENTER key should not expand fill (mathematically calculated width)")
+		assert_true(key_enter.custom_minimum_size.x != 0.0, "ENTER key should have mathematically calculated X minimum size")
 
 	var row2: HBoxContainer = keyboard.vbox_container.get_node("Row2") as HBoxContainer
 	var left_spacer: Control = row2.get_node_or_null("LeftStaggerSpacer") as Control
