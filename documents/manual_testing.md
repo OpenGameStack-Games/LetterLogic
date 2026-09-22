@@ -336,8 +336,8 @@ This document outlines the manual test cases used to verify the requirements out
        - Header with game name, UTC date, and attempt score (e.g., `LetterLogic 2026-09-15 3/6` or `X/6`).
        - Formatted active solve timer line with emoji (e.g., `⏱️ 01:45`).
        - Correct emoji representation grid for all submitted guesses (🟩🟨🟥).
-       - Universal game link (`Play now: audrain.games/letterlogic`).
-     - Verify that the device clipboard also receives the shared text as a convenience copy.
+        - Universal game link (`Play now: https://audrain.games/letterlogic`).
+      - Verify that the device clipboard also receives the shared text as a convenience copy.
 - **Expected Result:** Tapping the "Share" button on Android activates the native Android Share Sheet via the dynamically instantiated `Share.gd` wrapper node without freezing or crashing, allowing seamless sharing to any installed messaging or social application (Messages, WhatsApp, etc.), safely cleaning up the temporary node on a short timer delay while also copying the formatted results to the device clipboard.
 
 ### Test 4.2: Clipboard Fallback (Godot PC)
@@ -352,7 +352,7 @@ This document outlines the manual test cases used to verify the requirements out
   ⏱️ 01:45
 
   🟩🟨🟥...
-  Play now: audrain.games/letterlogic
+  Play now: https://audrain.games/letterlogic
   ```
 
 ### Test 4.3: Native Share Sheet & Clipboard Fallback on Web (Mobile & Desktop Web Browsers)
@@ -364,14 +364,22 @@ This document outlines the manual test cases used to verify the requirements out
      b. Complete a Daily Challenge (or re-enter a completed daily challenge) and tap "Share Results".
      c. Observe the browser response:
         - Verify that the native OS Share Sheet immediately opens (displaying system sharing targets such as Messages, Mail, WhatsApp, Discord, etc.) triggered via `navigator.share()`.
-        - Select a recipient or app and verify the shared message includes the header, timer, emoji grid, and footer link (`Play now: audrain.games/letterlogic`).
+        - Select a recipient or app and verify the shared message includes the header, timer, emoji grid, and footer link (`Play now: https://audrain.games/letterlogic`).
         - Verify the results are also copied to the clipboard.
   3. **Desktop Web Browser (Chrome, Firefox, Safari on PC/Mac):**
      a. Open the game in a desktop browser.
      b. Complete a Daily Challenge and tap "Share Results".
      c. If the desktop browser does not support `navigator.share()`, verify the game logs "Web Share API not supported" in the console without crashing or throwing unhandled JS errors.
-     d. Paste into a text editor (`Ctrl+V` / `Cmd+V`) and verify the clipboard contains the full share text with the `audrain.games/letterlogic` footer link.
+     d. Paste into a text editor (`Ctrl+V` / `Cmd+V`) and verify the clipboard contains the full share text with the `https://audrain.games/letterlogic` footer link.
 - **Expected Result:** On mobile web browsers supporting the Web Share API, tapping "Share Results" brings up the device's native system share sheet. On desktop browsers without Web Share support, it gracefully falls back to clipboard copying without crashing.
+
+### Test 4.4: Cross-Platform Link Hyperlinking (iOS iMessage & Strict Link Parsers)
+- **Requirement(s):** REQ-6.1, REQ-6.2
+- **Steps:**
+  1. Share Daily Challenge results from Android, Web, or PC clipboard.
+  2. Send or paste the share text into an Apple Messages (iMessage) conversation or strict link-parsing messaging client on iOS.
+  3. Inspect the received message on the iOS device.
+- **Expected Result:** The footer URL `Play now: https://audrain.games/letterlogic` includes the explicit `https://` protocol prefix. iOS iMessage and `NSDataDetector` immediately recognize it as an active, clickable hyperlink (with optional rich link preview), allowing recipients to tap to open the game in Safari or add it to their home screen.
 
 ---
 
