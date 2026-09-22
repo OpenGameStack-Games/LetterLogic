@@ -7,7 +7,7 @@ extends Node
 
 const GameManagerScript = preload("res://autoloads/game_manager.gd")
 
-const GAME_URL: String = "audrain.games/letterlogic"
+const GAME_URL: String = "https://audrain.games/letterlogic"
 
 const EMOJI_CORRECT: String = "🟩"
 const EMOJI_PRESENT: String = "🟨"
