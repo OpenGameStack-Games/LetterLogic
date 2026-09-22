@@ -255,9 +255,8 @@ func test_keyboard_uses_proportional_sizing() -> void:
 
 	assert_true(key_enter != null, "ENTER key should exist")
 	if key_enter != null:
-		assert_eq(key_enter.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "ENTER key should expand fill")
-		assert_eq(key_enter.size_flags_stretch_ratio, 2.0, "ENTER key should have stretch ratio 2.0")
-		assert_eq(key_enter.custom_minimum_size.x, 0.0, "ENTER key should not have X custom minimum size")
+		assert_eq(key_enter.size_flags_horizontal, 0, "ENTER key should not expand fill (mathematically calculated width)")
+		assert_true(key_enter.custom_minimum_size.x != 0.0, "ENTER key should have mathematically calculated X minimum size")
 
 	var row2: HBoxContainer = keyboard.vbox_container.get_node("Row2") as HBoxContainer
 	var left_spacer: Control = row2.get_node_or_null("LeftStaggerSpacer") as Control
@@ -270,3 +269,30 @@ func test_keyboard_uses_proportional_sizing() -> void:
 		assert_eq(row3_spacer.size_flags_horizontal, Control.SIZE_EXPAND_FILL, "Row 3 spacer should expand fill")
 		assert_eq(row3_spacer.size_flags_stretch_ratio, 1.0, "Row 3 spacer should have stretch ratio 1.0")
 		assert_eq(row3_spacer.custom_minimum_size.x, 0.0, "Row 3 spacer should not have X custom minimum size")
+
+func test_keyboard_bottom_row_enter_key_alignment_calculation() -> void:
+	keyboard.size = Vector2(500.0, 300.0)
+	keyboard._refresh_responsive_metrics()
+
+	var side_margin: int = keyboard._get_side_margin()
+	var key_sep: int = keyboard._get_key_separation()
+	var available_w: float = 500.0 - float(side_margin * 2)
+	var expected_col_w: float = (available_w - (9.0 * float(key_sep))) / 10.0
+	var expected_enter_w: float = (expected_col_w * 2.0) + float(key_sep)
+
+	var row3: HBoxContainer = keyboard.vbox_container.get_node_or_null("Row3") as HBoxContainer
+	assert_true(row3 != null, "Row3 must exist")
+	if row3 == null:
+		return
+
+	var enter_key: Control = null
+	for child: Node in row3.get_children():
+		if child is Button and (child as Button).text == "ENTER":
+			enter_key = child as Control
+			break
+
+	assert_true(enter_key != null, "ENTER key must exist in Row3")
+	if enter_key != null:
+		assert_eq(enter_key.size_flags_horizontal, 0, "ENTER key horizontal size flags must be 0 (no expand fill)")
+		assert_true(abs(enter_key.custom_minimum_size.x - expected_enter_w) < 0.001, "ENTER key custom minimum width must equal 2 columns plus key separation")
+
