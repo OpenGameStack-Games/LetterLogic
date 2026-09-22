@@ -27,6 +27,7 @@ SaveManager="*res://autoloads/save_manager.gd"
 DailyManager="*res://autoloads/daily_manager.gd"
 StatsManager="*res://autoloads/stats_manager.gd"
 ShareManager="*res://autoloads/share_manager.gd"
+McpInteractionServer="*res://autoloads/mcp_interaction_server.gd"
 
 [display]
 
