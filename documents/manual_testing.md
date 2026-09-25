@@ -817,12 +817,14 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm that Godot exports the Web build headlessly to `game/export/web/index.html`.
      - Confirm that the `LetterLogic-Web` workflow artifact is uploaded and downloadable.
      - Confirm that Butler publishes the package to itch.io under channel `html`.
+     - If triggered by a release tag (`v*`), confirm that the `Zip Web Build` step packages the web build into `LetterLogic-Web.zip` and the `Create GitHub Release` step uploads `LetterLogic-Web.zip` to the GitHub Release via `softprops/action-gh-release@v2`.
   4. Once deployment succeeds, open the game URL on itch.io or test an embedded `iframe` (e.g., on GitHub Pages `audrain.games/letterlogic`).
   5. Inspect browser developer tools (Console and Network tabs):
      - Confirm that the web game loads and initializes smoothly.
      - Confirm that no `SharedArrayBuffer` or Cross-Origin Isolation (COOP/COEP) header errors are thrown.
      - Confirm the game can be played in both Continuous Play and Daily Challenge modes in the browser.
-- **Expected Result:** The GitHub Actions workflow successfully compiles the single-threaded HTML5/WebAssembly build, uploads the artifact, and publishes the package to itch.io via Butler. The web build loads and runs cleanly in standard desktop and mobile browsers and within embedded iframes without requiring Cross-Origin Isolation headers.
+  6. If triggered by a release tag (`v*`), inspect the corresponding release on GitHub Releases (`https://github.com/OpenGameStack-Games/LetterLogic/releases`) and verify `LetterLogic-Web.zip` is attached as a downloadable asset.
+- **Expected Result:** The GitHub Actions workflow successfully compiles the single-threaded HTML5/WebAssembly build, uploads the artifact, and publishes the package to itch.io via Butler. When triggered by a release tag (`v*`), `LetterLogic-Web.zip` is created and attached directly to the GitHub Release. The web build loads and runs cleanly in standard desktop and mobile browsers and within embedded iframes without requiring Cross-Origin Isolation headers.
 
 ### Test 6.5: Google Play Console Automated Deployment Pipeline Verification
 - **Requirement(s):** REQ-9.8, REQ-9.9
@@ -840,10 +842,12 @@ This document outlines the manual test cases used to verify the requirements out
      - Confirm that Godot exports `LetterLogic.aab` headlessly.
      - Confirm that the bundle is signed via `r0adkll/sign-android-release`.
      - Confirm that `r0adkll/upload-google-play` successfully uploads the signed AAB to Google Play Console's `production` track for package `games.audrain.letterlogic`.
+     - Confirm that `softprops/action-gh-release@v2` attaches the signed Android App Bundle (`game/*.aab`) to the corresponding GitHub Release.
   4. Log in to Google Play Console and navigate to **Release > Production**:
      - Confirm that the new release appears on the production track matching the tag version name and version code.
      - Verify that Google Play Console reports 0 errors or blocking validation issues for the newly uploaded App Bundle.
-- **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console Production track automatically upon pushing a `v*` tag without manual intervention.
+  5. Inspect the corresponding release on GitHub Releases (`https://github.com/OpenGameStack-Games/LetterLogic/releases`) and verify `LetterLogic.aab` is attached as a downloadable asset.
+- **Expected Result:** The GitHub Actions workflow compiles, tests, signs, and deploys the Android App Bundle to the Google Play Console Production track automatically upon pushing a `v*` tag without manual intervention, and attaches the signed `.aab` file directly to the GitHub Release as a downloadable release asset.
 
 ### Test 6.6: Web Runtime Dictionary Packaging & Startup Validation
 - **Requirement(s):** REQ-9.3, REQ-9.5

@@ -43,12 +43,13 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## CI/CD & Deployment
 - **Android Release:** Automated build pipeline in `.github/workflows/android_release.yml` produces 16 KB page-aligned Android App Bundles (`.aab`) with native debug symbols and obfuscation mappings.
-- **Google Play Deployment:** Automated deployment pipeline in `.github/workflows/play_release.yml` builds, signs, and deploys the Android App Bundle (`.aab`) to the Google Play Console's Production track (`games.audrain.letterlogic`) upon pushing release tags (`v*`). Requires repository secret:
+- **Google Play Deployment:** Automated deployment pipeline in `.github/workflows/play_release.yml` builds, signs, and deploys the Android App Bundle (`.aab`) to the Google Play Console's Production track (`games.audrain.letterlogic`) upon pushing release tags (`v*`). The signed `.aab` is also automatically attached to the GitHub Release. Requires repository secret:
   - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: Service account JSON key with permissions to publish releases on Google Play Console.
-- **Web Export & Itch.io Deploy:** Automated pipeline in `.github/workflows/web_release.yml` builds a single-threaded HTML5/WebAssembly export on release tags (`v*`) or manual dispatch, uploads the `LetterLogic-Web` artifact, and deploys to itch.io using Butler. Requires repository secrets:
+- **Web Export & Itch.io Deploy:** Automated pipeline in `.github/workflows/web_release.yml` builds a single-threaded HTML5/WebAssembly export on release tags (`v*`) or manual dispatch, uploads the `LetterLogic-Web` artifact, and deploys to itch.io using Butler. On tagged releases (`v*`), the exported web build is packaged into `LetterLogic-Web.zip` and attached to the GitHub Release. Requires repository secrets:
   - `BUTLER_API_KEY`: itch.io API key.
   - `ITCH_USERNAME`: itch.io account username.
   - `ITCH_GAME`: itch.io game slug/project identifier (e.g., `letterlogic`).
+- **GitHub Releases:** Release binaries—including the standalone web distribution (`LetterLogic-Web.zip`) and signed Android App Bundle (`LetterLogic.aab`)—are automatically attached as downloadable assets on each tagged GitHub Release (`v*`).
 
 ## License
 The source code for LetterLogic is licensed under the [GNU GPLv3](LICENSE). 
