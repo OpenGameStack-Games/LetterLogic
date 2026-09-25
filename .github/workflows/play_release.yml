@@ -114,3 +114,9 @@ jobs:
           releaseFiles: game/*.aab
           track: production
           status: completed
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: game/*.aab
