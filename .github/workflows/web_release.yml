@@ -64,3 +64,16 @@ jobs:
           ITCH_GAME: ${{ env.ITCH_GAME }}
           ITCH_USER: ${{ env.ITCH_USERNAME }}
           PACKAGE: ./game/export/web
+
+      - name: Zip Web Build
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          cd ./game/export/web
+          zip -r ../../../LetterLogic-Web.zip .
+          cd ../../..
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: LetterLogic-Web.zip
