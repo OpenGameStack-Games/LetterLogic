@@ -25,6 +25,13 @@ func test_display_settings() -> void:
 	assert_eq(height, 1280, "Viewport height should be 1280 for mobile portrait")
 	assert_eq(orientation, 1, "Handheld orientation should be portrait (1)")
 
+func test_rendering_settings() -> void:
+	var rendering_method: String = ProjectSettings.get_setting("rendering/renderer/rendering_method", "")
+	assert_eq(rendering_method, "gl_compatibility", "Rendering method should be gl_compatibility for Android tearing fix")
+	
+	var vsync_mode: int = int(ProjectSettings.get_setting("display/window/vsync/vsync_mode", 0))
+	assert_eq(vsync_mode, 1, "V-Sync mode should be 1 (Enabled) to prevent screen tearing")
+
 func test_app_settings() -> void:
 	var app_name: String = String(ProjectSettings.get_setting("application/config/name", ""))
 	assert_eq(app_name, "LetterLogic", "Application name must be LetterLogic")
