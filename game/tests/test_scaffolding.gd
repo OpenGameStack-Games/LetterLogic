@@ -29,6 +29,9 @@ func test_rendering_settings() -> void:
 	var rendering_method: String = ProjectSettings.get_setting("rendering/renderer/rendering_method", "")
 	assert_eq(rendering_method, "gl_compatibility", "Rendering method should be gl_compatibility for Android tearing fix")
 	
+	var rendering_method_mobile: String = ProjectSettings.get_setting("rendering/renderer/rendering_method.mobile", "")
+	assert_eq(rendering_method_mobile, "gl_compatibility", "Mobile rendering method should be gl_compatibility for Android tearing fix")
+	
 	var vsync_mode: int = int(ProjectSettings.get_setting("display/window/vsync/vsync_mode", 0))
 	assert_eq(vsync_mode, 1, "V-Sync mode should be 1 (Enabled) to prevent screen tearing")
 

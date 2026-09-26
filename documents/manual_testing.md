@@ -879,4 +879,17 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify that the colored square grid emojis (`🟩`, `🟨`, `⬛`) and stopwatch emoji (`⏱️`) render properly.
 - **Expected Result:** All in-game UI buttons (`⌫`, `✕`) and emoji tiles/symbols (`🟩`, `🟨`, `⬛`) render cleanly and legibly across all screens on the Web export via the embedded font fallback stack (`NotoColorEmoji.ttf` and `NotoSansSymbols-Regular.ttf`) configured in `fallback_font.tres`, with zero missing glyph boxes or font loading errors. Standard UI text retains engine default metrics without vertical layout distortion or off-center letters in the grid.
 
+### Test 6.8: OpenGL Compatibility Renderer & Tear-Free Rendering on Snapdragon 8 Gen 3 Devices
+- **Requirement(s):** REQ-9.11
+- **Steps:**
+  1. Inspect `game/project.godot` (or Project Settings in Godot) to confirm:
+     - `renderer/rendering_method` is set to `"gl_compatibility"`.
+     - `renderer/rendering_method.mobile` is set to `"gl_compatibility"`.
+     - `display/window/vsync/vsync_mode` is set to `1` (Enabled).
+  2. Install the Android APK or AAB on a physical Snapdragon 8 Gen 3 / Adreno 750 device (such as the Samsung Galaxy S24 Ultra) or any high-refresh-rate display device (90Hz / 120Hz).
+  3. Launch LetterLogic and play through puzzles in both Continuous Play and Daily Challenge modes.
+  4. Perform rapid user actions, including fast keystrokes, submitting guesses to trigger staggered tile reveal and pop animations, opening/closing modals (How to Play, Stats, Credits, Game Over), and returning to the Main Menu.
+  5. Carefully observe the screen during tile animations, modal transitions, and banner animations.
+- **Expected Result:** The game launches and renders using the OpenGL Compatibility backend. Screen tearing, horizontal slicing artifacts, and visual stutter are completely absent across all animations and transitions on high-refresh Snapdragon 8 Gen 3 hardware. Frame pacing is smooth and synchronized with the display via enforced V-Sync.
+
 
