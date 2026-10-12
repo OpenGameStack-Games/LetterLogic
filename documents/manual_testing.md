@@ -24,23 +24,29 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps:**
   1. Start a game in either Continuous Play or Daily Challenge mode.
   2. Note the vertical position of the letter grid (`GameBoard`) and the running puzzle timer in the header directly below the game mode label.
-  3. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
-  4. Type 5 letters of an invalid non-word (e.g., "QWERT") and submit. 
-  5. Observe the presentation and fade-in of the "Not in word list" toast popup and verify the letter grid position.
-  6. Inspect the toast notification typography and outline container padding:
+  3. Verify via startup logs or console output that the word bank loads exactly 1,566 unique 5-letter isograms (`WordBank: Loaded 1566 unique 5-letter isograms.`).
+  4. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
+  5. Type 5 letters of an invalid non-word (e.g., "QWERT") and submit. 
+  6. Observe the presentation and fade-in of the "Not in word list" toast popup and verify the letter grid position.
+  7. Inspect the toast notification typography and outline container padding:
      - Verify the toast notification font size is prominently enlarged (36px).
      - Verify the text has comfortable horizontal padding (24px) away from the 12px rounded borders of the outline container (`ToastPanel`), ensuring the first and last characters do not crowd or clip against the curved corners.
-  7. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
-  8. Test curated dictionary exclusion of simple plurals ending in -S:
+  8. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
+  9. Test exclusion of obscure vocabulary:
+     - Type an obscure word (e.g., "RIOJA") and submit.
+     - Verify that "Not in word list" is displayed, the row does not advance, and no attempt is consumed.
+  10. Test dictionary exclusion of simple plurals ending in -S:
      - Type a simple plural isogram (e.g., "BIRDS" or "CARTS") and submit.
      - Verify that "Not in word list" is displayed, the row does not advance, and no attempt is consumed.
-  9. Test curated dictionary exclusion of regular past-tense verbs ending in -ED:
+  11. Test dictionary exclusion of regular past-tense verbs ending in -ED:
      - Type a regular past-tense isogram (e.g., "ACTED" or "HIKED") and submit.
      - Verify that "Not in word list" is displayed, the row does not advance, and no attempt is consumed.
-  10. Test acceptance of valid base forms and true singulars ending in S or ED:
+  12. Test acceptance of common Wordle isogram solution vocabulary:
+      - Type common vocabulary words (e.g., "NICHE", "RABID", "UNLIT", "ABOUT", "AFTER", "UNDER") and submit. Verify each is accepted and evaluated.
+  13. Test acceptance of valid base forms and true singulars ending in S:
       - Type a valid dictionary singular ending in S (e.g., "CHAOS", "FOCUS", or "VIRUS") and submit. Verify it is accepted and evaluated.
-      - In a new row, type a valid base form ending in ED (e.g., "SHRED") or standard base form (e.g., "PLANT", "BRICK", "LOGIC") and submit. Verify it is accepted and evaluated.
-- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. Simple inflected plurals ending in -S ("BIRDS", "CARTS") and regular past-tense verbs ending in -ED ("ACTED", "HIKED") are rejected with "Not in word list" without advancing the row or consuming attempts. True singular nouns ("CHAOS", "FOCUS", "VIRUS") and base forms ("SHRED", "PLANT", "BRICK") are accepted and evaluated. The toast dismisses smoothly via fade out after ~1.8 seconds.
+      - In a new row, type a standard root form (e.g., "PLANT", "BRICK", "LOGIC") and submit. Verify it is accepted and evaluated.
+- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The dictionary loads exactly 1,566 words. Obscure words ("RIOJA"), simple inflected plurals ending in -S ("BIRDS", "CARTS"), and regular past-tense verbs ending in -ED ("ACTED", "HIKED") are rejected with "Not in word list" without advancing the row or consuming attempts. Common vocabulary ("NICHE", "RABID", "UNLIT", "ABOUT", "AFTER", "UNDER"), true singular nouns ("CHAOS", "FOCUS", "VIRUS"), and root forms ("PLANT", "BRICK", "LOGIC") are accepted and evaluated. The toast dismisses smoothly via fade out after ~1.8 seconds.
 
 ### Test 1.3: Guess Evaluation, Staggered Reveal and Keyboard Colors
 - **Requirement(s):** REQ-2.2, REQ-2.4, REQ-8.15
@@ -814,7 +820,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps:**
   1. Export an Android APK or AAB using the configured Android export preset (`game/export_presets.cfg`) with the runtime dictionary include filter enabled.
   2. Install the build on an Android device or emulator and launch either Continuous Play or Daily Challenge from a cold start.
-  3. Verify the startup log reports a non-empty dictionary load, such as `WordBank: Loaded <n> unique 5-letter isograms.`, and that no `push_error(...)` message reports an empty or missing word list.
+  3. Verify the startup log reports a non-empty dictionary load, such as `WordBank: Loaded 1566 unique 5-letter isograms.`, and that no `push_error(...)` message reports an empty or missing word list.
   4. Enter the reference words `ADORE` and `THANK` during gameplay.
 - **Expected Result:** The Android build loads a non-empty runtime dictionary on startup, both reference words are accepted as valid guesses, and the game no longer rejects every guess with a "word not in list" outcome.
 
@@ -869,7 +875,7 @@ This document outlines the manual test cases used to verify the requirements out
   1. Export a Web build using the configured Web export preset (`game/export_presets.cfg`) with `include_filter="*.txt"` enabled, or run a local HTTP server serving the exported web directory (`python -m http.server 8000` from `game/export/web`).
   2. Open the web game in a browser (or navigate to the deployed build on itch.io).
   3. Open browser developer console (`F12`) and observe startup logs:
-     - Verify that `WordBank: Loaded <n> unique 5-letter isograms.` is printed.
+     - Verify that `WordBank: Loaded 1566 unique 5-letter isograms.` is printed.
      - Verify that no `push_error(...)` occurs regarding dictionary loading or missing `words.txt`.
   4. Start a game in either Continuous Play or Daily Challenge mode.
   5. Type a valid 5-letter isogram (e.g., `ADORE`, `PLANT`, or `THANK`) and submit the guess.
