@@ -18,7 +18,7 @@ func cleanup() -> void:
 
 func test_word_bank_loads_successfully() -> void:
 	assert_true(word_bank.is_loaded(), "WordBank should report loaded status")
-	assert_eq(word_bank.get_word_count(), 1656, "WordBank should have exactly 1,656 words loaded")
+	assert_eq(word_bank.get_word_count(), 1566, "WordBank should have exactly 1,566 words loaded")
 
 func test_startup_word_bank_is_loaded_with_words() -> void:
 	assert_true(word_bank.is_loaded() == true, "WordBank should be loaded during startup initialization")
@@ -60,11 +60,21 @@ func test_is_valid_word() -> void:
 	assert_false(word_bank.is_valid_word("ACTED"), "ACTED is a past-tense verb, should be invalid")
 	assert_false(word_bank.is_valid_word("HIKED"), "HIKED is a past-tense verb, should be invalid")
 	
-	# True singulars ending in S or ED should be valid
+	# Obscure words should be rejected
+	assert_false(word_bank.is_valid_word("RIOJA"), "RIOJA is an obscure word, should be invalid")
+
+	# True singulars ending in S should be valid
 	assert_true(word_bank.is_valid_word("CHAOS"), "CHAOS is a valid singular noun")
 	assert_true(word_bank.is_valid_word("FOCUS"), "FOCUS is a valid singular noun")
 	assert_true(word_bank.is_valid_word("VIRUS"), "VIRUS is a valid singular noun")
-	assert_true(word_bank.is_valid_word("SHRED"), "SHRED is a valid base verb")
+
+	# Common vocabulary words from official Wordle isogram solution list should be valid
+	assert_true(word_bank.is_valid_word("NICHE"), "NICHE should be a valid word")
+	assert_true(word_bank.is_valid_word("RABID"), "RABID should be a valid word")
+	assert_true(word_bank.is_valid_word("UNLIT"), "UNLIT should be a valid word")
+	assert_true(word_bank.is_valid_word("ABOUT"), "ABOUT should be a valid word")
+	assert_true(word_bank.is_valid_word("AFTER"), "AFTER should be a valid word")
+	assert_true(word_bank.is_valid_word("UNDER"), "UNDER should be a valid word")
 
 func test_android_reference_words_are_valid() -> void:
 	assert_true(word_bank.is_valid_word("ADORE"), "ADORE must be valid after Android word bank load")
