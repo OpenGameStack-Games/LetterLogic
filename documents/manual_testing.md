@@ -19,19 +19,28 @@ This document outlines the manual test cases used to verify the requirements out
   4. Attempt to tap the letter 'A' again or press 'A' on the physical keyboard.
 - **Expected Result:** The 'A' key on the keyboard is temporarily disabled and styled in dark gray (`#272729`). The second 'A' does not appear in the grid. The game prevents duplicate letters in the current row.
 
-### Test 1.2: Dictionary, Length Validation & Toast Popup Layout
-- **Requirement(s):** REQ-3.2, REQ-3.3, REQ-8.9
+### Test 1.2: Curated Dictionary, Length Validation & Toast Popup Layout
+- **Requirement(s):** REQ-1.1, REQ-3.2, REQ-3.3, REQ-8.9
 - **Steps:**
   1. Start a game in either Continuous Play or Daily Challenge mode.
   2. Note the vertical position of the letter grid (`GameBoard`) and the running puzzle timer in the header directly below the game mode label.
   3. Type 4 letters (e.g., "ABCD") and submit. Verify it is rejected (needs 5 letters).
-  4. Type 5 letters of an invalid word (e.g., "QWERT") and submit. 
+  4. Type 5 letters of an invalid non-word (e.g., "QWERT") and submit. 
   5. Observe the presentation and fade-in of the "Not in word list" toast popup and verify the letter grid position.
   6. Inspect the toast notification typography and outline container padding:
      - Verify the toast notification font size is prominently enlarged (36px).
      - Verify the text has comfortable horizontal padding (24px) away from the 12px rounded borders of the outline container (`ToastPanel`), ensuring the first and last characters do not crowd or clip against the curved corners.
   7. Wait ~1.8 seconds for the toast notification to fade out and dismiss.
-- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. The row does not advance, and the attempt is not consumed. The toast dismisses smoothly via fade out after ~1.8 seconds.
+  8. Test curated dictionary exclusion of simple plurals ending in -S:
+     - Type a simple plural isogram (e.g., "BIRDS" or "CARTS") and submit.
+     - Verify that "Not in word list" is displayed, the row does not advance, and no attempt is consumed.
+  9. Test curated dictionary exclusion of regular past-tense verbs ending in -ED:
+     - Type a regular past-tense isogram (e.g., "ACTED" or "HIKED") and submit.
+     - Verify that "Not in word list" is displayed, the row does not advance, and no attempt is consumed.
+  10. Test acceptance of valid base forms and true singulars ending in S or ED:
+      - Type a valid dictionary singular ending in S (e.g., "CHAOS", "FOCUS", or "VIRUS") and submit. Verify it is accepted and evaluated.
+      - In a new row, type a valid base form ending in ED (e.g., "SHRED") or standard base form (e.g., "PLANT", "BRICK", "LOGIC") and submit. Verify it is accepted and evaluated.
+- **Expected Result:** The toast notification appears cleanly in the vertical gap directly between the active puzzle timer and the top row of the letter grid. The toast text renders prominently at 36px font size with generous horizontal padding (24px left/right, 8px top/bottom) inside the rounded outline box. The toast does not obscure or overlap the header, back button, timer, or game board tiles. Because vertical space is persistently reserved for the toast overlay in the layout hierarchy, the letter grid (`GameBoard`) remains completely stationary with zero downward shift or jitter when the toast appears, and zero upward jump when it dismisses. Simple inflected plurals ending in -S ("BIRDS", "CARTS") and regular past-tense verbs ending in -ED ("ACTED", "HIKED") are rejected with "Not in word list" without advancing the row or consuming attempts. True singular nouns ("CHAOS", "FOCUS", "VIRUS") and base forms ("SHRED", "PLANT", "BRICK") are accepted and evaluated. The toast dismisses smoothly via fade out after ~1.8 seconds.
 
 ### Test 1.3: Guess Evaluation, Staggered Reveal and Keyboard Colors
 - **Requirement(s):** REQ-2.2, REQ-2.4, REQ-8.15
@@ -439,7 +448,7 @@ This document outlines the manual test cases used to verify the requirements out
   4. Inspect the modal typography and heading hierarchy:
      - **Modal Title (`ModalTitle`):** Verify `HOW TO PLAY` renders prominently in a tripled 84px font size centered at the top of the panel.
      - **Instructional Body Text (`RulesText`):** Verify the regular instructional copy renders in a calibrated 32px font size (`normal_font_size = 32`), filling the modal interior legibly.
-     - **Section Headings:** Verify bold section headings (`[b]Guess the secret word in 6 attempts.[/b]`, `[b]Tile Colors:[/b]`, `[b]Modes:[/b]`) render at 32px bold font size (`bold_font_size = 32`).
+      - **Section Headings:** Verify bold section headings (`[b]Guess the secret word in 6 attempts.[/b]`, `[b]Word Rules:[/b]`, `[b]Tile Colors:[/b]`, `[b]Modes:[/b]`) render at 32px bold font size (`bold_font_size = 32`).
   5. Inspect the dismiss button ("Got It!", `CloseButton`):
      - Verify the button features an enlarged minimum height of at least 80px (`custom_minimum_size.y >= 80px`), providing a comfortable and ergonomic mobile thumb-tap target, while still retaining visible horizontal padding from the panel border.
      - Verify the button font size is enlarged to at least 36px (`font_size >= 36px`), matching the Main Menu secondary utility buttons.
@@ -450,11 +459,16 @@ This document outlines the manual test cases used to verify the requirements out
      - Correct is displayed as `🟩 GREEN` (`#538d4e`) - "Letter is in the word and in the correct spot."
      - Present is displayed as `🟨 YELLOW` (`#b59f3b`) - "Letter is in the word but wrong spot."
      - Absent is displayed as `🟥 RED` (`#b53b3b`) - "Letter is not in the word." (confirm it is NOT gray `⬛ GRAY` or `#808080`).
-  8. Verify the special rule states that words never contain duplicate letters (5-letter isograms) and that keys typed in the current row are temporarily disabled.
+  8. Verify the Word Rules section clearly states the curated dictionary constraints:
+     - All words are 5-letter isograms (no repeating letters). Keys typed in the current row are temporarily disabled.
+     - Words are standard American English dictionary base forms (singular nouns, base verbs, adjectives).
+     - No simple plurals ending in -S (e.g., BIRDS, CARTS).
+     - No regular past-tense verbs ending in -ED (e.g., ACTED, HIKED).
+     - Every valid guess is a possible winning answer!
   9. Verify game modes (Daily Challenge with UTC midnight reset, Continuous Play unlimited sandbox) are clearly described.
   10. If tested on smaller displays or with enlarged system font scaling, verify the `RichTextLabel` vertical scrollbar engages cleanly (`scroll_active = true`) without content truncation.
   11. Tap "Got It!" and verify the modal dismisses smoothly with standard button interaction feedback and returns focus to the Main Menu.
-- **Expected Result:** The modal opens adaptively within responsive margins displaying prominent header typography (84px title), calibrated 32px body/headings fitting without vertical scrolling on 720x1280 screens, and an enlarged 80px "Got It" button (36px font). The title, rules, and dismiss button all preserve visible left/right inset from the panel border, all text is crisp and legible, deduction cues display flat red (`🟥 RED` / `#b53b3b`), fallback scrolling functions smoothly if constrained, and the modal dismisses cleanly.
+- **Expected Result:** The modal opens adaptively within responsive margins displaying prominent header typography (84px title), calibrated 32px body/headings fitting without vertical scrolling on 720x1280 screens, and an enlarged 80px "Got It" button (36px font). The title, rules, and dismiss button all preserve visible left/right inset from the panel border, all text is crisp and legible, deduction cues display flat red (`🟥 RED` / `#b53b3b`), the `Word Rules:` section explicitly articulates the isogram, base form, plural/past-tense restrictions, and single-tier winning answer structure, fallback scrolling functions smoothly if constrained, and the modal dismisses cleanly.
 
 ### Test 5.6: Responsive UI Scaling Across Android Portrait Aspect Ratios
 - **Requirement(s):** REQ-8.7
@@ -716,7 +730,7 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify the title "HOW TO PLAY" displays at 84px font size.
      - Verify the body text (`RulesText`) displays at the base 32px font size (`normal_font_size = 32`, `bold_font_size = 32`).
      - Verify the "Got It!" button displays at 36px font size with 80px minimum height.
-     - Verify all instructional text, color indicators, and bullet points fit cleanly within the modal panel.
+     - Verify all instructional text, color indicators, and bullet points (including the Word Rules section detailing 5-letter isograms, base forms, exclusion of -S plurals and -ED past tenses, and single-tier winning answers) fit cleanly within the modal panel.
   4. Test scrolling behavior:
      - Attempt to scroll the text vertically by dragging or using the mouse wheel / touch gestures over `RulesText`.
      - Confirm that vertical scrolling is completely disabled (`scroll_active = false`) and no scrollbar appears.

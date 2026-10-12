@@ -113,6 +113,10 @@ func test_how_to_play_modal_dimensions_and_rules() -> void:
 		assert_true(content.contains("🟥 RED"), "RulesText must contain 🟥 RED indicator")
 		assert_false(content.contains("⬛"), "RulesText must not contain black/gray square emoji ⬛")
 		assert_false(content.contains("GRAY"), "RulesText must not contain GRAY")
+		assert_true(content.contains("Word Rules:"), "RulesText must contain Word Rules section heading")
+		assert_true(content.contains("No simple plurals ending in -S"), "RulesText must mention exclusion of simple -S plurals")
+		assert_true(content.contains("No regular past-tense verbs ending in -ED"), "RulesText must mention exclusion of -ED past tenses")
+		assert_true(content.contains("Every valid guess is a possible winning answer!"), "RulesText must mention single-tier winning answer structure")
 		assert_false(rules_label.scroll_active, "RulesText scroll_active must be false (shrink-to-fit scaling replaces scrolling)")
 	
 	var close_btn: Button = modal.find_child("CloseButton", true, false) as Button

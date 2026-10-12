@@ -159,8 +159,12 @@ theme_override_font_sizes/bold_font_size = 32
 bbcode_enabled = true
 text = "[b]Guess the secret word in 6 attempts.[/b]
 
-• Each guess must be a valid 5-letter word.
-• [color=#ffcc00][b]Special Rule:[/b][/color] Words [b]NEVER contain duplicate letters[/b]! Keys you've already typed in the current row will be temporarily disabled.
+[b]Word Rules:[/b]
+• All words are 5-letter isograms (no repeating letters). Keys you've already typed will be temporarily disabled.
+• Words are standard American English dictionary base forms (singular nouns, base verbs, adjectives).
+• No simple plurals ending in -S (e.g., BIRDS, CARTS).
+• No regular past-tense verbs ending in -ED (e.g., ACTED, HIKED).
+• Every valid guess is a possible winning answer!
 
 [b]Tile Colors:[/b]
 [color=#538d4e]🟩 GREEN[/color] - Letter is in the word and in the correct spot.

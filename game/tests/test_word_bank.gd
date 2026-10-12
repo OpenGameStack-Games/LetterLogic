@@ -18,7 +18,7 @@ func cleanup() -> void:
 
 func test_word_bank_loads_successfully() -> void:
 	assert_true(word_bank.is_loaded(), "WordBank should report loaded status")
-	assert_true(word_bank.get_word_count() > 1000, "WordBank should have at least 1,000 words loaded")
+	assert_eq(word_bank.get_word_count(), 1656, "WordBank should have exactly 1,656 words loaded")
 
 func test_startup_word_bank_is_loaded_with_words() -> void:
 	assert_true(word_bank.is_loaded() == true, "WordBank should be loaded during startup initialization")
@@ -51,6 +51,20 @@ func test_is_valid_word() -> void:
 	assert_true(word_bank.is_valid_word("LOGIC"), "LOGIC should be a valid word")
 	assert_true(word_bank.is_valid_word("PLANT"), "PLANT should be a valid word")
 	assert_true(word_bank.is_valid_word("BRICK"), "BRICK should be a valid word")
+
+	# Simple plurals ending in S should be invalid
+	assert_false(word_bank.is_valid_word("BIRDS"), "BIRDS is a simple plural, should be invalid")
+	assert_false(word_bank.is_valid_word("CARTS"), "CARTS is a simple plural, should be invalid")
+	
+	# Past-tense verbs ending in ED should be invalid
+	assert_false(word_bank.is_valid_word("ACTED"), "ACTED is a past-tense verb, should be invalid")
+	assert_false(word_bank.is_valid_word("HIKED"), "HIKED is a past-tense verb, should be invalid")
+	
+	# True singulars ending in S or ED should be valid
+	assert_true(word_bank.is_valid_word("CHAOS"), "CHAOS is a valid singular noun")
+	assert_true(word_bank.is_valid_word("FOCUS"), "FOCUS is a valid singular noun")
+	assert_true(word_bank.is_valid_word("VIRUS"), "VIRUS is a valid singular noun")
+	assert_true(word_bank.is_valid_word("SHRED"), "SHRED is a valid base verb")
 
 func test_android_reference_words_are_valid() -> void:
 	assert_true(word_bank.is_valid_word("ADORE"), "ADORE must be valid after Android word bank load")
