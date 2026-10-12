@@ -18,7 +18,7 @@ func cleanup() -> void:
 
 func test_word_bank_loads_successfully() -> void:
 	assert_true(word_bank.is_loaded(), "WordBank should report loaded status")
-	assert_eq(word_bank.get_word_count(), 1566, "WordBank should have exactly 1,566 words loaded")
+	assert_eq(word_bank.get_word_count(), 1581, "WordBank should have exactly 1,581 words loaded")
 
 func test_startup_word_bank_is_loaded_with_words() -> void:
 	assert_true(word_bank.is_loaded() == true, "WordBank should be loaded during startup initialization")
@@ -75,6 +75,23 @@ func test_is_valid_word() -> void:
 	assert_true(word_bank.is_valid_word("ABOUT"), "ABOUT should be a valid word")
 	assert_true(word_bank.is_valid_word("AFTER"), "AFTER should be a valid word")
 	assert_true(word_bank.is_valid_word("UNDER"), "UNDER should be a valid word")
+
+	# Expanded common isograms should be valid
+	assert_true(word_bank.is_valid_word("PSYCH"), "PSYCH should be a valid word")
+	assert_true(word_bank.is_valid_word("LASER"), "LASER should be a valid word")
+	assert_true(word_bank.is_valid_word("SQUID"), "SQUID should be a valid word")
+	assert_true(word_bank.is_valid_word("LITER"), "LITER should be a valid word")
+	assert_true(word_bank.is_valid_word("MIXER"), "MIXER should be a valid word")
+	assert_true(word_bank.is_valid_word("SAVER"), "SAVER should be a valid word")
+	assert_true(word_bank.is_valid_word("TONER"), "TONER should be a valid word")
+	assert_true(word_bank.is_valid_word("TUNER"), "TUNER should be a valid word")
+	assert_true(word_bank.is_valid_word("BIKER"), "BIKER should be a valid word")
+	assert_true(word_bank.is_valid_word("WIPER"), "WIPER should be a valid word")
+	assert_true(word_bank.is_valid_word("MISTY"), "MISTY should be a valid word")
+	assert_true(word_bank.is_valid_word("LATEX"), "LATEX should be a valid word")
+	assert_true(word_bank.is_valid_word("REMIX"), "REMIX should be a valid word")
+	assert_true(word_bank.is_valid_word("SABER"), "SABER should be a valid word")
+	assert_true(word_bank.is_valid_word("OCHER"), "OCHER should be a valid word")
 
 func test_android_reference_words_are_valid() -> void:
 	assert_true(word_bank.is_valid_word("ADORE"), "ADORE must be valid after Android word bank load")
