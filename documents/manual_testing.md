@@ -153,7 +153,7 @@ This document outlines the manual test cases used to verify the requirements out
 
 ### Test 1.10: Main Game Portrait Layout, Board Visibility & Keyboard Containment on Android
 
-### Test 1.10b: Representative Portrait Screenshots — Continuous Play & Daily Challenge
+### Test 1.10b: Representative Portrait Screenshots: Continuous Play & Daily Challenge
 - **Requirement(s):** REQ-4.1, REQ-4.2, REQ-8.7
 - **Purpose:** Capture visual confirmation that the MainGame portrait-first proportional layout renders correctly across representative phone and tablet portrait sizes for both Continuous Play and Daily Challenge modes.
 - **Representative Viewports:** 360x800 (small phone), 412x915 (typical phone), 1080x2400 (tall phone), 1284x2778 (large phone/phablet), 1536x2048 (tablet portrait)
@@ -166,8 +166,8 @@ This document outlines the manual test cases used to verify the requirements out
      d. Verify the BoardArea is centered/fills the middle region and remains visually prominent (at least ~30% of viewport height for the board region).
      e. Verify there is no overlap between BoardArea and KeyboardArea: tiles must never be obscured by keys.
      f. Verify that the bottom area below the keyboard contains only the explicit bottom breathing buffer (a small spacer) and no large blank gap.
-     g. Capture a screenshot for each viewport showing the full main screen (header → board → keyboard → bottom buffer).
-  3. Repeat steps 1–2 for Daily Challenge mode.
+     g. Capture a screenshot for each viewport showing the full main screen (header -> board -> keyboard -> bottom buffer).
+  3. Repeat steps 1-2 for Daily Challenge mode.
 - **Expected Result:** For every representative viewport, the keyboard is readable and usable (no squashed keys), board and keyboard never overlap, board occupies the middle region, only the bottom breathing buffer remains under the keyboard (no large blank region), and screenshots demonstrate consistent layout across Continuous Play and Daily Challenge.
 
 (Continue with the existing Test 1.10 content below.)
@@ -234,7 +234,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Requirement(s):** REQ-4.2, REQ-7.3
 - **Steps:**
   1. Launch the game and start today's Daily Challenge from the Main Menu.
-  2. Enter 1–3 valid guesses (leaving the puzzle unfinished).
+  2. Enter 1-3 valid guesses (leaving the puzzle unfinished).
   3. Exit to the Main Menu (or close the application).
   4. Artificially advance the device/system clock by +24 hours past the next UTC midnight rollover (or modify system time to Day X+1).
   5. Reopen/return to the application.
@@ -421,7 +421,7 @@ This document outlines the manual test cases used to verify the requirements out
   4. Observe the Game Over modal panel container and action buttons ("Next Word", "Main Menu", "Share").
   5. Verify panel containers feature deep black fill with 3px solid white borders and 12px rounded corners.
   6. Verify all action buttons adhere strictly to the 1930s monochrome button styling and interaction states.
-  7. Verify that no chromatic colors appear on buttons or panels—chromatic colors remain strictly reserved for the letter evaluation tiles (🟩, 🟨, 🟥).
+  7. Verify that no chromatic colors appear on buttons or panels: chromatic colors remain strictly reserved for the letter evaluation tiles (🟩, 🟨, 🟥).
 - **Expected Result:** All modals, panels, and buttons across the entire application exhibit uniform 1930s monochrome styling inherited from the centralized project GUI theme.
 
 ### Test 5.3: Static Main Menu Mascot Display
@@ -490,7 +490,7 @@ This document outlines the manual test cases used to verify the requirements out
      - Verify the mascot, title box, and navigation buttons scale dynamically within safe margin padding without crowding screen borders or overflowing.
   4. Enter a game (Continuous Play or Daily Challenge):
      - **Game Board:** Confirm the 5-column by 6-row grid preserves its 5:6 aspect ratio and square tiles via `AspectRatioContainer`, dynamically expanding across the available width while observing safe margins.
-      - **Virtual Keyboard:** Confirm that the keyboard grid strictly enforces a left-aligned, non-staggered vertical grid layout across all three rows. Keys in Row 1 (Q–P) and Row 2 (A–L, ⌫) scale uniformly across 10 columns. Keys in Row 3 (Z–M) align with columns 1–7, the spacer aligns with column 8 ("K"), and the Enter key spans columns 9 and 10 with mathematically calculated width including the column gap, scaling seamlessly across display widths without horizontal clipping or column misalignment.
+     - **Virtual Keyboard:** Confirm that the keyboard grid strictly enforces a left-aligned, non-staggered vertical grid layout across all three rows. Keys in Row 1 (Q-P) and Row 2 (A-L, ⌫) scale uniformly across 10 columns. Keys in Row 3 (Z-M) align with columns 1-7, the spacer aligns with column 8 ("K"), and the Enter key spans columns 9 and 10 with mathematically calculated width including the column gap, scaling seamlessly across display widths without horizontal clipping or column misalignment.
      - **Header Bar:** Verify the back button, game mode title, timer label, and statistics button stay neatly aligned across the top row.
   5. Open dialog overlays (How to Play modal, Stats Screen, and Game Over modal):
      - Confirm dialog panels scale responsively within their `MarginContainer` boundaries without overflowing off-screen or truncating buttons.
@@ -520,7 +520,7 @@ This document outlines the manual test cases used to verify the requirements out
   1. Launch the game in either Continuous Play or Daily Challenge mode.
   2. Observe the letter tiles across the game grid.
   3. Type letters across the active row (e.g., "PLANT").
-  4. Verify that each letter renders in an enlarged font size (72px) that proportionally fills the responsive tile box (~100px–120px+).
+  4. Verify that each letter renders in an enlarged font size (72px) that proportionally fills the responsive tile box (~100px-120px+).
   5. Verify that each letter is horizontally and vertically centered within the tile.
   6. Verify that letters maintain clean padding and margin clearance from the tile's 2px border and 4px rounded corners without clipping, touching edges, or truncating across different screen resolutions (16:9, 19.5:9, 20:9 smartphones and 4:3, 16:10 tablets).
   7. Submit the guess and verify that evaluation colors (Green, Yellow, Flat Red) and state transitions preserve the font size and centering.
@@ -574,12 +574,12 @@ This document outlines the manual test cases used to verify the requirements out
   6. Observe the on-screen virtual keyboard at the bottom of the screen.
   7. Verify the vertical height of the keys is calibrated to 99px (`KEY_MIN_HEIGHT = 99.0`), providing a comfortable tap target while preventing container overflow on shorter mobile screens.
   8. Verify the keyboard grid strictly enforces a left-aligned, non-staggered vertical grid layout across all three rows (10 columns per row): standard letter keys and Delete ("⌫") use uniform stretch ratios (1.0), Row 2 side stagger spacers are eliminated, Row 3 features a gap spacer under "K" (ratio 1.0), and the Enter key ("ENTER") has its width mathematically calculated to span columns 9 and 10 (including the inter-column gap) with expand-fill disabled.
-  9. Verify standard letter keys ("A"–"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
+  9. Verify standard letter keys ("A"-"Z") display letters prominently with an enlarged font size (~44px) that proportionally fills the 99px key while maintaining clean margin padding.
   10. Verify the Delete key ("⌫") is positioned at the far right of Row 2 (after "L") and its icon is scaled up to match the enlarged font size of standard letter keys. Verify tapping the Delete key removes the most recently typed letter from the active row.
-  11. Verify the Enter key ("ENTER") is positioned on the bottom right of Row 3 with a visible gap spacer between "M" and "ENTER", with its left edge aligned with "L" and right edge aligned with "⌫". Verify its text scales responsively within the updated 22–32px font size range (`FONT_SIZE_ENTER_MIN = 22`, `FONT_SIZE_ENTER_MAX = 32`), with a 4px horizontal content margin (`content_margin_left = 4`, `content_margin_right = 4`) enforced on all keyboard keys so the full word fits neatly and legibly inside the 2-column key boundary with visible breathing room and no horizontal clipping or pushing adjacent keys off-screen.
+  11. Verify the Enter key ("ENTER") is positioned on the bottom right of Row 3 with a visible gap spacer between "M" and "ENTER", with its left edge aligned with "L" and right edge aligned with "⌫". Verify its text scales responsively within the updated 22-32px font size range (`FONT_SIZE_ENTER_MIN = 22`, `FONT_SIZE_ENTER_MAX = 32`), with a 4px horizontal content margin (`content_margin_left = 4`, `content_margin_right = 4`) enforced on all keyboard keys so the full word fits neatly and legibly inside the 2-column key boundary with visible breathing room and no horizontal clipping or pushing adjacent keys off-screen.
   12. Type letters and submit a guess to trigger state changes (Correct, Present, Absent, row disabled).
   13. Verify that the enlarged and constrained font sizes, column alignments, and Enter key dimensions are preserved across all visual key states and interaction feedback (hover, pressed).
-- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. The virtual keyboard uses a left-aligned non-staggered grid layout with exact mathematical column alignment across all three rows (uniform letter keys and Delete, Row 3 gap spacer under "K", and dynamically sized Enter key spanning columns 9 and 10). Keyboard keys provide calibrated 99px vertical tap targets and enforce 4px horizontal content margins. Delete is positioned at the right of Row 2, Row 3 features a gap spacer under "K", and Enter is positioned at the right of Row 3 spanning under "L" and "⌫". Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly and legibly in an updated 22–32px font size range, and all typography sizing and column alignments are strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
+- **Expected Result:** The Main Game screen uses a unified flow layout with visible header safe-area breathing room, a board that fills the middle, and a flexible keyboard that remains separated at the bottom without overlap on physical Android devices (including the Samsung Galaxy S22) as well as tablet profiles. The virtual keyboard uses a left-aligned non-staggered grid layout with exact mathematical column alignment across all three rows (uniform letter keys and Delete, Row 3 gap spacer under "K", and dynamically sized Enter key spanning columns 9 and 10). Keyboard keys provide calibrated 99px vertical tap targets and enforce 4px horizontal content margins. Delete is positioned at the right of Row 2, Row 3 features a gap spacer under "K", and Enter is positioned at the right of Row 3 spanning under "L" and "⌫". Standard letters and the Delete icon render prominently (~44px font size), the Enter text fits cleanly and legibly in an updated 22-32px font size range, and all typography sizing and column alignments are strictly maintained across varied screen widths and state changes without layout clipping or board overlap.
 
 ### Test 5.12: Main Menu Typography, Navigation Button Dimensions & Responsive Touch Targets
 - **Requirement(s):** REQ-8.1, REQ-8.2, REQ-8.7, REQ-8.12
@@ -768,7 +768,7 @@ This document outlines the manual test cases used to verify the requirements out
 - **Steps:**
   1. Launch a game in Continuous Play or Daily Challenge mode.
   2. Inspect the virtual keyboard layout at the bottom of the screen:
-     - **Uniform Letter Widths:** Verify that standard letter keys across Row 1 (Q–P) and Row 2 (A–L, ⌫) have mathematically uniform widths (`size_flags_stretch_ratio = 1.0`), occupying identical column widths.
+     - **Uniform Letter Widths:** Verify that standard letter keys across Row 1 (Q-P) and Row 2 (A-L, ⌫) have mathematically uniform widths (`size_flags_stretch_ratio = 1.0`), occupying identical column widths.
      - **Row 3 Column Alignment:** Verify that keys "Z" through "M" in Row 3 have the identical width and left/right horizontal alignment as the keys in the corresponding columns in Row 1 (Q through U) and Row 2 (A through J).
      - **Column 8 Spacer Alignment:** Verify that the gap spacer (`Row3Spacer`) under column 8 maintains the exact column width and alignment as "I" in Row 1 and "K" in Row 2.
      - **Enter Key 2-Column Span & Gap Inclusion:** Verify that the "ENTER" key spans columns 9 and 10, with its left edge perfectly aligned with the left edge of "L" and its right edge perfectly aligned with the right edge of "⌫". Verify that its width accounts for the inter-column gap between columns 9 and 10 without being narrower than the two columns above it.
@@ -911,5 +911,50 @@ This document outlines the manual test cases used to verify the requirements out
   4. Perform rapid user actions, including fast keystrokes, submitting guesses to trigger staggered tile reveal and pop animations, opening/closing modals (How to Play, Stats, Credits, Game Over), and returning to the Main Menu.
   5. Carefully observe the screen during tile animations, modal transitions, and banner animations.
 - **Expected Result:** The game launches and renders using the OpenGL Compatibility backend. Screen tearing, horizontal slicing artifacts, and visual stutter are completely absent across all animations and transitions on high-refresh Snapdragon 8 Gen 3 hardware. Frame pacing is smooth and synchronized with the display via enforced V-Sync.
+
+### Test 6.9: MCP Runtime Visual QA Verification (mcp_client.py & McpInteractionServer)
+- **Requirement(s):** REQ-11.2, REQ-11.3
+- **Steps:**
+  1. Open a PowerShell terminal in the repository root.
+  2. Launch the game in the background with debug features enabled:
+     ```powershell
+     Start-Process -FilePath "godot" -ArgumentList "--path", "game"
+     ```
+  3. Wait 2-3 seconds for the game window to initialize.
+  4. Ping the runtime MCP server:
+     ```powershell
+     python mcp_client.py ping
+     ```
+     Verify output reports `{"success": true}` or `PONG`.
+  5. Interrogate the runtime SceneTree:
+     ```powershell
+     python mcp_client.py get_scene_tree
+     ```
+     Verify that the JSON response includes the root viewport, autoload singletons (`GameManager`, `DailyManager`, `StatsManager`, `SaveManager`, `WordBank`, `ShareManager`, `McpInteractionServer`), and the active scene (`MainMenu`).
+  6. Capture a runtime visual screenshot:
+     ```powershell
+     python mcp_client.py screenshot agent_screenshot.png
+     ```
+     Verify that `agent_screenshot.png` is generated at the specified path and displays the current game screen cleanly.
+  7. Terminate the background Godot process:
+     ```powershell
+     Stop-Process -Name "godot" -Force -ErrorAction SilentlyContinue
+     ```
+- **Expected Result:** The game exposes the local MCP bridge on port 9090 during debug runs. The `mcp_client.py` CLI connects successfully, returns scene tree data, and captures clean PNG screenshots for visual verification. Terminating the Godot process releases all resources cleanly.
+
+### Test 6.10: Python Build, Workflow & Tooling Validation Test Suite
+- **Requirement(s):** REQ-9.1, REQ-9.12, REQ-12.3
+- **Steps:**
+  1. Open a terminal in the repository root.
+  2. Execute the Python validation test suite:
+     ```powershell
+     python -m unittest discover -s scripts -p "test_*.py" -v
+     ```
+  3. Observe the output of all discovered test suites:
+     - `test_mcp_client.py`: Verifies roundtrip TCP communication, mock server command execution, screenshot saving, and error exit codes.
+     - `test_workflows.py`: Verifies that workflow files in `.github/workflows/` exist, have no UTF-8 BOM, and do not reference `secrets.*` inside `if:` expressions.
+     - `test_validate_android_16kb.py`: Verifies ELF 64-bit 16 KB load segment alignment checks and strict ZIP data alignment validation.
+  4. Confirm that all tests pass with exit code 0.
+- **Expected Result:** All Python validation tests execute cleanly with 0 failures, confirming that tooling scripts and GitHub Actions workflow definitions adhere to project standards.
 
 
