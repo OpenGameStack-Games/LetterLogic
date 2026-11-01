@@ -89,6 +89,31 @@ func test_ai_agent_and_mcp_scaffolding() -> void:
 	assert_file_exists("res://AGENTS.md", "game/AGENTS.md directory rules file should exist")
 	assert_file_exists("res://autoloads/mcp_interaction_server.gd", "mcp_interaction_server.gd should exist in res://autoloads/")
 
+func test_ogs_stack_manifest() -> void:
+	var global_res_path: String = ProjectSettings.globalize_path("res://")
+	var ogs_stack_path: String = global_res_path.path_join("../ogs_stack.json")
+	var legacy_stack_path: String = global_res_path.path_join("../stack.json")
+
+	assert_true(FileAccess.file_exists(ogs_stack_path), "ProjectSettings.globalize_path('res://').path_join('../ogs_stack.json') must exist")
+	assert_false(FileAccess.file_exists(legacy_stack_path), "ProjectSettings.globalize_path('res://').path_join('../stack.json') must not exist")
+
+	var res_stack_path: String = "res://../ogs_stack.json"
+	var legacy_res_path: String = "res://../stack.json"
+	assert_true(FileAccess.file_exists(res_stack_path), "res://../ogs_stack.json must exist")
+	assert_false(FileAccess.file_exists(legacy_res_path), "res://../stack.json must not exist")
+
+	var file_content: String = FileAccess.get_file_as_string(ogs_stack_path)
+	if file_content.is_empty():
+		file_content = FileAccess.get_file_as_string(res_stack_path)
+	assert_ne(file_content, "", "ogs_stack.json content must not be empty")
+
+	var parsed: Variant = JSON.parse_string(file_content)
+	assert_not_null(parsed, "ogs_stack.json must parse as valid JSON")
+	assert_true(parsed is Dictionary, "ogs_stack.json must parse as a Dictionary")
+
+	var manifest_dict: Dictionary = parsed as Dictionary
+	assert_eq(manifest_dict.get("stack_name", ""), "LetterLogic", "stack_name must equal 'LetterLogic'")
+
 func test_version_synchronization() -> void:
 	var project_version: String = str(ProjectSettings.get_setting("application/config/version", ""))
 	assert_ne(project_version, "", "application/config/version should not be empty")
