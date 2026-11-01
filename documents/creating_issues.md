@@ -1,6 +1,6 @@
 # GitHub Issue Creation Standard & Guidelines
 
-This document outlines the standard specifications, structure, and workflow for creating GitHub issues for the **LetterLogic** project. Adhering to these standards ensures that any contributor—human developer or autonomous agent—can pick up an issue, understand the context and requirements without ambiguity, implement the change, and properly verify their work.
+This document outlines the standard specifications, structure, and workflow for creating GitHub issues for the **LetterLogic** project. Adhering to these standards ensures that any contributor (human developer or autonomous agent) can pick up an issue, understand the context and requirements without ambiguity, implement the change, and properly verify their work.
 
 ---
 
@@ -82,10 +82,11 @@ Apply at least one standard GitHub label when creating the issue:
 ## 4. Pre-Creation Checklist (For Authors & Agents)
 
 Before publishing an issue via GitHub:
-1. [ ] **Search Existing Issues:** Run `gh issue list --state all` to confirm the issue doesn't already exist or duplicate past work.
+1. [ ] **Search Existing Issues:** Run `gh issue list --state all` to confirm the issue does not already exist or duplicate past work.
 2. [ ] **Inspect Codebase:** Verify the exact file paths, variable names, and current behavior in the code.
 3. [ ] **Clarify Design Choices:** Resolve any open design questions (e.g., color hex codes, UI behaviors, platform fallbacks) before publishing so the issue body contains firm decisions rather than open questions.
-4. [ ] **Include Documentation Acceptance Criteria:** Ensure the mandatory documentation coordination checklist is included per `documents/reviewing_and_merging_prs.md`.
+4. [ ] **Web/HTML5 Font & Symbol Guardrails:** If the issue introduces custom fonts, themes, or Unicode symbols/icons (`☰`, `✕`, `▸`, `▾`, `★`, `↺`, `↻`, `⌫`, `▶`, `→`) in UI controls, include acceptance criteria requiring fallback font configuration via `res://assets/theme/fallback_font.tres` (`res://assets/fonts/NotoSansSymbols-Regular.ttf` and `res://assets/fonts/NotoColorEmoji.ttf`) and unit tests asserting `font.has_char(ord(ch))` (since Web/HTML5 WASM builds cannot access host OS system fonts).
+5. [ ] **Include Documentation Acceptance Criteria:** Ensure the mandatory documentation coordination checklist is included per [`documents/reviewing_and_merging_prs.md`](reviewing_and_merging_prs.md).
 
 ---
 
@@ -93,45 +94,15 @@ Before publishing an issue via GitHub:
 
 Contributors and agents can create issues directly from the command line using the GitHub CLI (`gh`).
 
-### Option A: Using Predefined Templates (Recommended)
-You can invoke the repository issue templates directly with the `--template` flag:
+### Option A: Using `--body-file` (Recommended for Agents)
+Write the formatted markdown body to a temporary file (`issue_body.tmp.md`) using the agent's native `write_file` tool to avoid PowerShell string-escaping issues, then run:
 ```powershell
-# Create a bug report using the bug_report.md template
-gh issue create --template "bug_report.md"
-
-# Create a feature request using the feature_request.md template
-gh issue create --template "feature_request.md" --title "UI - Add Haptic Feedback on Keypress"
+gh issue create --title "UI - Add Pause Overlay Modal" --body-file issue_body.tmp.md --label "enhancement"
+Remove-Item -Path issue_body.tmp.md -Force -ErrorAction SilentlyContinue
 ```
 
-### Option B: Scripted / Headless Creation
-When generating an issue programmatically, format the body string according to the full standard structure:
-```powershell
-$body = @"
-### 1. Problem & Context
-Short description of the bug or feature and its user impact.
-
-### 2. Technical Scope & Affected Files
-- game/scripts/<file>.gd
-- game/scenes/<file>.tscn
-
-### 3. Acceptance Criteria
-
-#### [Component / Feature Area]
-- [ ] Action item 1
-- [ ] Action item 2
-
-#### Automated Tests (game/tests/)
-- [ ] Add unit test cases in game/tests/<test_file>.gd.
-- [ ] Ensure test suite passes with 0 failures.
-
-#### Documentation Coordination (Mandatory per documents/reviewing_and_merging_prs.md)
-- [ ] Update documents/requirements.md.
-- [ ] Update documents/manual_testing.md.
-- [ ] Update README.md if applicable.
-"@
-
-gh issue create --title "<Prefix> - <Short Summary>" --body "$body" --label "<bug|enhancement>"
-```
+### Option B: Scripted Batch Creation
+When creating multiple issues in a batch, write all issue bodies and `gh issue create` commands into a single temporary PowerShell script (`tmp_create_issues.ps1`) and run it once so the user only needs to approve a single command execution.
 
 ---
 
