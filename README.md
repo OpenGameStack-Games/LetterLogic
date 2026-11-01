@@ -16,32 +16,70 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 - **1930s Mascot, Android Adaptive Icons & Monochrome Visual Aesthetic:** Launches with a custom boot splash screen featuring our signature 1930s walking cartoon tile mascot over a matching dark monochrome background (`#121212`), completely free of engine branding or text. Modern Android devices feature native Android Adaptive Icon support with separate foreground and background layers (432x432) for crisp launcher presentation and dynamic masking across all device themes. The main menu proudly displays our signature static walking mascot. High-contrast charcoal buttons, rounded white borders, and sleek panels embrace a vintage black-and-white art style, reserving chromatic color strictly for gameplay evaluation cues so deduction pops with maximum impact.
 - **Active Puzzle Timer:** Live running timer during gameplay with automatic app lifecycle pausing (backgrounding/minimizing) to encourage speed-solving and deduction efficiency, prominently displayed alongside your guess count on the Game Over win screen.
 - **Continuous Play:** A sandbox mode that allows you to play unlimited rounds with random words.
-- **In-Progress Game Persistence & Auto-Save:** Never lose puzzle progress mid-game. Navigating back to the Main Menu, switching apps, or closing the application automatically saves your exact session state—including board tiles, evaluated colors, current typed letters, keyboard states, and elapsed play time. Returning to Continuous Play or Daily Challenge seamlessly restores your board and timer, preventing resets until the puzzle is completed.
+- **In-Progress Game Persistence & Auto-Save:** Never lose puzzle progress mid-game. Navigating back to the Main Menu, switching apps, or closing the application automatically saves your exact session state (including board tiles, evaluated colors, current typed letters, keyboard states, and elapsed play time). Returning to Continuous Play or Daily Challenge seamlessly restores your board and timer, preventing resets until the puzzle is completed.
 - **Daily Challenge & Solved Puzzle Review:** A synchronized daily mode where everyone in the world guesses the same word based on the current UTC date. Puzzles lock out upon completion to preserve stats integrity, with an active live countdown to the next UTC release, while allowing players to safely re-open and review their completed board, solve time, and share their results anytime.
 - **Comprehensive Statistics & Connected Tabular UI:** Track your progress separately across Daily and Continuous modes using a seamless 1930s monochrome tabular layout with an opaque full-screen dark background (`#121212`) that completely obscures underlying screens. Features doubled typography (52px title, 32px close button, 32px tabs), an intuitive 3-column multi-row summary layout vertically pairing volume with win rate, peak with active streaks, and best with average times (with enlarged 36px metric values and 18px labels), and expanded 48px-tall guess distribution bars with 24px row indicators and 22px counts. Monitor your total wins, win streak, personal Best Time, Average Solve Time, and guess distributions.
-- **Social Sharing:** Easily share your Daily Challenge results with friends—including your completion time (⏱️), generated emoji grid (🟩🟨🟥), and universal game link (`https://audrain.games/letterlogic`)—via native system share sheets on Android and Web (mobile browsers) or system clipboard.
+- **Social Sharing:** Easily share your Daily Challenge results with friends, including your completion time (⏱️), generated emoji grid (🟩🟨🟥), and universal game link (`https://audrain.games/letterlogic`), via native system share sheets on Android and Web (mobile browsers) or system clipboard.
 - **Studio Attributions & Refined Credits Modal:** Dedicated 1930s monochrome Credits screen accessible from the Main Menu, honoring project creators and the open-source community with generous modal margins, expanded vertical row spacing, 50% larger circular badge logos (144x144), and left-aligned text and clickable web icon links for Open Game Stack, Audrain Entertainment, and the GitHub repository.
-- **Responsive Android Portrait Layout & Scaled Typography:** Built with Godot's adaptive `MarginContainer` and `AspectRatioContainer` architecture to scale seamlessly across diverse portrait smartphones (16:9, 18:9, 19.5:9, 20:9) and tablets (4:3, 16:10) without clipping or distortion. The Main Game now uses a safe-area-aware vertical flow with an aspect-ratio board slot, a left-aligned proportional keyboard grid (`size_flags_stretch_ratio`: 1.0 for letter keys and Delete, 1.0 for the Row 3 gap spacer, and 2.0 for Enter spanning 2 columns) with Delete moved to Row 2 and a gap on Row 3, ensuring mathematically uniform grid alignment and clean scaling across narrow and wide mobile displays, and a flexible keyboard that keeps a 44px minimum touch-height floor while remaining fully contained on tall portrait screens. Features doubled Main Menu typography (88px title, 36px subtitle) with expanded navigation button targets (120px / 80px heights with 40px / 36px fonts for mode and utility buttons including Stats, How to Play, and Credits), scaled How to Play and Credits modal typography (84px and 64px titles, calibrated body/attributions) with enlarged 80px "Got It" buttons (36px font), scaled Game Over modal typography (56px title, 32px summary message, 32px button text) with doubled-height action buttons (96px) inset from panel edges (64px margins) for comfortable mobile touch ergonomics, enlarged 72px letter tiles, responsive virtual keyboard tap targets with scalable typography (including an updated 22–32px range for the ENTER key and enforced 4px horizontal content margins across all keys to guarantee breathing room) for confident typing, doubled center header typography (48px title, 28px mode subtitle, 32px active timer), 36px toast notifications with comfortable outline padding, and an enlarged Statistics modal with an opaque full-screen dark background completely obscuring underlying screens, intuitively paired multi-row summary cards, and expanded distribution graph sizing for effortless readability on mobile displays.
+- **Responsive Android Portrait Layout & Scaled Typography:** Built with Godot's adaptive `MarginContainer` and `AspectRatioContainer` architecture to scale seamlessly across diverse portrait smartphones (16:9, 18:9, 19.5:9, 20:9) and tablets (4:3, 16:10) without clipping or distortion. The Main Game now uses a safe-area-aware vertical flow with an aspect-ratio board slot, a left-aligned proportional keyboard grid (`size_flags_stretch_ratio`: 1.0 for letter keys and Delete, 1.0 for the Row 3 gap spacer, and 2.0 for Enter spanning 2 columns) with Delete moved to Row 2 and a gap on Row 3, ensuring mathematically uniform grid alignment and clean scaling across narrow and wide mobile displays, and a flexible keyboard that keeps a 44px minimum touch-height floor while remaining fully contained on tall portrait screens. Features doubled Main Menu typography (88px title, 36px subtitle) with expanded navigation button targets (120px / 80px heights with 40px / 36px fonts for mode and utility buttons including Stats, How to Play, and Credits), scaled How to Play and Credits modal typography (84px and 64px titles, calibrated body/attributions) with enlarged 80px "Got It" buttons (36px font), scaled Game Over modal typography (56px title, 32px summary message, 32px button text) with doubled-height action buttons (96px) inset from panel edges (64px margins) for comfortable mobile touch ergonomics, enlarged 72px letter tiles, responsive virtual keyboard tap targets with scalable typography (including an updated 22-32px range for the ENTER key and enforced 4px horizontal content margins across all keys to guarantee breathing room) for confident typing, doubled center header typography (48px title, 28px mode subtitle, 32px active timer), 36px toast notifications with comfortable outline padding, and an enlarged Statistics modal with an opaque full-screen dark background completely obscuring underlying screens, intuitively paired multi-row summary cards, and expanded distribution graph sizing for effortless readability on mobile displays.
 
 ## Project Structure
+- `AGENTS.md` - Root operational manual for autonomous AI agents and developer workflows.
+- `mcp_client.py` - Zero-dependency Python CLI tool for MCP runtime bridge inspection and visual QA.
+- `.agents/` - Agent configuration, rules (secrets, keystore, MCP safety), and skills (orchestration, release, visual QA).
 - `/game` - The root directory for the Godot project containing all scenes, scripts, autoloads, and assets.
-  - `/autoloads` - Core singletons handling game logic, stats, daily dates, and the word dictionary.
+  - `AGENTS.md` - Godot project directory guidelines (static typing, logging, fallbacks, safe areas).
+  - `/autoloads` - Core singletons handling game logic, stats, daily dates, word dictionary, and debug-only `McpInteractionServer`.
   - `/scripts` & `/scenes` - UI components (game board, keyboard, main menu).
-  - `/tests` - Automated tests verifying the core logic.
-- `/documents` - Project documentation, including requirements and manual testing guides.
+  - `/tests` - Automated tests verifying core logic and UI scaffolding using `TestBase`.
+- `/scripts` - Python validation test suites (`test_mcp_client.py`, `test_workflows.py`, `test_validate_android_16kb.py`).
+- `/documents` - Project documentation, including requirements, workflow standards, and manual testing guides.
 - `/assets` - Contains the word lists and media assets.
 
 ## Getting Started
 1. Clone the repository.
-2. Open the Godot Editor (v4.7.2 — matches `stack.json`).
+2. Open the Godot Editor (v4.7.2, matches `stack.json`).
 3. Import the `game/project.godot` file.
 4. Press `F5` to run the project.
 
 ## Development & Testing
-- Automated tests are located in the `game/tests` folder and can be run from the editor using your preferred Godot testing framework.
-- For manual testing guidelines and core requirement mapping, please refer to the documentation in the `/documents` folder.
+
+### Headless Asset Import
+Before running headless tests, ensure all new project assets and UIDs are imported:
+```powershell
+godot --headless --editor --quit --path game
+```
+
+### Godot Automated Unit Tests
+Run the headless Godot test suite via the CLI (confirms 0 failures):
+```powershell
+godot --headless --path game -s res://tests/test_runner.gd
+```
+Unit tests inherit from `TestBase` (`game/tests/test_base.gd`) and leverage `before_each()` and `after_each()` lifecycle hooks alongside relational, approx, and collection assertions.
+
+### Python Validation Tests
+Validate GitHub Actions workflows, Android 16 KB page-size compliance, and MCP client tooling:
+```powershell
+python -m unittest discover -s scripts -p "test_*.py" -v
+```
+
+### MCP Runtime Visual QA
+LetterLogic includes a debug-only MCP bridge on port 9090 (`McpInteractionServer`). Use `mcp_client.py` for automated inspection and visual QA:
+```powershell
+# Check runtime bridge connection
+python mcp_client.py ping
+
+# Inspect SceneTree hierarchy
+python mcp_client.py get_scene_tree
+
+# Capture runtime screenshot
+python mcp_client.py screenshot screenshot.png
+```
+
+For manual testing guidelines and core requirement mapping, please refer to the documentation in the `/documents` folder.
 
 ## CI/CD & Deployment
+- **Continuous Integration (CI):** Automated pipeline in `.github/workflows/ci.yml` runs on all pull requests and pushes to `main`, validating Python test suites and executing Godot headless unit tests.
 - **Android Release:** Automated build pipeline in `.github/workflows/android_release.yml` produces 16 KB page-aligned Android App Bundles (`.aab`) with native debug symbols and obfuscation mappings.
 - **Google Play Deployment:** Automated deployment pipeline in `.github/workflows/play_release.yml` builds, signs, and deploys the Android App Bundle (`.aab`) to the Google Play Console's Production track (`games.audrain.letterlogic`) upon pushing release tags (`v*`). The signed `.aab` is also automatically attached to the GitHub Release. Requires repository secret:
   - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON`: Service account JSON key with permissions to publish releases on Google Play Console.
@@ -49,7 +87,7 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
   - `BUTLER_API_KEY`: itch.io API key.
   - `ITCH_USERNAME`: itch.io account username.
   - `ITCH_GAME`: itch.io game slug/project identifier (e.g., `letterlogic`).
-- **GitHub Releases:** Release binaries—including the standalone web distribution (`LetterLogic-Web.zip`) and signed Android App Bundle (`LetterLogic.aab`)—are automatically attached as downloadable assets on each tagged GitHub Release (`v*`).
+- **GitHub Releases:** Release binaries, including the standalone web distribution (`LetterLogic-Web.zip`) and signed Android App Bundle (`LetterLogic.aab`), are automatically attached as downloadable assets on each tagged GitHub Release (`v*`).
 
 ## License
 The source code for LetterLogic is licensed under the [GNU GPLv3](LICENSE). 
