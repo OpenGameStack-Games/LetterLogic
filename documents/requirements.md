@@ -237,6 +237,8 @@ The project adheres strictly to **Semantic Versioning (SemVer) 2.0.0** standards
   - **Release Management (`.agents/skills/release-management/SKILL.md`):** Manages semantic version bumps across both `game/project.godot` and `game/export_presets.cfg`, UTF-8 without BOM file edits, and dual monitoring of Android and Web deployment workflows.
   - **MCP Visual QA (`.agents/skills/mcp-visual-qa/SKILL.md`):** Defines runtime visual inspection, background process launching, SceneTree interrogation, screenshot capture, and clean process termination via `Stop-Process -Name "godot"`.
 
+- **REQ-11.5 - OpenGameStack Tool Version & Configuration Manifests (ogs_stack.json & ogs_config.json):** The repository root maintains `ogs_stack.json` to define OpenGameStack tool versions (specifying Godot 4.7.2 and related development toolchain dependencies) and `ogs_config.json` for network and offline access policies. The manifest standardizes launcher compatibility across the OpenGameStack ecosystem. Automated GDScript tests (`test_scaffolding.gd`) verify that `ogs_stack.json` exists at the repository root (`res://../ogs_stack.json`), parses as valid JSON with `stack_name == "LetterLogic"`, and asserts that legacy `res://../stack.json` is absent. Python workflow tests (`scripts/test_workflows.py`) independently verify that `ogs_stack.json` exists without a UTF-8 BOM, parses as valid JSON with `stack_name == "LetterLogic"`, and confirms legacy `stack.json` does not exist at the repository root.
+
 ## 12. Automated Testing Framework & Lifecycle Standards
 
 - **REQ-12.1 - TestBase Lifecycle Hooks & Expanded Assertion Library:** All GDScript automated unit tests inherit from `TestBase` (`game/tests/test_base.gd`). The base class provides:
@@ -253,7 +255,7 @@ The project adheres strictly to **Semantic Versioning (SemVer) 2.0.0** standards
 
 - **REQ-12.3 - Python Unit Test Suite & GitHub Workflow Validation (scripts/):** In addition to Godot GDScript tests, standard Python unit tests validate repository tools and GitHub Actions workflows:
   - `scripts/test_mcp_client.py`: Verifies `mcp_client.py` command roundtrips, screenshot decoding, and error exit codes against a mock TCP server.
-  - `scripts/test_workflows.py`: Verifies that all GitHub Actions workflow files exist without UTF-8 BOM and do not reference `secrets.*` inside `if:` conditionals (which triggers GitHub Actions parser rejections).
+  - `scripts/test_workflows.py`: Verifies that all GitHub Actions workflow files exist without UTF-8 BOM, do not reference `secrets.*` inside `if:` conditionals (which triggers GitHub Actions parser rejections), and verifies that `ogs_stack.json` exists without UTF-8 BOM with `stack_name == "LetterLogic"` while confirming legacy `stack.json` is absent.
   - `scripts/validate_android_16kb.py`: Verifies Android native shared libraries for 16 KB ELF segment alignment and strict ZIP data alignment.
 
 ## 13. Traceability & Automated Test Verification
@@ -271,7 +273,7 @@ The project adheres strictly to **Semantic Versioning (SemVer) 2.0.0** standards
 | UI Layout & Typography | REQ-8.1 - REQ-8.18 | `test_main_menu.gd`, `test_main_game.gd`, `test_keyboard.gd` | Implemented (Verified) |
 | Multiplatform Font Fallback | REQ-8.19 | `test_scaffolding.gd` | Implemented (Verified) |
 | Build, 16 KB Alignment & CI/CD | REQ-9.1 - REQ-9.12 | `scripts/test_validate_android_16kb.py`, `scripts/test_workflows.py`, `ci.yml` | Implemented (Verified) |
-| Versioning & Scaffolding | REQ-10.1, REQ-11.1 - REQ-11.4 | `test_scaffolding.gd` | Implemented (Verified) |
+| Versioning & Scaffolding | REQ-10.1, REQ-11.1 - REQ-11.5 | `test_scaffolding.gd`, `scripts/test_workflows.py` | Implemented (Verified) |
 | Testing Framework & Assertions | REQ-12.1 - REQ-12.3 | `test_scaffolding.gd`, `scripts/test_mcp_client.py` | Implemented (Verified) |
 
-*Total Automated Test Coverage: 2,196 passed GDScript assertions across 10 test suites; 9 passed Python validation tests across 3 suites. 0 failures.*
+*Total Automated Test Coverage: 2,205 passed GDScript assertions across 10 test suites; 10 passed Python validation tests across 3 suites. 0 failures.*

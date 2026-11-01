@@ -952,9 +952,35 @@ This document outlines the manual test cases used to verify the requirements out
      ```
   3. Observe the output of all discovered test suites:
      - `test_mcp_client.py`: Verifies roundtrip TCP communication, mock server command execution, screenshot saving, and error exit codes.
-     - `test_workflows.py`: Verifies that workflow files in `.github/workflows/` exist, have no UTF-8 BOM, and do not reference `secrets.*` inside `if:` expressions.
+     - `test_workflows.py`: Verifies that workflow files in `.github/workflows/` exist, have no UTF-8 BOM, do not reference `secrets.*` inside `if:` expressions, and verifies `ogs_stack.json` exists without UTF-8 BOM with valid `stack_name` while confirming legacy `stack.json` is absent.
      - `test_validate_android_16kb.py`: Verifies ELF 64-bit 16 KB load segment alignment checks and strict ZIP data alignment validation.
   4. Confirm that all tests pass with exit code 0.
 - **Expected Result:** All Python validation tests execute cleanly with 0 failures, confirming that tooling scripts and GitHub Actions workflow definitions adhere to project standards.
+
+### Test 6.11: OpenGameStack Tool Version Manifest Verification (ogs_stack.json)
+- **Requirement(s):** REQ-11.5
+- **Steps:**
+  1. Open a PowerShell terminal at the repository root.
+  2. Verify that `ogs_stack.json` is present at the repository root:
+     ```powershell
+     Test-Path ogs_stack.json
+     ```
+     Confirm the command outputs `True`.
+  3. Verify that the legacy `stack.json` manifest is absent from the repository root:
+     ```powershell
+     Test-Path stack.json
+     ```
+     Confirm the command outputs `False`.
+  4. Inspect the contents and encoding of `ogs_stack.json`:
+     - Confirm the file is encoded in UTF-8 without BOM.
+     - Confirm the JSON content is valid and defines `"stack_name": "LetterLogic"`.
+     - Confirm the Godot version is specified as `"4.7.2"`.
+  5. Run automated scaffolding and workflow tests:
+     ```powershell
+     python -m unittest discover -s scripts -p "test_*.py" -v
+     godot --headless --path game -s res://tests/test_runner.gd
+     ```
+- **Expected Result:** `ogs_stack.json` exists at the repository root as valid UTF-8 without BOM, defining `"stack_name": "LetterLogic"` and Godot version `"4.7.2"`. Legacy `stack.json` is confirmed absent (`Test-Path stack.json` outputs `False`). Both GDScript `test_scaffolding.gd` (`test_ogs_stack_manifest`) and Python `test_workflows.py` (`test_ogs_stack_manifest`) pass with zero errors.
+
 
 
