@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -34,6 +35,23 @@ class WorkflowValidationTests(unittest.TestCase):
                 f"{wf.name} references `secrets.` inside an `if:` expression "
                 "(bind to `env:` first and check `env.<VAR> != ''`).",
             )
+
+    def test_ogs_stack_manifest(self) -> None:
+        manifest_path = REPO_ROOT / "ogs_stack.json"
+        legacy_path = REPO_ROOT / "stack.json"
+
+        self.assertTrue(manifest_path.is_file(), "ogs_stack.json must exist at repository root")
+        self.assertFalse(legacy_path.exists(), "Legacy stack.json must not exist at repository root")
+
+        raw_bytes = manifest_path.read_bytes()
+        self.assertFalse(
+            raw_bytes.startswith(b"\xef\xbb\xbf"),
+            "ogs_stack.json must not contain a UTF-8 BOM",
+        )
+
+        manifest_data = json.loads(raw_bytes.decode("utf-8"))
+        self.assertIsInstance(manifest_data, dict, "ogs_stack.json must parse as a JSON object")
+        self.assertEqual(manifest_data.get("stack_name"), "LetterLogic", "stack_name must equal 'LetterLogic'")
 
 
 if __name__ == "__main__":

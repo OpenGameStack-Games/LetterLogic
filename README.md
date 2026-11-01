@@ -25,6 +25,8 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## Project Structure
 - `AGENTS.md` - Root operational manual for autonomous AI agents and developer workflows.
+- `ogs_stack.json` - OpenGameStack tool version manifest (Godot 4.7.2).
+- `ogs_config.json` - OpenGameStack network and offline policy configuration.
 - `mcp_client.py` - Zero-dependency Python CLI tool for MCP runtime bridge inspection and visual QA.
 - `.agents/` - Agent configuration, rules (secrets, keystore, MCP safety), and skills (orchestration, release, visual QA).
 - `/game` - The root directory for the Godot project containing all scenes, scripts, autoloads, and assets.
@@ -38,7 +40,7 @@ What sets LetterLogic apart is its unique constraint: **all valid guesses and se
 
 ## Getting Started
 1. Clone the repository.
-2. Open the Godot Editor (v4.7.2, matches `stack.json`).
+2. Open the Godot Editor (v4.7.2, matches `ogs_stack.json`).
 3. Import the `game/project.godot` file.
 4. Press `F5` to run the project.
 
